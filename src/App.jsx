@@ -1,11 +1,10 @@
-import "./output.css"
-
 function App() {
-    return (
-        <>
-        <h1>Project Description Generator</h1>
-        </>
-    )
+  return (
+    <>
+      <button className="btn btn-primary">Hello world!</button>
+      <h1>Project Description Generator</h1>
+    </>
+  );
 }
 
-export default App
+export default App;
