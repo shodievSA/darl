@@ -1,10 +1,13 @@
-import "./output.css"
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Registration from './pages/Registration';
 
 function App() {
     return (
-        <>
-        <h1>Project Description Generator</h1>
-        </>
+        <Router>
+            <Routes>
+                <Route path='/registration' element={<Registration />} />
+            </Routes>
+        </Router>
     )
 }
 
