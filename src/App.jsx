@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Registration from './pages/Registration';
+import Registration from './pages/Registration/Registration.jsx';
 
 function App() {
     return (

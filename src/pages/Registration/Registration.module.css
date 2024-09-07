@@ -1,0 +1,104 @@
+.page-container {
+    @apply h-full flex flex-col justify-center items-center
+}
+
+.sign-in-button {
+    @apply btn btn-secondary font-inter-regular font-normal btn-lg text-white
+}
+
+.sign-in-button > :first-child {
+    @apply flex h-full items-center
+}
+
+.service-description {
+    @apply text-white
+}
+
+.service-description h1 {
+    @apply font-inter-medium 
+}
+
+.sign-in {
+    @apply flex flex-col items-center w-full
+}
+
+.important {
+    @apply italic font-inter-regular text-center 
+}
+
+/* for smartphones */
+@media (min-width: 0) {
+    .page-container {
+        @apply space-y-20
+    }
+    .service-description {
+        @apply w-full px-4
+    }
+    .service-description h1 {
+        @apply text-5xl text-left leading-tight
+    }
+    .sign-in {
+        @apply space-y-3
+    }
+    .sign-in-button {
+        @apply text-xl
+    }
+    .sign-in-button > :first-child {
+        @apply space-x-3
+    }
+    .important {
+        @apply w-80 text-sm
+    }
+}
+
+/* for tablets */
+@media (min-width: 481px) {
+    .page-container {
+        @apply space-y-10
+    }
+    .service-description {
+        @apply w-full px-4
+    }
+    .service-description h1 {
+        @apply text-5xl text-center leading-tight
+    }
+    .sign-in {
+        @apply space-y-4
+    }
+    .sign-in-button {
+        @apply text-2xl px-8 py-10
+    }
+    .sign-in-button > :first-child {
+        @apply space-x-4
+    }
+    .important {
+        @apply w-96 text-base
+    }
+}
+
+/* for laptops */
+@media (min-width: 835px) {   
+    .page-container {
+        @apply space-y-12
+    }
+    .service-description {
+        @apply w-9/12
+    }
+    .service-description h1 {
+        @apply text-6xl text-center leading-tight
+    }
+    .sign-in {
+        @apply w-full space-y-4
+    }
+    .sign-in-button {
+        @apply text-3xl px-8 py-10
+    }
+    .sign-in-button > :first-child {
+        @apply space-x-5
+    }
+    .important {
+        @apply w-96 text-base
+    }
+}
+
+/* className="btn btn-secondary font-inter-regular font-normal btn-lg text-xl md:text-2xl md:btn-lg lg:text-3xl lg:px-7 lg:py-10 lg:btn-lg" */
