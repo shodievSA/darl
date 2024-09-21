@@ -1,0 +1,64 @@
+.page-container {
+    background-color: rgb(18, 18, 18);
+}
+
+@media (0 < width <= 480px) {
+    .page-container {
+        @apply flex py-10 justify-center
+    }
+    .page-container {
+        margin-top: 80px;
+    }
+    .pricing-plans {
+        @apply flex flex-col gap-y-10 flex-wrap
+    }
+}
+
+@media (480px < width <= 834px) {
+    .page-container {
+        @apply flex py-10 justify-center
+    }
+    .page-container {
+        margin-top: 80px;
+    }
+    .pricing-plans {
+        @apply flex flex-col gap-y-10 flex-wrap
+    }
+}
+
+@media (834px < width <= 1440px) {
+    .page-container {
+        @apply flex flex-col py-14 grow px-16 justify-center font-inter-medium
+    }
+    .page-container {
+        margin-top: 100px;
+    }
+    .page-container div:first-child {
+        @apply flex justify-center 
+    }
+    .page-container div:first-child h1 {
+        @apply text-5xl 
+    }
+    .pricing-plans {
+        @apply flex gap-x-28 gap-y-16 justify-center flex-wrap
+    }
+}
+
+@media (min-width: 1441px) {
+    .page-container {
+        @apply flex grow flex-col py-14 justify-center items-center font-inter-medium px-16
+    }
+    .page-container {
+        border-left-width: 4px;
+        border-left-color: black;
+    }
+    .page-container > div:first-child {
+        @apply flex justify-center 
+    }
+    .page-container > div:first-child h1 {
+        @apply text-5xl 
+    }
+    .pricing-plans {
+        @apply flex w-full gap-y-16 gap-x-16 flex-wrap justify-center
+    }
+}

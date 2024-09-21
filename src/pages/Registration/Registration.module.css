@@ -2,11 +2,15 @@
     @apply h-full flex flex-col justify-center items-center
 }
 
-.sign-in-button {
-    @apply btn btn-secondary font-inter-regular font-normal btn-lg text-white
+.page-container {
+    background-color: rgb(18, 18, 18);
 }
 
-.sign-in-button > :first-child {
+.sign-in-button {
+    @apply btn btn-secondary font-inter-regular font-normal btn-lg text-white rounded-md
+}
+
+.sign-in-button > div {
     @apply flex h-full items-center
 }
 
@@ -26,8 +30,7 @@
     @apply italic font-inter-regular text-center 
 }
 
-/* for smartphones */
-@media (min-width: 0) {
+@media (0 < width <= 480px) {
     .page-container {
         @apply space-y-20
     }
@@ -41,20 +44,22 @@
         @apply space-y-3
     }
     .sign-in-button {
-        @apply text-xl
+        @apply text-xl px-4
     }
-    .sign-in-button > :first-child {
+    .sign-in-button > div {
         @apply space-x-3
+    }
+    .github-icon {
+        @apply h-8 w-8
     }
     .important {
         @apply w-80 text-sm
     }
 }
 
-/* for tablets */
-@media (min-width: 481px) {
+@media (480px < width <= 834px) {
     .page-container {
-        @apply space-y-10
+        @apply space-y-10 px-4
     }
     .service-description {
         @apply w-full px-4
@@ -68,16 +73,48 @@
     .sign-in-button {
         @apply text-2xl px-8 py-10
     }
-    .sign-in-button > :first-child {
+    .sign-in-button > div {
         @apply space-x-4
+    }
+    .github-icon {
+        @apply h-10 w-10
     }
     .important {
         @apply w-96 text-base
     }
 }
 
-/* for laptops */
-@media (min-width: 835px) {   
+@media (834px < width <= 1440px) {   
+    .page-container {
+        @apply space-y-12
+    }
+    .service-description {
+        @apply w-8/12
+    }
+    .service-description h1 {
+        @apply text-5xl text-center leading-tight
+    }
+    .sign-in {
+        @apply w-full space-y-4
+    }
+    .sign-in-button {
+        @apply text-2xl px-6 py-10
+    }
+    .sign-in-button > div {
+        @apply space-x-5
+    }
+    .github-icon {
+        @apply h-10 w-10
+    }
+    .important {
+        @apply text-base
+    }
+    .important {
+        width: 500px;
+    }
+}
+
+@media (min-width: 1441px) {
     .page-container {
         @apply space-y-12
     }
@@ -91,14 +128,19 @@
         @apply w-full space-y-4
     }
     .sign-in-button {
-        @apply text-3xl px-8 py-10
+        @apply text-2xl px-6 py-10
     }
-    .sign-in-button > :first-child {
+    .sign-in-button > div {
         @apply space-x-5
     }
+    .github-icon {
+        @apply h-10 w-10
+    }
     .important {
-        @apply w-96 text-base
+        @apply text-base
+    }
+    .important {
+        width: 500px;
     }
 }
 
-/* className="btn btn-secondary font-inter-regular font-normal btn-lg text-xl md:text-2xl md:btn-lg lg:text-3xl lg:px-7 lg:py-10 lg:btn-lg" */

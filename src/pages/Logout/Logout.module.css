@@ -1,0 +1,151 @@
+.page-container {
+    background-color: rgb(18, 18, 18);
+}
+
+@media (0 < width <= 480px) {
+    .page-container {
+        @apply grow flex justify-center items-center
+    }
+    .page-container {
+        margin-top: 80px;
+    }
+    .delete-account-button {
+        @apply btn btn-secondary btn-lg text-xl rounded-md font-medium px-4
+    }
+    .modal-window {
+        @apply modal 
+    }
+    .popup-message {
+        @apply modal-box rounded-md py-5 px-6
+    }
+    .popup-message {
+        background-color: rgb(15, 15, 15);
+    }
+    .warning {
+        @apply py-4 text-lg text-center
+    }
+    .popup-message h3 {
+        @apply font-bold text-2xl text-center
+    }
+    .buttons-container {
+        @apply modal-action justify-center gap-x-6
+    }
+    .cancel-button {
+        @apply btn rounded-md btn-lg text-xl grow
+    }
+    .confirm-button {
+        @apply btn rounded-md btn-lg text-xl grow
+    }
+}
+
+@media (480px < width <= 834px) {
+    .page-container {
+        @apply grow flex justify-center items-center
+    }
+    .page-container {
+        margin-top: 80px;
+    }
+    .delete-account-button {
+        @apply btn btn-secondary btn-lg text-2xl rounded-md font-medium
+    }
+    .modal-window {
+        @apply modal 
+    }
+    .popup-message {
+        @apply modal-box rounded-md py-5 px-6
+    }
+    .popup-message {
+        background-color: rgb(15, 15, 15);
+    }
+    .warning {
+        @apply py-4 text-lg text-center
+    }
+    .popup-message h3 {
+        @apply font-bold text-2xl text-center
+    }
+    .buttons-container {
+        @apply modal-action justify-center gap-x-8
+    }
+    .cancel-button {
+        @apply btn rounded-md btn-lg text-xl grow
+    }
+    .confirm-button {
+        @apply btn rounded-md btn-lg text-xl grow
+    }
+}
+
+@media (834px < width <= 1440px) {
+    .page-container {
+        @apply grow flex justify-center items-center
+    }
+    .page-container {
+        margin-top: 100px;
+    }
+    .delete-account-button {
+        @apply btn btn-secondary btn-lg text-2xl rounded-md font-medium
+    }
+    .modal-window {
+        @apply modal 
+    }
+    .popup-message {
+        @apply modal-box rounded-md py-5 px-6
+    }
+    .popup-message {
+        background-color: rgb(15, 15, 15);
+    }
+    .warning {
+        @apply py-4 text-2xl/normal text-center
+    }
+    .popup-message h3 {
+        @apply font-bold text-3xl text-center
+    }
+    .buttons-container {
+        @apply modal-action justify-center gap-x-8
+    }
+    .cancel-button {
+        @apply btn rounded-md btn-lg text-xl grow
+    }
+    .confirm-button {
+        @apply btn rounded-md btn-lg text-xl grow
+    }
+}
+
+@media (min-width: 1441px) {
+    .page-container {
+        @apply grow flex justify-center items-center
+    }
+    .page-container {
+        border-left-width: 4px;
+        border-left-color: black;
+    }
+    .delete-account-button {
+        @apply btn btn-secondary btn-lg text-2xl rounded-md font-medium
+    }
+    .modal-window {
+        @apply modal flex justify-center items-center
+    }
+    .modal-window {
+        padding-left: 300px;
+    }
+    .popup-message {
+        @apply modal-box rounded-md py-5 px-6
+    }
+    .popup-message {
+        background-color: rgb(15, 15, 15);
+    }
+    .warning {
+        @apply py-4 text-2xl/normal text-center
+    }
+    .popup-message h3 {
+        @apply font-bold text-3xl text-center
+    }
+    .buttons-container {
+        @apply modal-action justify-center gap-x-8
+    }
+    .cancel-button {
+        @apply btn rounded-md btn-lg text-xl grow
+    }
+    .confirm-button {
+        @apply btn rounded-md btn-lg text-xl grow
+    }
+}

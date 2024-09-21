@@ -1,0 +1,17 @@
+@media (0 < width <= 834px) {
+    .page-container {
+        @apply flex flex-col h-full 
+    }
+}
+
+@media (835px < width <= 1440px) {
+    .page-container {
+        @apply flex flex-col h-full
+    }
+}
+
+@media (min-width: 1441px) {
+    .page-container {
+        @apply flex flex-row h-full
+    }
+}

@@ -1,0 +1,79 @@
+.repository-card {
+    border-color: transparent;
+    border-width: 0;
+    transition: border-color 0.5s ease;
+}
+
+.repository-card:hover {
+    border-color: #7a00c2;
+    border-width: 3px;
+}
+
+@media (0 < width <= 480px) {
+    .repository-card {
+        @apply flex flex-col bg-black p-6 rounded-md shadow-md
+    }
+    .repository-card > div:first-child {
+        @apply flex items-start gap-x-4 
+    }
+    .github-icon {
+        @apply w-7 h-7
+    }
+    .repository-name {
+        @apply text-lg text-wrap text-ellipsis overflow-hidden font-medium
+    }
+    .last-commit {
+        @apply grow flex items-end justify-end 
+    }
+}
+@media (480px < width <= 834px) {
+    .repository-card {
+        @apply flex flex-col bg-black p-6 rounded-md shadow-md
+    }
+    .repository-card > div:first-child {
+        @apply flex items-start gap-x-4 
+    }
+    .github-icon {
+        @apply w-7 h-7
+    }
+    .repository-name {
+        @apply text-lg text-wrap text-ellipsis overflow-hidden font-medium
+    }
+    .last-commit {
+        @apply grow flex items-end justify-end 
+    }
+}
+@media (834px < width <= 1440px) {
+    .repository-card {
+        @apply flex flex-col bg-black p-6 rounded-md shadow-md
+    }
+    .repository-card > div:first-child {
+        @apply flex items-start gap-x-4 
+    }
+    .github-icon {
+        @apply w-7 h-7
+    }
+    .repository-name {
+        @apply text-lg text-wrap text-ellipsis overflow-hidden font-medium
+    }
+    .last-commit {
+        @apply grow flex items-end justify-end 
+    }
+}
+@media (min-width: 1441px) {
+    .repository-card {
+        @apply flex flex-col bg-black p-6 rounded-md shadow-md
+    }
+    .repository-card > div:first-child {
+        @apply flex items-start gap-x-4 
+    }
+    .github-icon {
+        @apply w-7 h-7
+    }
+    .repository-name {
+        @apply text-lg text-wrap text-ellipsis overflow-hidden font-medium
+    }
+    .last-commit {
+        @apply grow flex items-end justify-end 
+    }
+}

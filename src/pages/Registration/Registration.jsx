@@ -1,11 +1,11 @@
-import GitHubIcon from "../../components/GitHub Logo/GitHubLogo";
-import styles from "./Registration.module.css"
-
-function authorizeUser() {
-    alert("Authorization process started...");
-}
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import styles from "./Registration.module.css";
 
 function Registration() {
+    function authorizeUser() {
+        alert("Authorization process started...");
+    }
     return (
         <>
         <div className={styles['page-container']}>
@@ -19,7 +19,12 @@ function Registration() {
                 onClick={authorizeUser}
                 >
                     <div>
-                        <div><GitHubIcon /></div>
+                        <div>
+                            <FontAwesomeIcon 
+                            icon={faGithub} 
+                            className={styles['github-icon']}
+                            />
+                        </div>
                         <div>Sign in with GitHub</div>
                     </div>
                 </button>

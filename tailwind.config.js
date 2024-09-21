@@ -3,7 +3,10 @@ import daisyui from "daisyui";
 
 // eslint-disable-next-line no-undef
 module.exports = {
-  content: ["./src/**/*.{js,ts,jsx,tsx}"],
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}"
+  ],
   theme: {
     extend: {},
     fontFamily: {
@@ -13,7 +16,7 @@ module.exports = {
   },
   plugins: [daisyui],
   daisyui: {
-    themes: ["black", "light", "dark", "halloween"],
+    themes: ["black", "dark", "halloween"],
     darkTheme: "black",
     base: true,
     styled: true, // include daisyUI colors and design decisions for all components

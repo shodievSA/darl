@@ -1,0 +1,60 @@
+.header {
+    @apply flex items-center py-6 px-8 fixed w-full justify-center
+}
+.header {
+    height: 100px;
+    background-color: black;
+    z-index: 10;
+}
+.header > div:first-child {
+    @apply absolute left-0 px-8
+}
+.header > div:last-child h1 {
+    @apply text-3xl font-medium
+}
+.bars-icon {
+    @apply h-8 w-8 p-3 rounded-md cursor-pointer
+}
+.bars-icon:hover {
+    background-color: rgb(20, 20, 20);
+}
+.menu-container {
+    @apply flex fixed top-0 z-10 h-full w-full
+}
+.menu-container > div:first-child {
+    @apply flex flex-col h-full space-y-12 pb-10 pt-6 px-10
+}
+.hide-menu-icon {
+    @apply h-9 w-9 cursor-pointer hover:bg-base-300 p-2 rounded-md
+}
+.menu-container > div:last-child {
+    @apply grow h-full backdrop-blur-2xl
+}
+.menu-container > div:last-child {
+    backdrop-filter: blur(40px);
+    background-color: rgba(0, 0, 0, 0.8);
+}
+.menu-header {
+    @apply flex justify-between items-center
+}
+.menu-header h1 {
+    @apply text-3xl font-medium
+}
+.menu-links-container {
+    @apply h-full
+}
+.links {
+    @apply flex flex-col text-2xl gap-y-8 h-full 
+}
+.links li:last-child {
+    @apply mt-auto
+}
+.links li {
+    @apply flex rounded-md w-full
+}
+.links > li:hover {
+    background-color: rgb(26, 26, 26);
+}
+.links li a {
+    @apply w-full 
+}
