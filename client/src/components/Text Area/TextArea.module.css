@@ -1,0 +1,98 @@
+@media (0 < width <= 480px) {
+    .textarea-container {
+        @apply grow flex flex-col w-full gap-y-4 relative
+    }
+    .copy-button-container {
+        @apply flex w-full justify-center rounded-md py-4 items-center gap-x-3
+    }
+    .copy-button-container {
+        background-color: rgb(122, 0, 194);
+    }
+    .copy-button {
+        @apply text-lg font-medium
+    }
+    .copy-icon {
+        @apply h-5 w-5
+    }
+    .repository-description {
+        @apply textarea textarea-bordered grow w-full rounded-md resize-none text-base py-2
+    }
+    .repository-description {
+        background-color: rgb(18, 18, 18);
+    }
+}
+
+@media (480px < width <= 834px) {
+    .textarea-container {
+        @apply grow flex flex-col w-full gap-y-4 relative items-center
+    }
+    .repository-description {
+        @apply textarea textarea-bordered grow min-w-96 w-3/4 rounded-md resize-none text-base py-2
+    }
+    .repository-description {
+        background-color: rgb(18, 18, 18);
+    }
+    .copy-button-container {
+        @apply flex w-fit justify-center rounded-md py-4 px-4 items-center gap-x-3
+    }
+    .copy-button-container {
+        background-color: rgb(122, 0, 194);
+    }
+    .copy-button {
+        @apply text-lg font-medium
+    }
+    .copy-icon {
+        @apply h-5 w-5
+    }
+}
+
+@media (834px < width <= 1440px) {
+    .textarea-container {
+        @apply grow flex flex-col gap-y-6 h-full items-center
+    }
+    .repository-description {
+        @apply textarea textarea-bordered grow w-1/2 rounded-md resize-none text-base py-4 textarea-lg text-lg
+    }
+    .repository-description {
+        background-color: rgb(18, 18, 18);
+        outline: none !important;
+        min-width: 600px;
+    }
+    .copy-button-container {
+        @apply flex w-fit justify-center rounded-md py-5 px-5 items-center gap-x-3 cursor-pointer
+    }
+    .copy-button-container {
+        background-color: rgb(122, 0, 194);
+    }
+    .copy-button {
+        @apply text-xl font-medium
+    }
+    .copy-icon {
+        @apply h-5 w-5
+    }
+}
+
+@media (min-width: 1441px) {
+    .textarea-container {
+        @apply grow flex flex-col gap-y-6 h-full items-center
+    }
+    .copy-button-container {
+        @apply flex justify-center rounded-md py-5 px-5 items-center gap-x-3 w-fit cursor-pointer
+    }
+    .copy-button-container {
+        background-color: rgb(122, 0, 194);
+    }
+    .copy-button {
+        @apply text-xl font-medium
+    }
+    .copy-icon {
+        @apply h-5 w-5
+    }
+    .repository-description {
+        @apply textarea textarea-bordered grow w-1/2 rounded-md resize-none text-base py-4 textarea-lg text-lg
+    }
+    .repository-description {
+        background-color: rgb(18, 18, 18);
+        outline: none !important;
+    }
+}

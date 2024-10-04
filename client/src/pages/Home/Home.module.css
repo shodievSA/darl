@@ -1,0 +1,59 @@
+.page-container {
+    background-color: rgb(18, 18, 18);
+}
+@media (0 < width <= 480px) {
+    .page-container {
+        margin-top: 80px;
+    }
+    .page-container {
+        @apply flex grow py-8 justify-center
+    }
+    .user-repositories {
+        @apply grid gap-y-8 grid-cols-1 w-10/12
+    }
+    .user-repositories {
+        grid-auto-rows: 180px;
+    }
+}
+@media (480px < width <= 834px) {
+    .page-container {
+        margin-top: 80px;
+    }
+    .page-container {
+        @apply flex grow py-8 px-10
+    }
+    .user-repositories {
+        @apply grid gap-y-10 grow gap-x-12 justify-center
+    }
+    .user-repositories {
+        grid-template-columns: repeat(auto-fit, 300px);
+        grid-auto-rows: 180px;
+    }
+}
+@media (834px < width <= 1440px) {
+    .page-container {
+        margin-top: 100px;
+    }
+    .page-container {
+        @apply flex grow py-10 px-10
+    }
+    .user-repositories {
+        @apply grid gap-y-10 grow gap-x-20 justify-center
+    }
+    .user-repositories {
+        grid-auto-rows: 180px;
+        grid-template-columns: repeat(auto-fit, 300px);
+    }
+}
+@media (min-width: 1441px) {
+    .page-container {
+        @apply flex grow border-l-4 border-black py-10 justify-center
+    }
+    .user-repositories {
+        @apply grid h-full gap-x-16 gap-y-10 overflow-x-auto py-5 px-10 overflow-x-hidden
+    }
+    .user-repositories {
+        grid-template-columns: repeat(3, 300px);
+        grid-auto-rows: 180px;
+    }
+}

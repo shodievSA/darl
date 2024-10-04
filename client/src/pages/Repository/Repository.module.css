@@ -1,0 +1,123 @@
+.page-container {
+    background-color: rgb(18, 18, 18);
+}
+
+@media (0 < width <= 480px) {
+    .page-container {
+        @apply flex grow flex-col h-full
+    }
+    .header {
+        height: 80px;
+    }
+    .header > div {
+        @apply flex items-center h-full px-8
+    }
+    .go-back-icon {
+        @apply h-6 w-6
+    }
+    .github-icon {
+        @apply h-10 w-10
+    }
+    .repository-name {
+        @apply text-2xl font-inter-medium
+    }
+    .main {
+        @apply flex flex-col grow items-center justify-center gap-y-5 relative
+    }
+    .main > div:first-child {
+        @apply flex flex-col items-center absolute top-0 gap-y-4
+    }
+    .generate-description-button {
+        @apply btn btn-secondary btn-lg text-xl
+    }
+}
+
+@media (480px < width <= 834px) {
+    .page-container {
+        @apply flex grow flex-col h-full gap-y-2
+    }
+    .header {
+        height: 100px;
+    }
+    .header > div {
+        @apply flex items-center justify-start h-full px-8
+    }
+    .go-back-icon {
+        @apply h-8 w-8
+    }
+    .github-icon {
+        @apply h-12 w-12
+    }
+    .repository-name {
+        @apply text-3xl font-inter-medium
+    }
+    .main {
+        @apply flex flex-col grow items-center justify-center gap-y-5 relative
+    }
+    .main > div:first-child {
+        @apply flex flex-col items-center absolute top-0 gap-y-4
+    }
+}
+
+@media (834px < width <= 1440px) {
+    .page-container {
+        @apply flex grow flex-col h-full gap-y-2
+    }
+    .header {
+        height: 120px;
+    }
+    .header {
+        @apply flex relative justify-center px-14
+    }
+    .header > div:first-child {
+        @apply flex items-center justify-start h-full absolute left-0 px-14
+    }
+    .header > div:last-child {
+        @apply flex items-center h-full gap-x-6
+    }
+    .go-back-icon {
+        @apply h-8 w-8 cursor-pointer
+    }
+    .github-icon {
+        @apply h-12 w-12
+    }
+    .repository-name {
+        @apply text-4xl font-inter-medium
+    }
+    .main {
+        @apply flex flex-col grow items-center justify-center gap-y-5 
+    }
+    .main > div:first-child {
+        @apply flex flex-col items-center
+    }
+}
+
+@media (min-width: 1441px) {
+    .page-container {
+        @apply flex grow flex-col h-full
+    }
+    .header {
+        @apply flex items-center relative justify-center px-24
+    }
+    .header {
+        height: 150px;
+    }
+    .go-back-icon {
+        @apply h-10 w-10
+    }
+    .header > div:first-child {
+        @apply absolute left-0 rounded-md cursor-pointer px-24
+    }
+    .header > div:last-child {
+        @apply flex items-center h-full justify-center gap-x-10
+    }
+    .github-icon {
+        @apply h-12 w-12
+    }
+    .repository-name {
+        @apply text-4xl font-inter-medium
+    }
+    .main {
+        @apply grow flex justify-center items-center pb-8
+    }
+}
