@@ -1,13 +1,18 @@
 import { useEffect, useRef, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { NavLink, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import styles from "./MobileNavigation.module.css";
 
 function MobileNavigation() {
 
-    const [pageName, setPageName] = useState();
+    const { repositoryName } = useParams();
+    const navigate = useNavigate();
+
+    const [pageName, setPageName] = useState(null);
     const [isMenuActive, setIsMenuActive] = useState(false);
 
     const headerRef = useRef(null);
@@ -32,13 +37,13 @@ function MobileNavigation() {
         } else if (currentRoute == "/history") {
             setPageName("History")
         } else if (currentRoute == "/pricing") {
-            setPageName("Pricing Plans")
-        } else if (currentRoute == "/") {
+            setPageName("Balance")
+        } else if (currentRoute == "/repositories") {
             setPageName("Repositories")
         } else if (currentRoute == "/logout") {
             setPageName("Log Out")
         }
-    }, []);
+    }, [route.pathname]);
 
     useEffect(() => {
         if (isMenuActive) {
@@ -56,7 +61,28 @@ function MobileNavigation() {
         >
             <div>                  
                 <h1 className={styles['page-name']}>
-                    {isMenuActive ? "Menu" : pageName}
+                    {
+                        isMenuActive ? (
+                            "Menu" 
+                        ) : (
+                            (route.pathname === `/repositories/${repositoryName}`) 
+                            ||
+                            (route.pathname === `/history/descriptions`)
+                            ||
+                            (route.pathname === `/history/logos`)
+                            || 
+                            (route.pathname === `/history/articles`) 
+                            ||
+                            (route.pathname === `/history/readmes`) ? (
+                                <FontAwesomeIcon 
+                                icon={faChevronLeft} 
+                                onClick={() => navigate(-1)}
+                                />
+                            ) : (
+                                pageName
+                            )
+                        )
+                    }
                 </h1>                 
                 <label className="btn swap swap-rotate px-0">
                     <input 
@@ -111,14 +137,14 @@ function MobileNavigation() {
                                     backgroundColor: isActive ? "#7a00c2" : ""
                                 }
                             }}
-                            onClick={() => handleRedirection("Pricing Plans")}
+                            onClick={() => handleRedirection("Balance")}
                             >
-                                Pricing Plans
+                                Balance
                             </NavLink>
                         </li>
                         <li>
                             <NavLink
-                            to="/"
+                            to="/repositories"
                             style={({ isActive }) => {
                                 return  {
                                     backgroundColor: isActive ? "#7a00c2" : ""

@@ -1,14 +1,9 @@
-import Card from "../../components/Card/Card";
 import styles from "./Pricing.module.css"
 
 function Pricing() {
     return (
         <div className={styles["page-container"]}>
-            <div className={styles["pricing-plans"]}>
-                <Card />
-                <Card />
-                <Card />
-            </div>
+            <h1>Coming soon...</h1>
         </div>
     );
 }

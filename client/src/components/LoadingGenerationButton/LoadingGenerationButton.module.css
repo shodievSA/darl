@@ -1,0 +1,46 @@
+.loading-button {
+    background-color: rgb(122, 0, 194);
+}
+.loading-button {
+    @apply rounded-md
+}
+
+@media (0 < width <= 480px) {
+    .loading-button {
+        padding: 1rem 1.25rem;
+        font-size: 1.25rem;
+    }
+    .loading-animation {
+        @apply progress w-56
+    }
+}
+
+@media (480px < width <= 834px) {
+    .loading-button {
+        padding: 1.25rem 1.5rem;
+        font-size: 1.5rem;
+    }
+    .loading-animation {
+        @apply progress w-56
+    }
+}
+
+@media (834px < width <= 1440px) {
+    .loading-button {
+        padding: 1.25rem 1.5rem;
+        font-size: 1.5rem;
+    }
+    .loading-animation {
+        @apply progress w-56
+    }
+}
+
+@media (min-width: 1441px) {
+    .loading-button {
+        padding: 1.25rem 1.5rem;
+        font-size: 1.5rem;
+    }
+    .loading-animation {
+        @apply progress w-56
+    }
+}

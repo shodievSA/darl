@@ -5,92 +5,117 @@
 @media (0 < width <= 480px) {
     .page-container {
         margin-top: 80px;
-        overflow-y: hidden;
     }
     .page-container {
         @apply grow flex py-6 justify-center px-6
     }
-    .heading-container {
-        @apply grow flex items-center justify-center
+    .main {
+        @apply grow
     }
-    .heading-container h1 {
-        @apply text-2xl text-center font-inter-medium
+    .histories {
+        @apply grid grow gap-y-10 justify-center
     }
-    .descriptions {
-        @apply flex flex-col h-full items-center  overflow-auto grow divide-y-2 divide-black
+    .histories {
+        grid-template-columns: 300px;
+        grid-auto-rows: 180px;
     }
-    .description {
-        @apply flex justify-between py-6 px-6 cursor-pointer w-full gap-x-6
-    }
-    .repository-name,
-    .generation-date {
-        @apply text-base text-ellipsis overflow-hidden
+    .histories > div {
+        @apply flex items-center justify-center rounded-md text-2xl bg-black font-medium
     }
 }
 
 @media (480px < width <= 834px) {
     .page-container {
         margin-top: 80px;
-        overflow-y: hidden;
     }
     .page-container {
-        @apply grow flex py-6 justify-center px-6
+        @apply grow flex py-10 justify-center px-6
     }
-    .heading-container {
-        @apply grow flex items-center justify-center
+    .main {
+        @apply grow
     }
-    .heading-container h1 {
-        @apply text-4xl text-center font-inter-medium
+    .histories {
+        @apply grid grow gap-y-10 justify-center
     }
-    .descriptions {
-        @apply flex flex-col h-full items-center gap-y-10 w-10/12 overflow-auto
+    .histories {
+        grid-template-columns: 300px;
+        grid-auto-rows: 180px;
     }
-    .description {
-        @apply flex justify-between py-8 rounded-md px-8 cursor-pointer w-full gap-x-6
-    }
-    .description:hover {
-        background-color: rgb(26, 26, 26);
-    }
-    .repository-name,
-    .generation-date {
-        @apply text-lg text-ellipsis overflow-hidden
+    .histories > div {
+        @apply flex items-center justify-center rounded-md text-2xl bg-black font-medium
     }
 }
 
 @media (834px < width <= 1440px) {
     .page-container {
         margin-top: 100px;
-        overflow-y: hidden;
     }
     .page-container {
-        @apply grow flex py-6 justify-center px-6
+        @apply flex grow flex-col h-full p-10 overflow-y-auto relative
     }
-    .heading-container {
-        @apply grow flex items-center justify-center
+    .main {
+        @apply flex flex-col grow items-center justify-center
     }
-    .heading-container h1 {
-        @apply text-5xl text-center font-inter-medium
+    .histories {
+        display: grid;
+        grid-template-columns: repeat(2, 300px);
+        grid-template-rows: repeat(2, 200px);
     }
-    .descriptions {
-        min-width: 800px;
+    .histories {
+        @apply gap-y-12 gap-x-24 box-content
     }
-    .descriptions {
-        @apply flex flex-col h-full items-center gap-y-10  w-10/12 overflow-auto
+    .histories > div {
+        @apply flex justify-center items-center text-center p-5 rounded-md
     }
-    .description {
-        @apply flex justify-between py-8 rounded-md px-8 cursor-pointer w-full
+    .histories > div {
+        background-color: rgb(24, 24, 24);
+        font-size: 26px;
     }
-    .description:hover {
-        background-color: rgb(26, 26, 26);
+    .histories > div:hover {
+        border: 3px solid rgb(122, 0, 194);
     }
-    .repository-name,
-    .generation-date {
-        @apply text-xl 
+    .histories > div:hover {
+        @apply font-medium
     }
 }
 
 @media (min-width: 1441px) {
     .page-container {
+        @apply h-full flex flex-col grow
+    }
+    .page-container {
+        border-left-width: 4px;
+        border-left-color: black;
+    }
+    .header {
+        @apply flex items-end px-24
+    }
+    .header {
+        height: 80px;
+    }
+    .header h1 {
+        @apply text-4xl font-medium
+    }
+    .main {
+        @apply flex grow justify-center items-center
+    }
+    .histories {
+        display: grid;
+        grid-template-columns: repeat(2, 300px);
+        grid-template-rows: repeat(2, 175px);
+    }
+    .histories {
+        @apply gap-x-24 gap-y-12 pb-10
+    }
+    .histories > div {
+        @apply bg-black flex items-center justify-center text-2xl rounded-md
+    }
+    .histories > div:hover {
+        border-color: #7a00c2;
+        border-width: 3px;
+        font-weight: 600;
+    }
+    /* .page-container {
         @apply grow flex py-10 px-10
     }
     .page-container {
@@ -115,5 +140,5 @@
     .repository-name,
     .generation-date {
         @apply text-xl 
-    }
+    } */
 }

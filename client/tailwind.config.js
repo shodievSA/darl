@@ -16,7 +16,7 @@ module.exports = {
   },
   plugins: [daisyui],
   daisyui: {
-    themes: ["black", "dark", "halloween"],
+    themes: ["black", "dark", "halloween", "night"],
     darkTheme: "black",
     base: true,
     styled: true, // include daisyUI colors and design decisions for all components

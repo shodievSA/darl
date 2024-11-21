@@ -1,3 +1,4 @@
+const serverIP = import.meta.env.VITE_SERVER_IP;
 import { useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import styles from "./Logout.module.css"
@@ -12,7 +13,7 @@ function Logout() {
 
         modelWindowRef.current.close();
 
-        let res = await fetch("http://localhost:3000/api/v1/delete-user");
+        let res = await fetch(`http://${serverIP}:3000/api/v1/delete-user`);
 
         if (res.status == 500)
         {
@@ -32,7 +33,7 @@ function Logout() {
             className={styles['delete-account-button']}
             onClick={() => modelWindowRef.current.showModal()}
             >
-                Delete my account
+                Log out
             </button>
             <dialog 
             className={styles['modal-window']} 
@@ -41,9 +42,9 @@ function Logout() {
                 <div className={styles['popup-message']}>
                     <h3>Important!</h3>
                     <p className={styles['warning']}>
-                        Are you sure you want to delete your account? 
+                        Are you sure you want to log out from your account? 
                         Your data (e.g subscription and history) will 
-                        be erased 30 days after you sign out.
+                        be erased 30 days after you log out.
                     </p>
                     <div className={styles['buttons-container']}>
                         <form method="dialog">

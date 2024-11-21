@@ -1,82 +1,45 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import fetchUserGeneratedDescriptions from "../../utils/fetchUserGeneratedDescriptions";
-import SkeletRepo from "../../components/Skelet Repo/SkeletRepo";
-import styles from "./History.module.css"
+import { useNavigationContext } from "../../context/NavigationContext";
+import styles from "./History.module.css";
 
 function History() {
 
-    const [descriptions, setDescriptions] = useState([]);
-    const [areDescriptionsFetched, setAreDescriptionsFetched] = useState(false);
+    const { currentNavigation } = useNavigationContext();
+
     const navigate = useNavigate();
 
-    const skeletonCount = 5;
-
-    const handleRedirection = (description) => {
-
-        navigate(`/history/${description.repoName}`, {
-            state: { 
-                    description: description.description,
-                    repositoryName: description.repoName
-            }
-        });
-
+    const handleRedirection = (segment) => {
+        navigate(`/history${segment}`);
     }
-
-    useEffect(() => {
-
-        async function fetchData() {
-            let data = await fetchUserGeneratedDescriptions();
-            setDescriptions(data);
-            setAreDescriptionsFetched(true);
-        }
-        fetchData();
-
-    }, []);
 
     return (
         <div className={styles['page-container']}>
             {
-                areDescriptionsFetched ? (
-                    descriptions.length > 0 ? (
-                        <div className={styles['descriptions']}>
-                        {
-                            descriptions.map((description) => {
-                                return (
-                                    <>
-                                    <div 
-                                    className={styles['description']}
-                                    onClick={() => handleRedirection(description)}
-                                    >
-                                        <div className={styles['repository-name']}>
-                                            <b>Repository name:</b> {description.repoName}
-                                        </div>
-                                        <div className={styles['generation-date']}>
-                                            <b>{description['generatedOn']}</b>
-                                        </div>
-                                    </div>
-                                    </>
-                                )
-                            })
-                        }
-                        </div>
-                    ) : (
-                        <div className={styles['heading-container']}>
-                            <h1>Your history is currently empty</h1>
-                        </div>
-                    )
-                ) : (
-                    <div className={styles['descriptions']}>
-                        {
-                            Array.from({ length: skeletonCount }).map((_, index) => (
-                                <SkeletRepo key={index} />
-                            ))
-                        }
+                currentNavigation === "desktop" && (
+                    <div className={styles['header']}>
+                        <h1>History</h1>
                     </div>
                 )
             }
+            <div className={styles['main']}>
+                <div className={styles['histories']}>
+                    <div onClick={() => handleRedirection('/descriptions')}>
+                        Descriptions
+                    </div>
+                    <div onClick={() => handleRedirection('/logos')}>
+                        Logos
+                    </div>
+                    <div onClick={() => handleRedirection('/articles')}>
+                        Articles
+                    </div>
+                    <div onClick={() => handleRedirection('/readmes')}>
+                        READMEs
+                    </div>
+                </div>
+            </div>
         </div>
-    )
+    );
+    
 }
 
-export default History
+export default History;

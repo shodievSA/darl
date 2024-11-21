@@ -19,8 +19,14 @@ const User = sequelize.define(
             primaryKey: true,
             allowNull: false
         },
-        generated_descriptions: {
-            type: DataTypes.ARRAY(DataTypes.JSONB)
+        user_history: {
+            type: DataTypes.JSON,
+            defaultValue: {
+                descriptions: [],
+                logos: [],
+                articles: [],
+                readmes: []
+            }
         },
         free_trials_left: {
             type: DataTypes.SMALLINT

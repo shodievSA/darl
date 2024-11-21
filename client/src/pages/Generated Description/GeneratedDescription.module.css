@@ -1,0 +1,117 @@
+.page-container {
+    background-color: rgb(18, 18, 18);
+}
+
+@media (0 < width <= 480px) {
+    .page-container {
+        @apply flex flex-col h-full 
+    }
+    .header {
+        height: 120px;
+    }
+    .header {
+        @apply flex items-center justify-center relative
+    }
+    .header > div:first-child {
+        @apply absolute left-8
+    }
+    .github-icon {
+        @apply h-10 w-10
+    }
+    .go-back-icon {
+        @apply h-6 w-6 
+    }
+    .header > div:last-child {
+        @apply text-center text-2xl font-medium
+    }
+    .main {
+        @apply grow px-5 pb-5
+    }
+}
+
+@media (480px < width <= 834px) {
+    .page-container {
+        @apply flex flex-col h-full 
+    }
+    .header {
+        height: 120px;
+    }
+    .header {
+        @apply flex items-center justify-center relative
+    }
+    .header > div:first-child {
+        @apply absolute left-8
+    }
+    .github-icon {
+        @apply h-10 w-10
+    }
+    .go-back-icon {
+        @apply h-8 w-8
+    }
+    .header > div:last-child {
+        @apply text-center text-2xl font-medium
+    }
+    .main {
+        @apply grow px-10 pb-5
+    }
+}
+
+@media (834px < width <= 1440px) {
+    .page-container {
+        @apply flex flex-col h-full
+    }
+    .header {
+        @apply flex items-center justify-center relative px-24
+    }
+    .header {
+        height: 120px;
+    }
+    .header > div:first-child {
+        @apply absolute left-24 rounded-md 
+    }
+    .go-back-icon {
+        @apply h-8 w-8 cursor-pointer
+    }
+    .header > div:last-child {
+        @apply flex items-center h-full justify-center gap-x-10
+    }
+    .github-icon {
+        @apply h-10 w-10
+    }
+    .repository-name {
+        @apply text-4xl font-inter-medium
+    }
+    .main {
+        @apply grow pb-10 flex justify-center
+    }
+}
+
+@media (min-width: 1441px) {
+    .page-container {
+        @apply flex flex-col h-full
+    }
+    .header {
+        @apply flex items-center justify-center relative px-24
+    }
+    .header {
+        height: 150px;
+    }
+    .header > div:first-child {
+        @apply absolute left-24 rounded-md 
+    }
+    .go-back-icon {
+        @apply h-10 w-10 cursor-pointer
+    }
+    .header > div:last-child {
+        @apply flex items-center h-full justify-center gap-x-10
+    }
+    .github-icon {
+        @apply h-12 w-12
+    }
+    .repository-name {
+        @apply text-4xl font-inter-medium
+    }
+    .main {
+        @apply grow pb-12 flex justify-center
+    }
+}

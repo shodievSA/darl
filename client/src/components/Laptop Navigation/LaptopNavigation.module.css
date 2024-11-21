@@ -12,6 +12,9 @@
 .header > div:last-child h1 {
     @apply text-3xl font-medium
 }
+.header > div:last-child div {
+    @apply flex items-center gap-x-5
+}
 .bars-icon {
     @apply h-8 w-8 p-3 rounded-md cursor-pointer
 }
@@ -57,4 +60,10 @@
 }
 .links li a {
     @apply w-full 
+}
+.github-icon {
+    @apply h-12 w-12
+}
+.repository-name {
+    @apply text-4xl font-inter-medium
 }

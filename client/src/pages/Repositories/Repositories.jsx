@@ -1,10 +1,13 @@
 import { useEffect, useState, useRef } from "react";
+import { useNavigationContext } from "../../context/NavigationContext";
 import fetchUserRepos from "../../utils/fetchUserRepos";
 import RepositoryCard from "../../components/Repository Card/RepositoryCard";
 import SkeletRepo from "../../components/Skelet Repo/SkeletRepo";
-import styles from "./Home.module.css"
+import styles from "./Repositories.module.css"
 
-function Home() {
+function Repositories() {
+
+    const { currentNavigation } = useNavigationContext();
 
     const [repos, setRepos] = useState([]);
     const [loadingRepos, setLoadingRepos] = useState(true);
@@ -54,40 +57,40 @@ function Home() {
                     </div>
                 </div>
             </dialog>
-            <div className={styles['user-repositories']}>
             {
-                loadingRepos ? (
-
-                    Array.from({ length: skeletonCount }).map((_, index) => (
-                        <SkeletRepo key={index} />
-                    ))
-
-                ) : (
-
-                    repos.length > 0 ? (
-
-                        repos.map((repo) => {
-                            return (
-                                <RepositoryCard 
-                                key={`${repo.id}`} 
-                                name={repo.name}
-                                owner={repo.owner.login}
-                                />
-                            )
-                        })
-
-                    ) : (
-
-                        <h1>Looks like you don't have any repositories</h1>
-
-                    )
-
-                )
+                currentNavigation === 'desktop' &&
+                <div className={styles['header']}>
+                    <h1>Repositories</h1>
+                </div>
             }
+            <div className={styles['main']}>
+                <div className={styles['user-repositories']}>
+                {
+                    loadingRepos ? (
+                        Array.from({ length: skeletonCount }).map((_, index) => (
+                            <SkeletRepo key={index} />
+                        ))
+                    ) : (
+                        repos.length > 0 ? (
+                            repos.map((repo) => {
+                                return (
+                                    <RepositoryCard
+                                    key={`${repo.id}`}
+                                    name={repo.name}
+                                    owner={repo.owner.login}
+                                    />
+                                )
+                            })
+                        ) : (
+                            <h1>Looks like you don't have any repositories</h1>
+                        )
+                    )
+                }
+                </div>
             </div>
         </div>
     );
 
 }
 
-export default Home
+export default Repositories;

@@ -1,23 +1,24 @@
 import { useState, useRef } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClone } from "@fortawesome/free-solid-svg-icons";
 import styles from "./TextArea.module.css";
 
-function TextArea({ description }) {
+function TextArea({ value, copy }) {
 
-    const [ isTextCopied, setIsTextCopied ] = useState(false);
+    const [isTextCopied, setIsTextCopied] = useState(false);
 
     const textareaRef = useRef(null);
 
-    const copyDescription = () => {
+    const copyTextAreaValue = async () => {
 
-        navigator.clipboard.writeText(textareaRef.current.value)
-        .then(() => {
+        try {
+
+            await navigator.clipboard.writeText(textareaRef.current.value);
             setIsTextCopied(true);
-        })
-        .catch((err) => {
+
+        } catch (err) {
+
             console.log("Error occured! ", err);
-        })
+
+        }
 
     }
 
@@ -28,37 +29,18 @@ function TextArea({ description }) {
             <textarea
             className={styles['repository-description']}
             ref={textareaRef}
-            value={description}
+            value={value}
             readOnly
             ></textarea>
-            <div 
-            className={styles['copy-button-container']}
-            onClick={copyDescription}
+            <button
+            data-theme="halloween" 
+            className={styles['copy-button']}
+            onClick={copyTextAreaValue}
             >
-            {
-                isTextCopied ? (
-                    <>
-                        <button 
-                        className={styles['copy-button']}
-                        >
-                            Copied!
-                        </button>
-                    </>
-                ) : (
-                    <>
-                        <button 
-                        className={styles['copy-button']}
-                        >
-                            Copy Description
-                        </button>
-                        <FontAwesomeIcon 
-                        icon={faClone} 
-                        className={styles['copy-icon']}
-                        />
-                    </>
-                )
-            }
-            </div>
+                {
+                    isTextCopied ? `${copy} Copied!` : `Copy ${copy}`
+                }
+            </button>
         </div>
     );
 

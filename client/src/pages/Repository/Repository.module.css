@@ -4,16 +4,19 @@
 
 @media (0 < width <= 480px) {
     .page-container {
-        @apply flex grow flex-col h-full
+        margin-top: 80px;
+    }
+    .page-container {
+        @apply flex grow flex-col
     }
     .header {
         height: 80px;
     }
-    .header > div {
-        @apply flex items-center h-full px-8
+    .header {
+        @apply py-4
     }
-    .go-back-icon {
-        @apply h-6 w-6
+    .header > div {
+        @apply flex items-center justify-center gap-x-4
     }
     .github-icon {
         @apply h-10 w-10
@@ -22,79 +25,113 @@
         @apply text-2xl font-inter-medium
     }
     .main {
-        @apply flex flex-col grow items-center justify-center gap-y-5 relative
+        @apply flex flex-col grow items-center justify-center gap-y-8 py-8
     }
-    .main > div:first-child {
-        @apply flex flex-col items-center absolute top-0 gap-y-4
+    .services {
+        @apply grid gap-y-10
     }
-    .generate-description-button {
-        @apply btn btn-secondary btn-lg text-xl
+    .services {
+        grid-template-columns: 280px;
+        grid-auto-rows: 180px;
+    }
+    .services > div {
+        @apply flex justify-center items-center text-center p-5 rounded-md shadow-md text-xl bg-black
     }
 }
 
 @media (480px < width <= 834px) {
     .page-container {
-        @apply flex grow flex-col h-full gap-y-2
+        margin-top: 80px;
+    }
+    .page-container {
+        @apply flex grow flex-col
     }
     .header {
         height: 100px;
     }
-    .header > div {
-        @apply flex items-center justify-start h-full px-8
+    .header {
+        @apply py-6
     }
-    .go-back-icon {
-        @apply h-8 w-8
+    .header > div {
+        @apply flex items-center justify-center h-full gap-x-4
     }
     .github-icon {
         @apply h-12 w-12
     }
     .repository-name {
-        @apply text-3xl font-inter-medium
+        @apply text-3xl font-medium
     }
     .main {
-        @apply flex flex-col grow items-center justify-center gap-y-5 relative
+        @apply flex flex-col grow items-center justify-center gap-y-8 py-8
     }
-    .main > div:first-child {
-        @apply flex flex-col items-center absolute top-0 gap-y-4
+    .services {
+        @apply grid gap-y-10 grow gap-x-12 justify-center
+    }
+    .services {
+        grid-template-columns: repeat(auto-fit, 300px);
+        grid-auto-rows: 180px;
+    }
+    .services > div {
+        @apply flex justify-center items-center text-center p-5 rounded-md shadow-md text-2xl bg-black
     }
 }
 
 @media (834px < width <= 1440px) {
     .page-container {
-        @apply flex grow flex-col h-full gap-y-2
+        margin-top: 100px;
+    }
+    .page-container {
+        @apply flex grow flex-col h-full p-10 overflow-y-auto relative
     }
     .header {
-        height: 120px;
-    }
-    .header {
-        @apply flex relative justify-center px-14
+        height: 80px;
+        position: absolute;
     }
     .header > div:first-child {
-        @apply flex items-center justify-start h-full absolute left-0 px-14
-    }
-    .header > div:last-child {
-        @apply flex items-center h-full gap-x-6
+        @apply flex justify-start h-full px-14
     }
     .go-back-icon {
-        @apply h-8 w-8 cursor-pointer
+        @apply h-10 w-10 cursor-pointer
     }
     .github-icon {
-        @apply h-12 w-12
+        @apply h-10 w-10
     }
     .repository-name {
         @apply text-4xl font-inter-medium
     }
     .main {
-        @apply flex flex-col grow items-center justify-center gap-y-5 
+        @apply flex flex-col grow items-center justify-center
     }
-    .main > div:first-child {
-        @apply flex flex-col items-center
+    .services {
+        display: grid;
+        grid-template-columns: repeat(2, 300px);
+        grid-template-rows: repeat(2, 200px);
+    }
+    .services {
+        @apply gap-y-12 gap-x-24 box-content
+    }
+    .services > div {
+        @apply flex justify-center items-center text-center p-5 rounded-md
+    }
+    .services > div {
+        background-color: rgb(24, 24, 24);
+        font-size: 26px;
+    }
+    .services > div:hover {
+        border: 3px solid rgb(122, 0, 194);
+    }
+    .services > div:hover {
+        @apply font-medium
     }
 }
 
 @media (min-width: 1441px) {
     .page-container {
         @apply flex grow flex-col h-full
+    }
+    .page-container {
+        border-left-width: 4px;
+        border-left-color: black;
     }
     .header {
         @apply flex items-center relative justify-center px-24
@@ -103,13 +140,13 @@
         height: 150px;
     }
     .go-back-icon {
-        @apply h-10 w-10
+        @apply h-10 w-10 cursor-pointer 
     }
     .header > div:first-child {
-        @apply absolute left-0 rounded-md cursor-pointer px-24
+        @apply absolute left-0 rounded-md px-24
     }
     .header > div:last-child {
-        @apply flex items-center h-full justify-center gap-x-10
+        @apply flex items-center justify-center gap-x-10
     }
     .github-icon {
         @apply h-12 w-12
@@ -118,6 +155,27 @@
         @apply text-4xl font-inter-medium
     }
     .main {
-        @apply grow flex justify-center items-center pb-8
+        @apply flex grow justify-center items-center
+    }
+    .services {
+        display: grid;
+        grid-template-columns: repeat(2, 300px);
+        grid-template-rows: repeat(2, 175px);
+    }
+    .services {
+        @apply gap-y-12 gap-x-24
+    }
+    .services > div {
+        @apply flex flex-col justify-center items-center text-center p-5 rounded-md shadow-md relative text-2xl
+    }
+    .services > div > div {
+        @apply py-4 px-4 self-start bottom-0 absolute mb-5
+    }
+    .services > div {
+        background-color: rgb(24, 24, 24);
+    }
+    .services > div:hover {
+        border: 3px solid rgb(122, 0, 194);
+        font-weight: 500;
     }
 }

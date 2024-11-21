@@ -8,7 +8,7 @@ function RepositoryCard({ name, owner }) {
     const navigate = useNavigate();
 
     const handleRedirect = () => {
-        navigate(`/${name}`, {
+        navigate(`/repositories/${name}`, {
             state: { 
                 repositoryName: name, 
                 repositoryOwner: owner 
@@ -30,9 +30,6 @@ function RepositoryCard({ name, owner }) {
                     {name}
                 </h1>
             </div>
-            {/* <div className={styles['last-commit']}>
-                <h1>Updated last week</h1>
-            </div> */}
         </div>
     )
 }

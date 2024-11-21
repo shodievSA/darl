@@ -1,12 +1,14 @@
 const User = require("./models/user.js");
 
-async function getGeneratedDescriptions(userID) {
-    let generatedDescriptions = await User.findOne({
+async function getUserHistory({ userID, generation }) {
+
+    const generatedDescriptions = await User.findOne({
         where: { user_id: userID },
-        attributes: ["generated_descriptions"]
+        attributes: ["user_history"]
     });
 
-    return generatedDescriptions.dataValues['generated_descriptions'];
+    return generatedDescriptions['user_history'][generation];
+
 }
 
-module.exports = getGeneratedDescriptions;
+module.exports = getUserHistory;

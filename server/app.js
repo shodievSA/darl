@@ -10,14 +10,22 @@ const exchangeCode = require('./utils/exchangeCode.js');
 const getUserInfo = require("./utils/getUserInfo.js");
 const registerNewUser = require("./database/registerNewUser.js");
 const getUserAccessToken = require("./database/getAccessToken.js");
-const getGeneratedDescriptions = require('./database/getGeneratedDescriptions.js');
+const getUserHistory = require('./database/getGeneratedDescriptions.js');
 const refreshAccessToken = require("./utils/refreshAccessToken");
 const isUserNew = require("./database/isUserNew.js");
 const updateUserTokens = require("./database/updateUserTokens.js");
-const sendPrompt = require("./utils/sendPrompt.js");
+const generateStreamDescription = require("./utils/chatgpt/generateStreamDescription.js");
+const generateDescription = require("./utils/chatgpt/generateDescription.js");
 const addNewDescription = require('./database/addNewDescription.js');
-const generatePrompt = require('./utils/generatePrompt.js');
+const addNewArticle = require("./database/addNewArticle.js");
+const addNewReadme = require("./database/addNewReadme.js");
+const addNewLogo = require("./database/addNewLogo.js");
+const createPrompt = require('./utils/createPrompt.js');
 const contactAdmin = require('./utils/contactAdmin.js');
+const generateLogoDescription = require("./utils/chatgpt/generateLogoDescription.js");
+const generateLogo = require('./utils/chatgpt/generateLogo.js');
+const generateStreamReadme = require('./utils/chatgpt/generateStreamReadme.js');
+const generateStreamArticle = require('./utils/chatgpt/generateStreamArticle.js');
 
 const app = express();
 
@@ -141,13 +149,17 @@ app.get("/api/v1/user-repos", async (req, res) => {
         }
 
         let accessToken = await getUserAccessToken(req.session.userID);
-        let githubResponse = await fetch("https://api.github.com/user/repos", {
-            method: "GET",
-            headers: {
-                "Accept": "application/vnd.github+json",
-                "Authorization": `Bearer ${accessToken}`
+
+        let githubResponse = await fetch(
+            `https://api.github.com/user/repos`, 
+            {
+                method: "GET",
+                headers: {
+                    "Accept": "application/vnd.github+json",
+                    "Authorization": `Bearer ${accessToken}`
+                }
             }
-        });
+        );
 
         if (githubResponse.status == 200)
         {
@@ -177,8 +189,81 @@ app.get("/api/v1/generated-descriptions", async (req, res) => {
             await refreshAccessToken(req.session.userID, req);
         }
 
-        let data = await getGeneratedDescriptions(req.session.userID);
-        res.json(data);
+        const generatedDescriptions = await getUserHistory({
+            userID: req.session.userID,
+            generation: 'descriptions'
+        });
+
+        res.json({ data: generatedDescriptions });
+    }
+
+});
+
+app.get("/api/v1/generated-articles", async (req, res) => {
+
+    if (req.session.userID) 
+    {
+        if (req.session.refreshTokenExpirationDate <= Date.now())
+        {
+            res.redirect('/registration');
+        } 
+        else if (req.session.accessTokenExpirationDate <= Date.now())
+        {
+            await refreshAccessToken(req.session.userID, req);
+        }
+
+        const generatedArticles = await getUserHistory({
+            userID: req.session.userID,
+            generation: 'articles'
+        });
+
+        res.json({ data: generatedArticles });
+    }
+
+});
+
+app.get("/api/v1/generated-readmes", async (req, res) => {
+
+    if (req.session.userID) 
+    {
+        if (req.session.refreshTokenExpirationDate <= Date.now())
+        {
+            res.redirect('/registration');
+        } 
+        else if (req.session.accessTokenExpirationDate <= Date.now())
+        {
+            await refreshAccessToken(req.session.userID, req);
+        }
+
+        const generatedReadmes = await getUserHistory({
+            userID: req.session.userID,
+            generation: 'readmes'
+        });
+
+        res.json({ data: generatedReadmes });
+    }
+
+});
+
+app.get("/api/v1/generated-logos", async (req, res) => {
+
+    if (req.session.userID) 
+    {
+        if (req.session.refreshTokenExpirationDate <= Date.now())
+        {
+            res.redirect('/registration');
+        } 
+        else if (req.session.accessTokenExpirationDate <= Date.now())
+        {
+            await refreshAccessToken(req.session.userID, req);
+        }
+
+        const generatedLogos = await getUserHistory({
+            userID: req.session.userID,
+            generation: 'logos'
+        });
+
+        res.json({ data: generatedLogos });
     }
 
 });
@@ -218,7 +303,7 @@ app.get("/api/v1/delete-user", (req, res) => {
 
     req.session.destroy((err) => {
         if (err) {
-            return res.status(500).send('Unable to log out');
+            return res.status(500).send('Unable to log out.');
         }
 
         res.clearCookie('connect.sid');
@@ -237,13 +322,13 @@ app.get(
         const repoName = req.params['repoName'];
         const owner = req.params['repoOwner'];
 
-        const prompt = await generatePrompt({
+        const prompt = await createPrompt({
             repoName: repoName,
             owner: owner,
             userID: req.session.userID
         });
  
-        const description = await sendPrompt(prompt, res);
+        const description = await generateStreamDescription(prompt, res);
 
         res.end();
 
@@ -255,6 +340,94 @@ app.get(
 
     }
 );
+
+app.get(
+    "/api/v1/readme-generation/:repoName/:repoOwner",
+    async (req, res) => {
+
+        res.setHeader("Content-Type", "text/plain");
+        res.setHeader("Transfer-Encoding", "chunked");
+
+        const { repoName, repoOwner } = req.params;
+
+        const prompt = await createPrompt({
+            repoName: repoName,
+            owner: repoOwner,
+            userID: req.session.userID
+        });
+
+        const readme = await generateStreamReadme(prompt, res);
+
+        res.end();
+
+        await addNewReadme(
+            req.session.userID,
+            readme,
+            repoName
+        );
+
+    }
+);
+
+app.get(
+    "/api/v1/article-generation/:repoName/:repoOwner", 
+    async (req, res) => {
+
+        res.setHeader("Content-Type", "text/plain");
+        res.setHeader("Transfer-Encoding", "chunked");
+
+        const { repoName, repoOwner } = req.params;
+
+        const prompt = await createPrompt({
+            repoName: repoName,
+            owner: repoOwner,
+            userID: req.session.userID
+        });
+
+        const article = await generateStreamArticle(prompt, res);
+
+        res.end();
+
+        await addNewArticle(
+            req.session.userID,
+            article,
+            repoName
+        );
+
+    }
+)
+
+app.post(
+    "/api/v1/generate-logo/:repoName/:repoOwner", 
+    async (req, res) => {
+
+        const repoName = req.params['repoName'];
+        const repoOwner = req.params['repoOwner'];
+        const resolution = req.body.resolution;
+
+        const prompt = await createPrompt({
+            repoName: repoName,
+            owner: repoOwner,
+            userID: req.session.userID
+        });
+
+        const description = await generateDescription(prompt);
+        const logoDescription = await generateLogoDescription(description);
+
+        const logo = await generateLogo(
+            logoDescription, 
+            resolution
+        );
+
+        await addNewLogo(
+            req.session.userID,
+            logo,
+            repoName
+        );
+
+        res.json({ b64URL: logo });
+
+});
 
 app.get("*", async (req, res) => {
 
@@ -297,7 +470,7 @@ app.get("*", async (req, res) => {
 
 }); 
 
-app.listen(3000, () => {
+app.listen(3000, process.env.SERVER_IP, () => {
     console.log(`The express app is running on port 3000`);
 });
 

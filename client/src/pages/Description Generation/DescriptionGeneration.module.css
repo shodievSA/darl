@@ -1,0 +1,108 @@
+.page-container {
+    background-color: rgb(18, 18, 18);
+}
+
+@media (0 < width < 480px) {
+    .page-container {
+        @apply h-full flex flex-col gap-y-8
+    }
+    .header {
+        height: 80px;
+    }
+    .header {
+        @apply flex items-center justify-center relative box-content
+    }
+    .go-back-icon {
+        @apply h-6 w-6 cursor-pointer
+    }
+    .header > div:first-child {
+        @apply absolute left-8
+    }
+    .service-name {
+        @apply text-xl font-medium
+    }
+    .main {
+        @apply grow flex items-center justify-center pb-10 px-5
+    }
+}
+
+@media (480px < width <= 834px) {
+    .page-container {
+        @apply h-full flex flex-col gap-y-8
+    }
+    .header {
+        height: 100px;
+    }
+    .header {
+        @apply flex items-center justify-center relative box-content
+    }
+    .go-back-icon {
+        @apply h-6 w-6 cursor-pointer
+    }
+    .header > div:first-child {
+        @apply absolute left-12
+    }
+    .service-name {
+        @apply text-2xl font-medium
+    }
+    .main {
+        @apply grow flex items-center justify-center pb-10 px-10
+    }
+}
+
+@media (834px < width <= 1440px) {
+    .page-container {
+        @apply h-full flex flex-col pb-10
+    }
+    .header {
+        height: 120px;
+    }
+    .header {
+        @apply flex items-center justify-center relative
+    }
+    .header > div:first-child {
+        @apply absolute left-24
+    }
+    .go-back-icon {
+        @apply h-8 w-8 cursor-pointer
+    }
+    .service-name {
+        @apply text-4xl font-medium
+    }
+    .main {
+        @apply flex grow items-center justify-center
+    }
+}
+
+@media (min-width: 1441px) {
+    .page-container {
+        @apply flex flex-col h-full
+    }
+    .header {
+        @apply flex items-center justify-center relative px-24
+    }
+    .header {
+        height: 150px;
+    }
+    .header > div:first-child {
+        @apply absolute left-24 rounded-md 
+    }
+    .header > div:last-child {
+        @apply flex items-center h-full justify-center gap-x-10
+    }
+    .service-name {
+        @apply text-4xl font-medium
+    }
+    .go-back-icon {
+        @apply h-10 w-10 cursor-pointer
+    }
+    .header > h1 {
+        @apply text-4xl font-medium
+    }
+    .main {
+        @apply flex flex-col grow justify-center items-center gap-y-32 pb-10
+    }
+    .download-button-container {
+        @apply flex h-full items-center justify-center
+    }
+}

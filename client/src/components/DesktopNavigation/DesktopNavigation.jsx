@@ -61,13 +61,13 @@ function DesktopNavigation() {
                             <FontAwesomeIcon icon={faDollarSign} className="h-6 w-6" />
                         </div>
                         <div>
-                            Pricing Plans
+                            Balance
                         </div>
                     </NavLink>
                 </li>
                 <li>
                     <NavLink 
-                    to="/" 
+                    to="/repositories" 
                     style={({ isActive }) => {
                         return  {
                             backgroundColor: isActive ? "#7a00c2" : ""
