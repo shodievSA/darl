@@ -14,18 +14,18 @@ const getUserHistory = require('./database/getGeneratedDescriptions.js');
 const refreshAccessToken = require("./utils/refreshAccessToken");
 const isUserNew = require("./database/isUserNew.js");
 const updateUserTokens = require("./database/updateUserTokens.js");
-const generateStreamDescription = require("./utils/chatgpt/generateStreamDescription.js");
-const generateDescription = require("./utils/chatgpt/generateDescription.js");
+const generateStreamDescription = require("./utils/gemini/generateStreamDescription.js");
+const generateDescription = require("./utils/gemini/generateDescription.js");
 const addNewDescription = require('./database/addNewDescription.js');
 const addNewArticle = require("./database/addNewArticle.js");
 const addNewReadme = require("./database/addNewReadme.js");
 const addNewLogo = require("./database/addNewLogo.js");
 const createPrompt = require('./utils/createPrompt.js');
 const contactAdmin = require('./utils/contactAdmin.js');
-const generateLogoDescription = require("./utils/chatgpt/generateLogoDescription.js");
-const generateLogo = require('./utils/chatgpt/generateLogo.js');
-const generateStreamReadme = require('./utils/chatgpt/generateStreamReadme.js');
-const generateStreamArticle = require('./utils/chatgpt/generateStreamArticle.js');
+const generateLogoDescription = require("./utils/gemini/generateLogoDescription.js");
+const generateLogo = require('./utils/gemini/generateLogo.js');
+const generateStreamReadme = require('./utils/gemini/generateStreamReadme.js');
+const generateStreamArticle = require('./utils/gemini/generateStreamArticle.js');
 
 const app = express();
 

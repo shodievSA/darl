@@ -1,5 +1,5 @@
 const getUserAccessToken = require("../database/getAccessToken.js");
-const filterProjectStructure = require("./chatgpt/filterProjectStructure.js");
+const filterProjectStructure = require("./gemini/filterProjectStructure.js");
 const generateProjectStructure = require("./generateProjectStructure.js");
 const getFileContents = require("./getFileContents.js");
 
