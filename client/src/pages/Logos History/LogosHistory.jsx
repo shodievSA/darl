@@ -28,7 +28,7 @@ function LogosHistory() {
 
         async function fetchGeneratedLogos() {
 
-            let res = await fetch(`http://${serverIP}:3000/api/v1/generated-logos`);
+            let res = await fetch(`${serverIP}/api/v1/generated-logos`);
             let data = await res.json();
             
             setLogos(data.data);

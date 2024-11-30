@@ -4,7 +4,7 @@ async function fetchUserRepos() {
 
     try 
     {
-        let res = await fetch(`http://${serverIP}:3000/api/v1/user-repos`);
+        let res = await fetch(`${serverIP}/api/v1/user-repos`);
 
         if (res.status == 200)
         {

@@ -2,7 +2,7 @@ const serverIP = import.meta.env.VITE_SERVER_IP
 
 async function submitUserMessage(email, text) {
 
-    let res = await fetch(`http://${serverIP}:3000/api/v1/report-problem`, {
+    let res = await fetch(`${serverIP}/api/v1/report-problem`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

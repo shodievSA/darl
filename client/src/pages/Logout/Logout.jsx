@@ -13,7 +13,7 @@ function Logout() {
 
         modelWindowRef.current.close();
 
-        let res = await fetch(`http://${serverIP}:3000/api/v1/delete-user`);
+        let res = await fetch(`${serverIP}/api/v1/delete-user`);
 
         if (res.status == 500)
         {

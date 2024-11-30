@@ -26,7 +26,7 @@ function ArticleGeneration() {
         setIsGenerateArticleButtonClicked(true);
 
         let res = await fetch(
-            `http://${serverIP}:3000/api/v1/article-generation/${repositoryName}/${repositoryOwner}`
+            `${serverIP}/api/v1/article-generation/${repositoryName}/${repositoryOwner}`
         );
         
         const reader = res.body.getReader();

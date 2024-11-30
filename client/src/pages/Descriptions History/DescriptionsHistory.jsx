@@ -28,7 +28,7 @@ function DescriptionsHistory() {
 
         async function fetchGeneratedDescriptions() {
 
-            let res = await fetch(`http://${serverIP}:3000/api/v1/generated-descriptions`);
+            let res = await fetch(`${serverIP}/api/v1/generated-descriptions`);
             let data = await res.json();
             
             setDescriptions(data.data);

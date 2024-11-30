@@ -30,7 +30,7 @@ function LogoGeneration() {
         setIsGenerateLogoButtonClicked(true);
 
         let res = await fetch(
-            `http://${serverIP}:3000/api/v1/generate-logo/${repositoryName}/${repositoryOwner}`, 
+            `${serverIP}/api/v1/generate-logo/${repositoryName}/${repositoryOwner}`, 
             {
                 method: "POST",
                 headers: {
