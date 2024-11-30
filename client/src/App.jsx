@@ -41,13 +41,13 @@ function App() {
                         <Route path='history/descriptions' element={<DescriptionsHistory />} />
                         <Route path='history/articles' element={<ArticlesHistory />} />
                         <Route path='history/readmes' element={<ReadmesHistory />} />
-                        <Route path='history/logos' element={<LogosHistory />} />
+                        {/* <Route path='history/logos' element={<LogosHistory />} /> */}
                         <Route path='contact' element={<Contact />} />
                         <Route path='logout' element={<Logout />} />
                     </Route>
                     <Route path='/:repositoryName/project-description' element={<DescriptionGeneration />} />
                     <Route path='/:repositoryName/readme-generation' element={<ReadmeGeneration />} />
-                    <Route path='/:repositoryName/logo-generation' element={<LogoGeneration />} />
+                    {/* <Route path='/:repositoryName/logo-generation' element={<LogoGeneration />} /> */}
                     <Route 
                     path='/history/descriptions/:repositoryName' 
                     element={<GeneratedDescription />} 
@@ -60,10 +60,10 @@ function App() {
                     path='/history/readmes/:repositoryName' 
                     element={<GeneratedReadme />} 
                     />
-                    <Route 
+                    {/* <Route 
                     path='/history/logos/:repositoryName' 
                     element={<GeneratedLogo />} 
-                    />
+                    /> */}
                     <Route path='/:repositoryName/article-generation' element={<ArticleGeneration />} />
                 </Routes>
             </NavigationContext>
