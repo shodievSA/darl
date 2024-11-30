@@ -470,7 +470,9 @@ app.get("*", async (req, res) => {
 
 }); 
 
-app.listen(3000, process.env.SERVER_IP, () => {
+const PORT = process.env.PORT
+
+app.listen(PORT, () => {
     console.log(`The express app is running on port 3000`);
 });
 
