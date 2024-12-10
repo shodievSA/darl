@@ -28,7 +28,7 @@ function ArticlesHistory() {
 
         async function fetchGeneratedArticles() {
 
-            let res = await fetch(`http://${serverIP}:3000/api/v1/generated-articles`);
+            let res = await fetch(`${serverIP}/api/v1/generated-articles`);
             let data = await res.json();
             
             setArticles(data.data);

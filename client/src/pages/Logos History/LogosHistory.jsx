@@ -18,17 +18,19 @@ function LogosHistory() {
 
     const skeletonCount = 9;
 
-    function handleRedirection(repoName, logo) {
+    function handleRedirection(repoName, path) {
+
         navigate(`/history/logos/${repoName}`, {
-            state: { logo: logo }
+            state: { logoPath: path }
         });
+        
     }
 
     useEffect(() => {
 
         async function fetchGeneratedLogos() {
 
-            let res = await fetch(`http://${serverIP}:3000/api/v1/generated-logos`);
+            let res = await fetch(`${serverIP}/api/v1/generated-logos`);
             let data = await res.json();
             
             setLogos(data.data);
@@ -88,7 +90,7 @@ function LogosHistory() {
                                         className={styles['generated-logo']}
                                         onClick={() => handleRedirection(
                                             logo.repoName,
-                                            logo.logo
+                                            logo.path
                                         )}
                                         >
                                             <div>

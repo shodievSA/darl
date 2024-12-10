@@ -27,7 +27,7 @@ function ReadmeGeneration() {
         setIsGenerateReadmeButtonClicked(true);
 
         let res = await fetch(
-            `http://${serverIP}:3000/api/v1/readme-generation/${repositoryName}/${repositoryOwner}`
+            `${serverIP}/api/v1/readme-generation/${repositoryName}/${repositoryOwner}`
         );
 
         const reader = res.body.getReader();

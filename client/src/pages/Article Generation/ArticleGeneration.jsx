@@ -1,4 +1,3 @@
-const serverIP = import.meta.env.VITE_SERVER_IP;
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import GenerationButton from "../../components/GenerationButton/GenerationButton";
@@ -7,6 +6,7 @@ import TextArea from "../../components/Text Area/TextArea";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import styles from "./ArticleGeneration.module.css";
+const serverIP = import.meta.env.VITE_SERVER_IP;
 
 function ArticleGeneration() {
 
@@ -26,7 +26,7 @@ function ArticleGeneration() {
         setIsGenerateArticleButtonClicked(true);
 
         let res = await fetch(
-            `http://${serverIP}:3000/api/v1/article-generation/${repositoryName}/${repositoryOwner}`
+            `${serverIP}/api/v1/article-generation/${repositoryName}/${repositoryOwner}`
         );
         
         const reader = res.body.getReader();

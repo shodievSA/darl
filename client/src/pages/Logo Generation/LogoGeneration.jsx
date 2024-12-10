@@ -21,8 +21,16 @@ function LogoGeneration() {
 
     const { repositoryName, repositoryOwner } = location.state;
 
-    function handleSelectResolution(e) {
-        setResolution(e.target.value);
+    function handleLogoDownload() {
+
+        const link = document.createElement('a');
+        link.href = logoURL;
+        link.download = 'downloaded-image.png';
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
     }
 
     async function generateLogo() {
@@ -30,7 +38,7 @@ function LogoGeneration() {
         setIsGenerateLogoButtonClicked(true);
 
         let res = await fetch(
-            `http://${serverIP}:3000/api/v1/generate-logo/${repositoryName}/${repositoryOwner}`, 
+            `${serverIP}/api/v1/generate-logo/${repositoryName}/${repositoryOwner}`, 
             {
                 method: "POST",
                 headers: {
@@ -43,7 +51,7 @@ function LogoGeneration() {
         );
 
         let data = await res.json();
-        let imageURL = `data:image/png;base64,${data['b64URL']}`;
+        let imageURL = data.url;
 
         setLogoURL(imageURL);
         
@@ -84,10 +92,10 @@ function LogoGeneration() {
                 ) : (
                     <div className={styles['download-button-container']}>
                         <button 
-                        onClick={() => navigate(-2)}
+                        onClick={handleLogoDownload}
                         data-theme="dark"
                         className={styles['download-logo-button']}>
-                            <a href={logoURL} download={true}>Download Logo</a>
+                            Download Logo
                         </button>
                     </div>
                 )

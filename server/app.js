@@ -26,6 +26,8 @@ const generateLogoDescription = require("./utils/gemini/generateLogoDescription.
 const generateLogo = require('./utils/gemini/generateLogo.js');
 const generateStreamReadme = require('./utils/gemini/generateStreamReadme.js');
 const generateStreamArticle = require('./utils/gemini/generateStreamArticle.js');
+const uploadImageToS3 = require('./utils/uploadImageToS3.js');
+const getPresignedURL = require('./utils/getPresignedURL.js');
 
 const app = express();
 
@@ -268,6 +270,15 @@ app.get("/api/v1/generated-logos", async (req, res) => {
 
 });
 
+app.post("/api/v1/generated-logo", async (req, res) => {
+
+    const { path } = req.body;
+    const signenURL = await getPresignedURL(path);
+
+    res.json({ url: signenURL });
+
+});
+
 app.post("/api/v1/report-problem", limiter, async (req, res) => {
 
     if (req.session.userID) {
@@ -417,15 +428,19 @@ app.post(
         const logo = await generateLogo(
             logoDescription, 
             resolution
-        );
+        ); 
 
-        await addNewLogo(
+        const logoPath = await addNewLogo(
             req.session.userID,
             logo,
             repoName
         );
 
-        res.json({ b64URL: logo });
+        await uploadImageToS3(logoPath, logo);
+
+        const presignedURL = await getPresignedURL(logoPath);
+
+        res.json({ url: presignedURL });
 
 });
 

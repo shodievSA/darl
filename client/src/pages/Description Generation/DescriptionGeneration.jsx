@@ -26,7 +26,7 @@ function DescriptionGeneration() {
         setIsGenerateDescriptionButtonClicked(true);
 
         let res = await fetch(
-            `http://${serverIP}:3000/api/v1/project-description/${repositoryName}/${repositoryOwner}`
+            `${serverIP}/api/v1/project-description/${repositoryName}/${repositoryOwner}`
         );
 
         const reader = res.body.getReader();

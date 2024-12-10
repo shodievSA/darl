@@ -28,7 +28,7 @@ function ReadmesHistory() {
 
         async function fetchGeneratedReadmes() {
 
-            let res = await fetch(`http://${serverIP}:3000/api/v1/generated-readmes`);
+            let res = await fetch(`${serverIP}/api/v1/generated-readmes`);
             let data = await res.json();
             
             setReadmes(data.data);

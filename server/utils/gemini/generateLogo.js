@@ -28,7 +28,7 @@ async function generateLogo(logoDescription, resolution) {
         sampleCount: 1,
         aspectRatio: '1:1',
         safetyFilterLevel: 'block_some',
-        personGeneration: 'allow_adult',
+        personGeneration: 'dont_allow',
     };
 
     const parameters = helpers.toValue(parameter);
@@ -45,52 +45,5 @@ async function generateLogo(logoDescription, resolution) {
     return prediction.structValue.fields.bytesBase64Encoded.stringValue;
 
 }
-
-
-// async function generateLogo(logoDescription, resolution) {
-
-//     const projectID = process.env.VERTEXAI_PTOJECT_ID;
-//     const model = "imagen-3.0-generate-001";
-//     const gcToken = process.env.GCLOUD_ACCESS_TOKEN;
-//     const location = "me-central1"
-
-//     const requestBody = {
-//         instances: [
-//             {
-//                 prompt: logoDescription
-//             }
-//         ],
-//         parameters: {
-//             sampleCount: 1
-//         }
-//     }
-
-//     try {
-
-//         let res = await fetch(
-//             `https://${location}-aiplatform.googleapis.com/v1/projects/${projectID}/locations/${location}/publishers/google/models/${model}:predict`,
-//             {
-//                 method: "POST",
-//                 headers: {
-//                     "Content-Type": "application/json",
-//                     "Authorization": `Bearer ${gcToken}`
-//                 },
-//                 body: JSON.stringify(requestBody)
-//             }
-//         );
-
-//         let data = await res.json();
-
-//         console.log(data)
-
-//         return data["predictions"][0]['bytesBase64Encoded'];
-
-//     } catch (err) {
-
-//         console.log("The following error occured: " + err);
-
-//     }
-
-// }
 
 module.exports = generateLogo;

@@ -27,7 +27,7 @@ function History() {
                         Descriptions
                     </div>
                     <div 
-                    // onClick={() => handleRedirection('/logos')}
+                    onClick={() => handleRedirection('/logos')}
                     >
                         Logos
                     </div>
