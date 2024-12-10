@@ -17,12 +17,14 @@ function Repository() {
     }
 
     const handleRedirection = (route) => {
+
         navigate(`/${repositoryName}/${route}`, {
             state: {
                 repositoryName: repositoryName,
                 repositoryOwner: repositoryOwner
             }
         });
+        
     }
 
     const { currentNavigation } = useNavigationContext();
@@ -83,7 +85,7 @@ function Repository() {
                         <h1>Generate README.md</h1>
                     </div>
                     <div 
-                    // onClick={() => handleRedirection('logo-generation')}
+                    onClick={() => handleRedirection('logo-generation')}
                     >
                         <h1>Generate Logo</h1>
                     </div>

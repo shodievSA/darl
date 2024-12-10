@@ -9,7 +9,7 @@ async function addNewLogo(userID, newLogo, repoName) {
     const formattedDate = `${year}-${month}-${day}`;
 
     const logo = {
-        logo: newLogo,
+        path: `${userID}/${repoName}-${Date.now()}.png`,
         repoName: repoName,
         generatedOn: formattedDate
     }
@@ -30,6 +30,8 @@ async function addNewLogo(userID, newLogo, repoName) {
         { user_history: updatedUserHistory }, 
         { where: { user_id: userID } }
     );
+
+    return logo.path;
 
 }
 

@@ -18,10 +18,12 @@ function LogosHistory() {
 
     const skeletonCount = 9;
 
-    function handleRedirection(repoName, logo) {
+    function handleRedirection(repoName, path) {
+
         navigate(`/history/logos/${repoName}`, {
-            state: { logo: logo }
+            state: { logoPath: path }
         });
+        
     }
 
     useEffect(() => {
@@ -88,7 +90,7 @@ function LogosHistory() {
                                         className={styles['generated-logo']}
                                         onClick={() => handleRedirection(
                                             logo.repoName,
-                                            logo.logo
+                                            logo.path
                                         )}
                                         >
                                             <div>
