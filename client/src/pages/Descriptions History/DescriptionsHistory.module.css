@@ -135,7 +135,7 @@
         @apply absolute left-0 rounded-md cursor-pointer px-32
     }
     .header > div:last-child h1 {
-        @apply text-4xl font-inter-medium
+        @apply text-4xl
     }
     .main {
         height: calc(100vh - 150px);

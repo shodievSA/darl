@@ -22,7 +22,7 @@
         @apply h-10 w-10
     }
     .repository-name {
-        @apply text-2xl font-inter-medium
+        @apply text-2xl
     }
     .main {
         @apply flex flex-col grow items-center justify-center gap-y-8 py-8
@@ -97,7 +97,7 @@
         @apply h-10 w-10
     }
     .repository-name {
-        @apply text-4xl font-inter-medium
+        @apply text-4xl
     }
     .main {
         @apply flex flex-col grow items-center justify-center
@@ -152,7 +152,7 @@
         @apply h-12 w-12
     }
     .repository-name {
-        @apply text-4xl font-inter-medium
+        @apply text-4xl 
     }
     .main {
         @apply flex grow justify-center items-center

@@ -103,7 +103,7 @@
         @apply h-10 w-10
     }
     .repository-name {
-        @apply text-4xl font-inter-medium
+        @apply text-4xl
     }
     .main {
         @apply grow pb-10 flex justify-center
@@ -145,7 +145,7 @@
         @apply h-12 w-12
     }
     .repository-name {
-        @apply text-4xl font-inter-medium
+        @apply text-4xl
     }
     .main {
         @apply flex flex-col grow justify-center items-center gap-y-32

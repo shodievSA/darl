@@ -7,7 +7,7 @@
 }
 
 .sign-in-button {
-    @apply btn btn-secondary font-inter-regular font-normal btn-lg text-white rounded-md
+    @apply btn btn-secondary font-normal btn-lg text-white rounded-md
 }
 
 .sign-in-button > div {
@@ -18,16 +18,12 @@
     @apply text-white
 }
 
-.service-description h1 {
-    @apply font-inter-medium 
-}
-
 .sign-in {
     @apply flex flex-col items-center w-full
 }
 
 .important {
-    @apply italic font-inter-regular text-center 
+    @apply italic text-center 
 }
 
 @media (0 < width <= 480px) {

@@ -65,5 +65,5 @@
     @apply h-12 w-12
 }
 .repository-name {
-    @apply text-4xl font-inter-medium
+    @apply text-4xl
 }
