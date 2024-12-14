@@ -65,7 +65,7 @@ app.use(session({
 app.use(express.json());
 
 app.use("/assets", express.static(
-    path.join(__dirname, "../client/dist/assets")
+    path.join(__dirname, process.env.ASSETS_FOLDER_PATH)
 ));
 
 const limiter = rateLimiter({
@@ -80,7 +80,7 @@ app.get("/registration", (req, res) => {
 
     const filePath = path.join(
         __dirname, 
-        '../client/dist/index.html'
+        process.env.SPA_INDEX_PATH
     );
     res.sendFile(filePath);
 });
@@ -465,7 +465,7 @@ app.get("*", async (req, res) => {
 
             const filePath = path.join(
                 __dirname, 
-                "../client/dist/index.html"
+                process.env.SPA_INDEX_PATH
             );
             res.sendFile(filePath);
         }
@@ -473,7 +473,7 @@ app.get("*", async (req, res) => {
         {
             const filePath = path.join(
                 __dirname, 
-                "../client/dist/index.html"
+                process.env.SPA_INDEX_PATH
             );
             res.sendFile(filePath);
         }
