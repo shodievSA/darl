@@ -12,7 +12,7 @@ const content = "You will be given a description of the user's github project. "
                 "Reply directly with the logo description.";
 
 const generativeModel = vertexAI.getGenerativeModel({
-    model: "gemini-1.5-pro",
+    model: "gemini-2.0-flash-exp",
     systemInstruction: content,
 });
 
