@@ -5,12 +5,13 @@ const session = require("express-session");
 const Sequelize = require("sequelize");
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const crypto = require("crypto");
+const axios = require("axios");
 const path = require("path");
 const exchangeCode = require('./utils/exchangeCode.js');
 const getUserInfo = require("./utils/getUserInfo.js");
 const registerNewUser = require("./database/registerNewUser.js");
 const getUserAccessToken = require("./database/getAccessToken.js");
-const getUserHistory = require('./database/getGeneratedDescriptions.js');
+const getUserHistory = require('./database/getUserHistory.js');
 const refreshAccessToken = require("./utils/refreshAccessToken");
 const isUserNew = require("./database/isUserNew.js");
 const updateUserTokens = require("./database/updateUserTokens.js");
@@ -28,6 +29,14 @@ const generateStreamReadme = require('./utils/gemini/generateStreamReadme.js');
 const generateStreamArticle = require('./utils/gemini/generateStreamArticle.js');
 const uploadImageToS3 = require('./utils/uploadImageToS3.js');
 const getPresignedURL = require('./utils/getPresignedURL.js');
+const getUserFreeTrials = require('./database/getUserFreeTrials.js');
+const getUserBalance = require('./database/getUserBalance.js');
+const reduceUserFreeTrials = require('./database/reduceUserFreeTrials.js');
+const reduceUserBalance = require('./database/reduceUserBalance.js');
+const manageUserBalance = require('./utils/manageUserBalance.js');
+const generateStreamName = require('./utils/gemini/generateStreamName.js');
+const addNewName = require('./database/addNewName.js');
+const { error } = require('console');
 
 const app = express();
 
@@ -61,9 +70,7 @@ app.use(session({
         return crypto.randomBytes(32).toString('hex');
     }
 }));
-
 app.use(express.json());
-
 app.use("/assets", express.static(
     path.join(__dirname, process.env.ASSETS_FOLDER_PATH)
 ));
@@ -82,17 +89,17 @@ app.get("/registration", (req, res) => {
         __dirname, 
         process.env.SPA_INDEX_PATH
     );
+
     res.sendFile(filePath);
+
 });
 
 app.get("/github/callback", async (req, res) => {
     const code = req.query.code;
-    if (!code) 
-    {
+    if (!code) {
         res.redirect("/registration");
     }
-    try 
-    {
+    try {
         const tokenData = await exchangeCode(code);
 
         const currentDate = Date.now(); 
@@ -139,46 +146,52 @@ app.get("/github/callback", async (req, res) => {
 
 app.get("/api/v1/user-repos", async (req, res) => {
 
-    if (req.session.userID) 
-    {
-        if (req.session.refreshTokenExpirationDate <= Date.now())
-        {
+    if (req.session.userID) {
+
+        if (req.session.refreshTokenExpirationDate <= Date.now()) {
+
             res.redirect('/registration');
-        } 
-        else if (req.session.accessTokenExpirationDate <= Date.now())
-        {
+
+        } else if (req.session.accessTokenExpirationDate <= Date.now()) {
+
             await refreshAccessToken(req.session.userID, req);
+
         }
 
-        let accessToken = await getUserAccessToken(req.session.userID);
+        const accessToken = await getUserAccessToken(req.session.userID);
 
-        let githubResponse = await fetch(
-            `https://api.github.com/user/repos`, 
-            {
-                method: "GET",
-                headers: {
-                    "Accept": "application/vnd.github+json",
-                    "Authorization": `Bearer ${accessToken}`
-                }
+        const instance = axios.create({
+            baseURL: "https://api.github.com",
+            timeout: 20000,
+        });
+
+        const githubResponse = await instance.get("/user/repos", {
+            headers: {
+                "Accept": "application/vnd.github+json",
+                "Authorization": `Bearer ${accessToken}`
             }
-        );
+        });
 
-        if (githubResponse.status == 200)
-        {
-            const repos = await githubResponse.json();
+        if (githubResponse.status == 200) {
+
+            const repos = githubResponse.data;
+            console.log(repos);
+
             res.status(200).json(repos);
-        } 
-        else 
-        {
+
+        } else {
+
             res.status(500).send(
                 "We couldn't fetch your repositories due to the technical issues. Please try again later!"
             );
+
         }
+
     }
 
 });
 
-app.get("/api/v1/generated-descriptions", async (req, res) => {
+app.get("/api/v1/user-history", async (req, res) => {
 
     if (req.session.userID) 
     {
@@ -191,81 +204,11 @@ app.get("/api/v1/generated-descriptions", async (req, res) => {
             await refreshAccessToken(req.session.userID, req);
         }
 
-        const generatedDescriptions = await getUserHistory({
+        const history = await getUserHistory({
             userID: req.session.userID,
-            generation: 'descriptions'
         });
 
-        res.json({ data: generatedDescriptions });
-    }
-
-});
-
-app.get("/api/v1/generated-articles", async (req, res) => {
-
-    if (req.session.userID) 
-    {
-        if (req.session.refreshTokenExpirationDate <= Date.now())
-        {
-            res.redirect('/registration');
-        } 
-        else if (req.session.accessTokenExpirationDate <= Date.now())
-        {
-            await refreshAccessToken(req.session.userID, req);
-        }
-
-        const generatedArticles = await getUserHistory({
-            userID: req.session.userID,
-            generation: 'articles'
-        });
-
-        res.json({ data: generatedArticles });
-    }
-
-});
-
-app.get("/api/v1/generated-readmes", async (req, res) => {
-
-    if (req.session.userID) 
-    {
-        if (req.session.refreshTokenExpirationDate <= Date.now())
-        {
-            res.redirect('/registration');
-        } 
-        else if (req.session.accessTokenExpirationDate <= Date.now())
-        {
-            await refreshAccessToken(req.session.userID, req);
-        }
-
-        const generatedReadmes = await getUserHistory({
-            userID: req.session.userID,
-            generation: 'readmes'
-        });
-
-        res.json({ data: generatedReadmes });
-    }
-
-});
-
-app.get("/api/v1/generated-logos", async (req, res) => {
-
-    if (req.session.userID) 
-    {
-        if (req.session.refreshTokenExpirationDate <= Date.now())
-        {
-            res.redirect('/registration');
-        } 
-        else if (req.session.accessTokenExpirationDate <= Date.now())
-        {
-            await refreshAccessToken(req.session.userID, req);
-        }
-
-        const generatedLogos = await getUserHistory({
-            userID: req.session.userID,
-            generation: 'logos'
-        });
-
-        res.json({ data: generatedLogos });
+        res.json({ history });
     }
 
 });
@@ -327,27 +270,33 @@ app.get(
     "/api/v1/project-description/:repoName/:repoOwner", 
     async (req, res) => {
 
-        res.setHeader('Content-Type', "text/plain");
-        res.setHeader('Transfer-Encoding', "chunked");
-
         const repoName = req.params['repoName'];
         const owner = req.params['repoOwner'];
 
-        const prompt = await createPrompt({
-            repoName: repoName,
-            owner: owner,
-            userID: req.session.userID
-        });
- 
-        const description = await generateStreamDescription(prompt, res);
+        try {
 
-        res.end();
+            const prompt = await createPrompt({
+                repoName: repoName,
+                owner: owner,
+                userID: req.session.userID
+            });
+     
+            const description = await generateStreamDescription(prompt);
+    
+            res.status(200).json({ description });
 
-        await addNewDescription(
-            req.session.userID, 
-            description, 
-            repoName
-        );
+            await addNewDescription(req.session.userID, description, repoName);
+            await manageUserBalance(req.session.userID, 0.2);
+
+        } catch (err) {
+
+            console.log(err);
+
+            res.status(500).json({ 
+                errorMessage: "An error occurred while generating the project description. Please try again." 
+            });
+
+        }
 
     }
 );
@@ -356,26 +305,66 @@ app.get(
     "/api/v1/readme-generation/:repoName/:repoOwner",
     async (req, res) => {
 
-        res.setHeader("Content-Type", "text/plain");
-        res.setHeader("Transfer-Encoding", "chunked");
+        const { repoName, repoOwner } = req.params;
+
+        try {
+
+            const prompt = await createPrompt({
+                repoName: repoName,
+                owner: repoOwner,
+                userID: req.session.userID
+            });
+    
+            const readme = await generateStreamReadme(prompt);
+    
+            res.status(200).json({ readme });
+
+            await addNewReadme(req.session.userID, readme, repoName);
+            await manageUserBalance(req.session.userID, 0.4);
+            
+        } catch (err) {
+
+            console.log(err);
+
+            res.status(500).json({
+                errorMessage: "An error occurred while generating the project README. Please try again."
+            });
+
+        }
+
+    }
+);
+
+app.get(
+    '/api/v1/name-generation/:repoName/:repoOwner', 
+    async (req, res) => {
 
         const { repoName, repoOwner } = req.params;
 
-        const prompt = await createPrompt({
-            repoName: repoName,
-            owner: repoOwner,
-            userID: req.session.userID
-        });
+        try {
 
-        const readme = await generateStreamReadme(prompt, res);
+            const prompt = await createPrompt({
+                repoName: repoName,
+                owner: repoOwner,
+                userID: req.session.userID
+            });
 
-        res.end();
+            const name = await generateStreamName(prompt);
 
-        await addNewReadme(
-            req.session.userID,
-            readme,
-            repoName
-        );
+            res.status(200).json({ name });
+
+            await addNewName(req.session.userID, name, repoName);
+            await manageUserBalance(req.session.userID, 0.2);
+            
+        } catch (err) {
+
+            console.log(err);
+
+            res.status(500).json({
+                errorMessage: "An error occurred while generating the project name. Please try again."
+            });
+
+        }
 
     }
 );
@@ -384,63 +373,115 @@ app.get(
     "/api/v1/article-generation/:repoName/:repoOwner", 
     async (req, res) => {
 
-        res.setHeader("Content-Type", "text/plain");
-        res.setHeader("Transfer-Encoding", "chunked");
-
         const { repoName, repoOwner } = req.params;
 
-        const prompt = await createPrompt({
-            repoName: repoName,
-            owner: repoOwner,
-            userID: req.session.userID
-        });
+        try {
 
-        const article = await generateStreamArticle(prompt, res);
+            const prompt = await createPrompt({
+                repoName: repoName,
+                owner: repoOwner,
+                userID: req.session.userID
+            });
 
-        res.end();
+            const article = await generateStreamArticle(prompt);
 
-        await addNewArticle(
-            req.session.userID,
-            article,
-            repoName
-        );
+            res.status(200).json({ article });
+
+            await addNewArticle(req.session.userID, article, repoName);
+            await manageUserBalance(req.session.userID, 0.4);
+            
+        } catch (err) {
+
+            console.log(err);
+
+            res.status(500).json({
+                errorMessage: "An error occurred while generating the project article. Please try again."
+            });
+
+        }
 
     }
-)
+);
 
-app.post(
+app.get(
     "/api/v1/generate-logo/:repoName/:repoOwner", 
     async (req, res) => {
 
         const repoName = req.params['repoName'];
         const repoOwner = req.params['repoOwner'];
-        const resolution = req.body.resolution;
 
-        const prompt = await createPrompt({
-            repoName: repoName,
-            owner: repoOwner,
-            userID: req.session.userID
-        });
+        try {
 
-        const description = await generateDescription(prompt);
-        const logoDescription = await generateLogoDescription(description);
+            const prompt = await createPrompt({
+                repoName: repoName,
+                owner: repoOwner,
+                userID: req.session.userID
+            });
 
-        const logo = await generateLogo(
-            logoDescription, 
-            resolution
-        ); 
+            const description = await generateDescription(prompt);
+            const logoDescription = await generateLogoDescription(description);
 
-        const logoPath = await addNewLogo(
-            req.session.userID,
-            logo,
-            repoName
-        );
+            const logo = await generateLogo(logoDescription); 
+            const logoPath = await addNewLogo(req.session.userID, repoName);
 
-        await uploadImageToS3(logoPath, logo);
+            await uploadImageToS3(logoPath, logo);
+            await manageUserBalance(req.session.userID, 0.4);
 
-        const presignedURL = await getPresignedURL(logoPath);
+            const presignedURL = await getPresignedURL(logoPath);
+            res.json({ url: presignedURL });
 
-        res.json({ url: presignedURL });
+        } catch (err) {
+
+            console.log(err);
+            
+            res.status(500).json({
+                errorMessage: "An error occurred while generating the project logo. Please try again."
+            });
+
+        }
+
+    }
+);
+
+app.get("/api/v1/user-free-trials", async (req, res) => {
+
+    const userID = req.session.userID;
+    const freeTrialsLeft = await getUserFreeTrials(userID);
+
+    res.json({ freeTrialsLeft });
+
+});
+
+app.get("/api/v1/user-balance", async (req, res) => {
+
+    const userID = req.session.userID;
+    const userBalance = await getUserBalance(userID);
+
+    res.json({ balance: userBalance });
+
+});
+
+app.patch("/api/v1/reduce-user-free-trials", async (req, res) => {
+
+    const userID = req.session.userID;
+    await reduceUserFreeTrials(userID);
+
+    res.status(200).json({ 
+        message: "User's free trial has been reduced by 1" 
+    });
+
+});
+
+app.patch("/api/v1/reduce-user-balance", async (req, res) => {
+
+    const userID = req.session.userID;
+    const reduceBy = parseFloat(req.body.reduceBy);
+
+    await reduceUserBalance(userID, reduceBy);
+
+    res.status(200).json({
+        message: `User's balance has been reduced by ${reduceBy}`
+    });
 
 });
 

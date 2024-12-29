@@ -2,7 +2,7 @@
     @apply flex flex-col fixed w-full space-y-12 top-0 z-10
 }
 .header {
-    background-color: black;
+    background-color: rgb(12.5, 12.5, 12.5);
 }
 .header div:first-child {
     @apply flex justify-between w-full px-8 py-5 items-center
@@ -14,7 +14,7 @@
     @apply text-2xl font-medium text-white
 }
 .page-name + label {
-    background-color: black !important;
+    background-color: rgb(12.5, 12.5, 12.5) !important;
     border: none !important;
 }
 .bars-icon {
@@ -31,4 +31,28 @@
 }
 a {
     @apply py-4 px-7 rounded-md
+}
+.delete-account-button {
+    @apply btn btn-secondary rounded-md
+}
+.modal-window {
+    @apply modal flex justify-center items-center
+}
+.popup-message {
+    @apply modal-box rounded-md py-10 px-8 gap-y-5 flex flex-col
+}
+.popup-message {
+    background-color: rgb(12.5, 12.5, 12.5);
+}
+.warning {
+    @apply text-2xl/normal text-center
+}
+.buttons-container {
+    @apply modal-action gap-x-8 flex justify-center
+}
+.cancel-button {
+    @apply btn rounded-md grow
+}
+.confirm-button {
+    @apply btn rounded-md grow
 }

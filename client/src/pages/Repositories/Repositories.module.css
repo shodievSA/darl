@@ -1,5 +1,5 @@
 .page-container {
-    background-color: rgb(18, 18, 18);
+    background-color: rgb(10, 10, 10);
 }
 
 @media (0 < width <= 480px) {
@@ -7,7 +7,7 @@
         margin-top: 80px;
     }
     .page-container {
-        @apply flex grow py-8
+        @apply flex grow
     }
     .main {
         @apply grow
@@ -19,6 +19,53 @@
         grid-template-columns: 300px;
         grid-auto-rows: 180px;
     }
+    .user-repositories {
+        @apply grid gap-y-10 grow gap-x-12 justify-center pb-8
+    }
+    .user-repositories {
+        grid-template-columns: repeat(auto-fit, 380px);
+        grid-auto-rows: 180px;
+        padding-top: 120px;
+    }
+    .search-container {
+        @apply flex items-center justify-center fixed px-6 right-5
+    }
+    .search-container {
+        width: calc(100% - 20px);
+    }
+    .search-container {
+        height: 100px;
+        backdrop-filter: blur(12px);
+        background-color: rgba(10, 10, 10, 0.7);
+    }
+    .search-container label {
+        @apply w-11/12 rounded-md
+    }
+    .search-container label {
+        background-color: rgb(12.5, 12.5, 12.5);
+        outline: none !important;
+        border: 1px solid rgb(40, 40, 40) !important;
+    }
+    .no-results-container {
+        @apply flex items-center justify-center w-full
+    }
+    .no-results-container {
+        height: calc(100vh - 100px);
+        margin-top: 80px;
+    }
+    .no-results-container h1 {
+        @apply text-center text-white text-lg
+    }
+    .no-repos-container {
+        @apply flex items-center justify-center w-full
+    }
+    .no-repos-container {
+        height: calc(100vh - 100px);
+        margin-top: 80px;
+    }
+    .no-repos-container h1 {
+        @apply text-center text-white text-lg
+    }
 }
 
 @media (480px < width <= 834px) {
@@ -26,60 +73,168 @@
         margin-top: 80px;
     }
     .page-container {
-        @apply flex grow py-8 px-10 justify-center
+        @apply flex grow px-10 justify-center
     }
     .user-repositories {
-        @apply grid gap-y-10 grow gap-x-12 justify-center
+        @apply grid gap-y-10 grow gap-x-12 justify-center pb-8
     }
     .user-repositories {
-        grid-template-columns: repeat(auto-fit, 300px);
+        grid-template-columns: repeat(auto-fit, 380px);
         grid-auto-rows: 180px;
+        padding-top: 120px;
+    }
+    .search-container {
+        @apply flex items-center justify-center fixed px-6 right-5
+    }
+    .search-container {
+        width: calc(100% - 20px);
+    }
+    .search-container {
+        height: 100px;
+        backdrop-filter: blur(12px);
+        background-color: rgba(10, 10, 10, 0.7);
+    }
+    .search-container label {
+        @apply w-11/12 rounded-md
+    }
+    .search-container label {
+        background-color: rgb(12.5, 12.5, 12.5);
+        outline: none !important;
+        border: 1px solid rgb(40, 40, 40) !important;
+    }
+    .no-results-container {
+        @apply flex items-center justify-center w-full
+    }
+    .no-results-container {
+        height: calc(100vh - 100px);
+        margin-top: 80px;
+    }
+    .no-results-container h1 {
+        @apply text-center text-white text-lg
+    }
+    .no-repos-container {
+        @apply flex items-center justify-center w-full
+    }
+    .no-repos-container {
+        height: calc(100vh - 100px);
+        margin-top: 80px;
+    }
+    .no-repos-container h1 {
+        @apply text-center text-white text-lg
     }
 }
 
 @media (834px < width <= 1440px) {
     .page-container {
-        margin-top: 100px;
+        @apply flex flex-col grow px-10 overflow-y-auto
     }
     .page-container {
-        @apply flex flex-col grow py-10 px-10
+        margin-top: 80px;
     }
     .main {
         @apply grow
     }
-    .user-repositories {
-        @apply grid gap-y-10 grow gap-x-20 justify-center
+    .search-container {
+        @apply flex items-center justify-center fixed px-12 right-5
+    }
+    .search-container {
+        width: calc(100% - 20px);
+    }
+    .search-container {
+        height: 100px;
+        backdrop-filter: blur(12px);
+        background-color: rgba(10, 10, 10, 0.7);
+    }
+    .search-container label {
+        @apply w-9/12 rounded-md
+    }
+    .search-container label {
+        background-color: rgb(12.5, 12.5, 12.5);
+        outline: none !important;
+        border: 1px solid rgb(40, 40, 40) !important;
     }
     .user-repositories {
+        @apply grid gap-y-6 grow gap-x-6 justify-center pb-8
+    }
+    .user-repositories {
+        grid-template-columns: repeat(auto-fit, 380px);
         grid-auto-rows: 180px;
-        grid-template-columns: repeat(auto-fit, 300px);
+        padding-top: 120px;
+    }
+    .no-results-container {
+        @apply flex items-center justify-center w-full
+    }
+    .no-results-container {
+        height: calc(100vh - 100px);
+        margin-top: 80px;
+    }
+    .no-results-container h1 {
+        @apply text-center text-white text-lg
+    }
+    .no-repos-container {
+        @apply flex items-center justify-center w-full
+    }
+    .no-repos-container {
+        height: calc(100vh - 100px);
+        margin-top: 80px;
+    }
+    .no-repos-container h1 {
+        @apply text-center text-white text-lg
     }
 }
 
 @media (min-width: 1441px) {
     .page-container {
-        @apply flex grow flex-col border-l-4 border-black h-screen overflow-y-auto 
-    }
-    .header {
-        @apply flex items-end px-24
-    }
-    .header {
-        height: 80px;
-    }
-    .header h1 {
-        @apply text-4xl font-medium
+        @apply flex flex-col grow overflow-y-auto
     }
     .main {
-        @apply grow
+        @apply flex flex-col grow
+    }
+    .search-container {
+        @apply flex items-center justify-start fixed px-12 right-5
+    }
+    .search-container {
+        width: calc(100% - 250px);
+    }
+    .search-container {
+        height: 120px;
+        backdrop-filter: blur(12px);
+        background-color: rgba(10, 10, 10, 0.7);
+    }
+    .search-container label {
+        @apply w-6/12 rounded-md
+    }
+    .search-container label {
+        background-color: rgb(12.5, 12.5, 12.5);
+        outline: none !important;
+        border: 1px solid rgb(40, 40, 40) !important;
     }
     .user-repositories {
-        @apply grid justify-center gap-x-16 gap-y-10 px-10 py-12
+        @apply grid justify-between gap-y-6 px-12 pb-8
     }
     .user-repositories {
-        height: calc(100vh - 80px);
-    }
-    .user-repositories {
-        grid-template-columns: repeat(3, 300px);
+        grid-template-columns: repeat(3, 380px);
         grid-auto-rows: 180px;
+        padding-top: 120px;
+    }
+    .no-results-container {
+        @apply flex items-center justify-center w-full
+    }
+    .no-results-container {
+        height: calc(100vh - 120px);
+        margin-top: 120px;
+    }
+    .no-results-container h1 {
+        @apply text-center text-white text-lg
+    }
+    .no-repos-container {
+        @apply flex items-center justify-center w-full
+    }
+    .no-repos-container {
+        height: calc(100vh - 120px);
+        margin-top: 120px;
+    }
+    .no-repos-container h1 {
+        @apply text-center text-white text-lg
     }
 }

@@ -3,6 +3,8 @@ import styles from "./TextArea.module.css";
 
 function TextArea({ value, copy }) {
 
+    const copyText = capitalizeFirstChar(copy);
+
     const [isTextCopied, setIsTextCopied] = useState(false);
 
     const textareaRef = useRef(null);
@@ -38,11 +40,17 @@ function TextArea({ value, copy }) {
             onClick={copyTextAreaValue}
             >
                 {
-                    isTextCopied ? `${copy} Copied!` : `Copy ${copy}`
+                    isTextCopied ? `${copyText} Copied!` : `Copy ${copyText}`
                 }
             </button>
         </div>
     );
+
+}
+
+function capitalizeFirstChar(str) {
+
+    return str.charAt(0).toUpperCase() + str.slice(1);
 
 }
 

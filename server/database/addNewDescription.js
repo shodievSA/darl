@@ -1,34 +1,27 @@
-const User = require("./models/user.js");
+const { sequelize } = require("./models/user.js");
+const getUserFreeTrials = require("./getUserFreeTrials.js");
+const formatDate = require("../utils/formatDate.js");
 
-async function addNewDescription(userID, newDescription, repoName) {
+async function addNewDescription(userID, description, repoName) {
 
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
+    const userFreeTrials = await getUserFreeTrials(userID);
 
-    const description = {
-        description: newDescription,
+    const newDescription = {
+        value: description,
         repoName: repoName,
-        generatedOn: formattedDate
+        date: formatDate(),
+        type: 'description',
+        price: userFreeTrials > 0 ? 'free trial' : 0.2
     }
 
-    const user = await User.findOne({
-        where: { user_id: userID },
-        attributes: ["user_history"]
-    });
-
-    const userHistory = user['user_history'];
-
-    const updatedUserHistory = { 
-        ...userHistory, 
-        descriptions: [description, ...userHistory['descriptions']] 
-    };
-
-    await User.update(
-        { user_history: updatedUserHistory }, 
-        { where: { user_id: userID } }
+    await sequelize.query(
+        `UPDATE users SET user_history = :newDescription || user_history WHERE user_id = :userID`,
+        {
+            replacements: {
+                newDescription: JSON.stringify([newDescription]),
+                userID: userID,
+            },
+        }
     );
 
 }

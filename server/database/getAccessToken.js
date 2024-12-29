@@ -1,5 +1,5 @@
 require("dotenv").config();
-const User = require("./models/user.js");
+const { User } = require("./models/user.js");
 const decryptToken = require("../utils/decryptToken.js");
 
 async function getUserAccessToken(userID) {

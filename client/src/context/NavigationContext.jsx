@@ -31,6 +31,7 @@ export function NavigationContext({ children }) {
             {children}
         </MyContext.Provider>
     )
+    
 }
 
 export function useNavigationContext() {

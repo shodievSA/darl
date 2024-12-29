@@ -17,30 +17,21 @@
 
 @media (480px < width <= 834px) {
     .loading-button {
-        padding: 1.25rem 1.5rem;
-        font-size: 1.5rem;
-    }
-    .loading-animation {
-        @apply progress w-56
+        padding: 0.75rem 1rem;
+        font-size: 1.25rem;
     }
 }
 
 @media (834px < width <= 1440px) {
     .loading-button {
-        padding: 1.25rem 1.5rem;
-        font-size: 1.5rem;
-    }
-    .loading-animation {
-        @apply progress w-56
+        padding: 0.75rem 1rem;
+        font-size: 1.25rem;
     }
 }
 
 @media (min-width: 1441px) {
     .loading-button {
-        padding: 1.25rem 1.5rem;
-        font-size: 1.5rem;
-    }
-    .loading-animation {
-        @apply progress w-56
+        padding: 0.75rem 1rem;
+        font-size: 1.25rem;
     }
 }

@@ -24,6 +24,30 @@
     .main {
         @apply grow flex items-center justify-center pb-10 px-5
     }
+    .modal-window {
+        @apply modal flex justify-center items-center
+    }
+    .cancel-button {
+        @apply btn btn-md btn-circle btn-ghost absolute right-4 top-4 w-fit
+    }
+    .popup-message {
+        @apply modal-box flex flex-col rounded-md py-6 px-6 gap-y-6
+    }
+    .popup-message {
+        background-color: rgb(15, 15, 15);
+    }
+    .warning {
+        @apply py-4 text-xl/normal text-center
+    }
+    .popup-message h3 {
+        @apply font-bold text-2xl text-center
+    }
+    .add-funds-button {
+        @apply btn rounded-md btn-lg text-xl self-center
+    }
+    .add-funds-button {
+        background-color: #7a00c2;
+    }
 }
 
 @media (480px < width <= 834px) {
@@ -47,6 +71,30 @@
     }
     .main {
         @apply grow flex items-center justify-center pb-10 px-10
+    }
+    .modal-window {
+        @apply modal flex justify-center items-center
+    }
+    .cancel-button {
+        @apply btn btn-lg btn-circle btn-ghost absolute right-4 top-4 w-fit
+    }
+    .popup-message {
+        @apply modal-box flex flex-col rounded-md py-8 px-8 gap-y-6
+    }
+    .popup-message {
+        background-color: rgb(15, 15, 15);
+    }
+    .warning {
+        @apply py-4 text-2xl/normal text-center
+    }
+    .popup-message h3 {
+        @apply font-bold text-3xl text-center
+    }
+    .add-funds-button {
+        @apply btn rounded-md btn-lg text-xl self-center
+    }
+    .add-funds-button {
+        background-color: #7a00c2;
     }
 }
 
@@ -72,6 +120,30 @@
     .main {
         @apply flex grow items-center justify-center
     }
+    .modal-window {
+        @apply modal flex justify-center items-center
+    }
+    .cancel-button {
+        @apply btn btn-lg btn-circle btn-ghost absolute right-4 top-4 w-fit
+    }
+    .popup-message {
+        @apply modal-box flex flex-col rounded-md py-8 px-8 gap-y-6
+    }
+    .popup-message {
+        background-color: rgb(15, 15, 15);
+    }
+    .warning {
+        @apply py-4 text-2xl/normal text-center
+    }
+    .popup-message h3 {
+        @apply font-bold text-3xl text-center
+    }
+    .add-funds-button {
+        @apply btn rounded-md btn-lg text-xl self-center
+    }
+    .add-funds-button {
+        background-color: #7a00c2;
+    }
 }
 
 @media (min-width: 1441px) {
@@ -95,5 +167,29 @@
     }
     .main {
         @apply grow flex items-center justify-center pb-10
+    }
+    .modal-window {
+        @apply modal flex justify-center items-center
+    }
+    .popup-message {
+        @apply modal-box flex flex-col rounded-md py-8 px-8 gap-y-6
+    }
+    .cancel-button {
+        @apply btn btn-lg btn-circle btn-ghost absolute right-4 top-4 w-fit
+    }
+    .popup-message {
+        background-color: rgb(15, 15, 15);
+    }
+    .warning {
+        @apply py-4 text-2xl/normal text-center
+    }
+    .popup-message h3 {
+        @apply font-bold text-3xl text-center
+    }
+    .add-funds-button {
+        @apply btn rounded-md btn-lg text-xl self-center
+    }
+    .add-funds-button {
+        background-color: #7a00c2;
     }
 }

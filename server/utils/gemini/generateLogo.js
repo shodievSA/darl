@@ -14,7 +14,9 @@ const clientOptions = {
 
 const predictionServiceClient = new PredictionServiceClient(clientOptions);
 
-async function generateLogo(logoDescription, resolution) {
+async function generateLogo(logoDescription) {
+
+    console.log(logoDescription);
 
     const endpoint = `projects/${projectID}/locations/${location}/publishers/google/models/${model}`;
 
@@ -27,7 +29,7 @@ async function generateLogo(logoDescription, resolution) {
     const parameter = {
         sampleCount: 1,
         aspectRatio: '1:1',
-        safetyFilterLevel: 'block_some',
+        safetyFilterLevel: 'block_none',
         personGeneration: 'dont_allow',
     };
 

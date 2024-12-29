@@ -1,37 +1,30 @@
-const User = require("./models/user.js");
+const { sequelize } = require("./models/user.js");
+const getUserFreeTrials = require("./getUserFreeTrials.js");
+const formatDate = require("../utils/formatDate.js");
 
-async function addNewLogo(userID, newLogo, repoName) {
+async function addNewLogo(userID, repoName) {
 
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
+    const userFreeTrials = await getUserFreeTrials(userID);
 
-    const logo = {
-        path: `${userID}/${repoName}-${Date.now()}.png`,
+    const newLogo = {
+        value: `${userID}/${repoName}-${Date.now()}.png`,
         repoName: repoName,
-        generatedOn: formattedDate
+        date: formatDate(),
+        type: 'logo',
+        price: userFreeTrials > 0 ? 'free trial' : 0.4
     }
 
-    const user = await User.findOne({
-        where: { user_id: userID },
-        attributes: ["user_history"]
-    });
-
-    const userHistory = user['user_history'];
-
-    const updatedUserHistory = { 
-        ...userHistory, 
-        logos: [logo, ...userHistory['logos']] 
-    };
-
-    await User.update(
-        { user_history: updatedUserHistory }, 
-        { where: { user_id: userID } }
+    await sequelize.query(
+        `UPDATE users SET user_history = :newLogo || user_history WHERE user_id = :userID`,
+        {
+            replacements: {
+                newLogo: JSON.stringify([newLogo]),
+                userID: userID,
+            },
+        }
     );
 
-    return logo.path;
+    return newLogo.value;
 
 }
 

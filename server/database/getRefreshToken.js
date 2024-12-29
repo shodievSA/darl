@@ -1,4 +1,4 @@
-const User = require("./models/user.js");
+const { User } = require("./models/user.js");
 const decrypt = require("../utils/decryptToken.js");
 
 async function getRefreshToken(userID) {

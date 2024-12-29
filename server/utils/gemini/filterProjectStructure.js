@@ -13,7 +13,7 @@ const content = "You will be given a project structure of a github repository " 
                 "Reply directly with the modified JSON object without any language-specifying formats (e.g ```json```).";
 
 const generativeModel = vertexAI.getGenerativeModel({
-    model: "gemini-2.0-flash-exp",
+    model: "gemini-1.5-pro",
     systemInstruction: content,
 });
 

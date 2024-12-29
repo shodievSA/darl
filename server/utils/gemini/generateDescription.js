@@ -8,10 +8,10 @@ const vertexAI = new VertexAI({
 const content = "You will be provided with the repository structure " +
                 "of a github user represented in the JSON format, as well as the contents of each " + 
                 "repository file. Your job is to carefully analyze each " +
-                "file and then generate a description of the project."
+                "file and then generate a detailed description of the project."
 
 const generativeModel = vertexAI.getGenerativeModel({
-    model: "gemini-2.0-flash-exp",
+    model: "gemini-1.5-pro",
     systemInstruction: content,
 });
 

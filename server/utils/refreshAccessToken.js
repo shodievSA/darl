@@ -1,7 +1,7 @@
 require("dotenv").config();
+const { User } = require("../database/models/user.js");
 const getRefreshToken = require("../database/getRefreshToken.js");
 const encryptToken = require("./encryptToken.js");
-const User = require("../database/models/user.js");
 
 async function refreshAccessToken(userID, req) {
 

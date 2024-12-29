@@ -6,7 +6,7 @@ function LoadingGenerationButton() {
         <button 
         className={styles['loading-button']}
         >          
-            <progress className="progress w-56" />   
+            <progress className="progress w-52" />   
         </button>
     );
 

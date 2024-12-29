@@ -2,6 +2,10 @@
     background-color: rgb(122, 0, 194);
 }
 
+.generate-button:hover {
+    background-color: rgba(122, 0, 194, 0.8);
+}
+
 @media (0 < width <= 480px) {
     .generate-button {
         @apply font-medium rounded-md
@@ -32,10 +36,10 @@
 }
 @media (min-width: 1441px) {
     .generate-button {
-        @apply font-medium rounded-md
+        @apply rounded-md w-fit shadow-md
     }
     .generate-button {
-        padding: 1.25rem 1.5rem;
-        font-size: 1.5rem;
+        padding: 1rem 1rem;
+        font-size: 1.25rem;
     }
 }

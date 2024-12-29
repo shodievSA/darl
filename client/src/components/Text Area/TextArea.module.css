@@ -9,7 +9,12 @@
         background-color: rgb(18, 18, 18);
     }
     .copy-button {
-        @apply flex items-center justify-center w-9/12 font-medium bg-secondary py-3 px-4 rounded-md cursor-pointer text-lg shadow-md
+        background-color: white;
+        color: black;
+        font-weight: 500;
+    }
+    .copy-button:hover {
+        background-color: rgba(255, 255, 255, 0.9);
     }
 }
 
@@ -21,10 +26,19 @@
         @apply textarea textarea-bordered grow w-full rounded-md resize-none text-base py-2
     }
     .repository-description {
-        background-color: rgb(18, 18, 18);
+        background-color: rgb(12.5, 12.5, 12.5);
+        outline: none !important;
+        border-color: rgb(40, 40, 40) !important;
+        border-width: 1px !important;
+        border-style: solid !important;
     }
     .copy-button {
-        @apply flex items-center justify-center w-9/12 font-medium bg-secondary py-3 px-4 rounded-md cursor-pointer text-lg shadow-md
+        background-color: white;
+        color: black;
+        font-weight: 500;
+    }
+    .copy-button:hover {
+        background-color: rgba(255, 255, 255, 0.9);
     }
 }
 
@@ -33,30 +47,52 @@
         @apply flex flex-col gap-y-6 h-full items-center w-8/12
     }
     .copy-button {
-        @apply flex items-center justify-center w-5/12 font-medium bg-secondary py-4 px-4 rounded-md cursor-pointer text-lg shadow-md
+        @apply flex items-center justify-center py-3 px-4 rounded-md cursor-pointer text-lg shadow-md
+    }
+    .copy-button {
+        background-color: white;
+        color: black;
+        font-weight: 500;
+    }
+    .copy-button:hover {
+        background-color: rgba(255, 255, 255, 0.9);
     }
     .repository-description {
         @apply textarea textarea-bordered grow w-full rounded-md resize-none text-base py-4 textarea-lg text-lg
     }
     .repository-description {
-        background-color: rgb(18, 18, 18);
+        background-color: rgb(12.5, 12.5, 12.5);
         outline: none !important;
+        border-color: rgb(40, 40, 40) !important;
+        border-width: 1px !important;
+        border-style: solid !important;
         min-width: 600px;
     }
 }
 
 @media (min-width: 1441px) {
     .textarea-container {
-        @apply flex flex-col gap-y-5 h-full items-center w-3/5
+        @apply flex flex-col gap-y-4 h-full items-center w-3/4
     }
     .copy-button {
-        @apply flex items-center justify-center w-5/12 font-medium bg-secondary py-4 px-4 rounded-md cursor-pointer text-lg shadow-md
+        @apply flex items-center justify-center py-3 px-4 rounded-md cursor-pointer text-lg shadow-md
+    }
+    .copy-button {
+        background-color: white;
+        color: black;
+        font-weight: 500;
+    }
+    .copy-button:hover {
+        background-color: rgba(255, 255, 255, 0.9);
     }
     .repository-description {
         @apply textarea textarea-bordered grow w-full rounded-md resize-none text-base py-4 textarea-lg text-lg
     }
     .repository-description {
-        background-color: rgb(18, 18, 18);
+        background-color: rgb(12.5, 12.5, 12.5);
         outline: none !important;
+        border-color: rgb(40, 40, 40) !important;
+        border-width: 1px !important;
+        border-style: solid !important;
     }
 }

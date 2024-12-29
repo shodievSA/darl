@@ -20,19 +20,16 @@ const User = sequelize.define(
             allowNull: false
         },
         user_history: {
-            type: DataTypes.JSON,
-            defaultValue: {
-                descriptions: [],
-                logos: [],
-                articles: [],
-                readmes: []
-            }
+            type: DataTypes.JSONB,
+            defaultValue: []
         },
         free_trials_left: {
-            type: DataTypes.SMALLINT
+            type: DataTypes.SMALLINT,
+            defaultValue: 100
         },
-        purchased_descriptions_left: {
-            type: DataTypes.SMALLINT
+        user_balance: {
+            type: DataTypes.FLOAT,
+            defaultValue: 0
         },
         access_token: {
             type: DataTypes.TEXT
@@ -47,4 +44,6 @@ const User = sequelize.define(
     }
 );
 
-module.exports = User;
+User.sync({ alter: true });
+
+module.exports = { sequelize, User }

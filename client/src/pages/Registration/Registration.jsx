@@ -4,18 +4,21 @@ import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import styles from "./Registration.module.css";
 
 function Registration() {
+    
     const [isSigninButtonClicked, setIsSigninButtonClicked] = useState(false);
     function authorizeUser() {
         setIsSigninButtonClicked(true);
 
         const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
-        window.location.href = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}`;
+        window.location.href = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&prompt=select_account&scope=repo`;
     }
     return (
         <>
         <div className={styles['page-container']}>
             <div className={styles['service-description']}>
-                <h1>Generate professional descriptions of projects for your CV</h1>
+                <h1>
+                    Generate descriptions, articles, READMEs and logos of your GitHub repositories
+                </h1>
             </div>
             <div className={styles['sign-in']}>
                 {
@@ -44,14 +47,15 @@ function Registration() {
                     )
                 }
                 <p className={styles['important']}>
-                    We will need to get access to your public repositories 
-                    to generate descriptions. We will be permitted to only 
+                    We will need to get access to your <strong>public</strong> repositories 
+                    to make generations. We will be permitted to only 
                     “read” your projects.
                 </p>
             </div>
         </div>
         </>
     );
+
 }
 
-export default Registration
+export default Registration;

@@ -118,19 +118,19 @@
         @apply w-9/12
     }
     .service-description h1 {
-        @apply text-6xl text-center leading-tight
+        @apply text-5xl text-center leading-tight
     }
     .sign-in {
         @apply w-full space-y-4
     }
     .sign-in-button {
-        @apply text-2xl px-6 py-10
+        @apply text-xl px-4 py-8
     }
     .sign-in-button > div {
-        @apply space-x-5
+        @apply space-x-4
     }
     .github-icon {
-        @apply h-10 w-10
+        @apply h-8 w-8
     }
     .important {
         @apply text-base

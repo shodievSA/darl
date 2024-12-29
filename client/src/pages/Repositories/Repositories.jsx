@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigationContext } from "../../context/NavigationContext";
 import fetchUserRepos from "../../utils/fetchUserRepos";
 import RepositoryCard from "../../components/Repository Card/RepositoryCard";
 import SkeletRepo from "../../components/Skelet Repo/SkeletRepo";
@@ -7,14 +6,12 @@ import styles from "./Repositories.module.css"
 
 function Repositories() {
 
-    const { currentNavigation } = useNavigationContext();
-
     const [repos, setRepos] = useState([]);
     const [loadingRepos, setLoadingRepos] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
+    const [searchResults, setSearchResults] = useState(null);
 
     const dialogWindowRef = useRef(null);
-    const skeletonCount = 9;
 
     useEffect(() => {
 
@@ -22,30 +19,31 @@ function Repositories() {
 
             let res = await fetchUserRepos();
 
-            if (res.status == "error")
-            {
+            if (res.status == "error") {
                 setErrorMessage(res.data);
                 dialogWindowRef.current.showModal();
-            } 
-            else if (res.status == "success")
-            {
+            } else if (res.status == "success") {
                 setRepos(res.data);
             }
             
             setLoadingRepos(false);
+            
         }
+
         fetchData();
 
     }, []);
 
     return (
         <div className={styles['page-container']}>
-            <dialog 
-            id="my_modal_5" 
+            <dialog  
             className="modal modal-bottom sm:modal-middle"
             ref={dialogWindowRef}
             >
-                <div className="modal-box">
+                <div 
+                className="modal-box" 
+                style={{ backgroundColor: "rgb(12.5, 12.5, 12.5)"}}
+                >
                     <h3 className="font-bold text-lg"></h3>
                     <p className="py-4">
                         {errorMessage}
@@ -57,36 +55,86 @@ function Repositories() {
                     </div>
                 </div>
             </dialog>
-            {
-                currentNavigation === 'desktop' &&
-                <div className={styles['header']}>
-                    <h1>Repositories</h1>
-                </div>
-            }
             <div className={styles['main']}>
-                <div className={styles['user-repositories']}>
+                <div className={styles['search-container']}>
+                    <label className="input input-bordered flex items-center gap-2">
+                        <input 
+                        type="text" 
+                        className="grow" 
+                        placeholder="Search by repository name" 
+                        onChange={(e) => {
+                            setSearchResults(repos.filter((repo) => {
+                                return repo.name.includes(e.target.value)
+                            }))
+                        }}
+                        />
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 16 16"
+                            fill="currentColor"
+                            className="h-4 w-4 opacity-70">
+                            <path
+                            fillRule="evenodd"
+                            d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                            clipRule="evenodd" />
+                        </svg>
+                    </label>
+                </div>
                 {
                     loadingRepos ? (
-                        Array.from({ length: skeletonCount }).map((_, index) => (
-                            <SkeletRepo key={index} />
-                        ))
+                        <div className={styles['user-repositories']}>
+                            {
+                                Array.from({ length: 9 }).map((_, index) => (
+                                    <SkeletRepo key={index} />
+                                ))
+                            }
+                        </div>
                     ) : (
                         repos.length > 0 ? (
-                            repos.map((repo) => {
-                                return (
-                                    <RepositoryCard
-                                    key={`${repo.id}`}
-                                    name={repo.name}
-                                    owner={repo.owner.login}
-                                    />
+                            searchResults ? (
+                                searchResults.length > 0 ? (
+                                    <div className={styles['user-repositories']}>
+                                        {
+                                            searchResults.map((repo) => {
+                                                return (
+                                                    <RepositoryCard
+                                                    key={`${repo.id}`}
+                                                    name={repo.name}
+                                                    owner={repo.owner.login}
+                                                    updated_at={repo.updated_at}
+                                                    />
+                                                )
+                                            })
+                                        }
+                                    </div>
+                                ) : (
+                                    <div className={styles["no-results-container"]}>
+                                        <h1>No results found</h1>
+                                    </div>
                                 )
-                            })
+                            ) : (
+                                <div className={styles['user-repositories']}>
+                                {
+                                    repos.map((repo) => {
+                                        return (
+                                            <RepositoryCard
+                                            key={`${repo.id}`}
+                                            name={repo.name}
+                                            owner={repo.owner.login}
+                                            updated_at={repo.updated_at}
+                                            />
+                                        )
+                                    })
+                                }
+                                </div>
+                            )
                         ) : (
-                            <h1>Looks like you don't have any repositories</h1>
+                            <div className={styles["no-repos-container"]}>
+                                <h1>Looks like you don't have any repositories</h1>
+                            </div>
                         )
                     )
                 }
-                </div>
             </div>
         </div>
     );

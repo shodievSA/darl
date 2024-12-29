@@ -1,5 +1,5 @@
 .page-container {
-    background-color: rgb(18, 18, 18);
+    background-color: rgb(10, 10, 10);
 }
 
 @media (0 < width <= 480px) {
@@ -7,20 +7,25 @@
         margin-top: 80px;
     }
     .page-container {
-        @apply grow flex py-6 justify-center px-6
+        @apply grow flex items-center py-6 justify-center px-6
+    }
+    .empty-history h1 {
+        @apply text-2xl font-medium
     }
     .main {
         @apply grow
     }
-    .histories {
-        @apply grid grow gap-y-10 justify-center
+    .empty-history {
+        @apply flex grow justify-center items-center
     }
-    .histories {
-        grid-template-columns: 300px;
-        grid-auto-rows: 180px;
+    .table-head {
+        @apply text-sm text-center
     }
-    .histories > div {
-        @apply flex items-center justify-center rounded-md text-2xl bg-black font-medium
+    .table-body {
+        @apply text-sm text-center 
+    }
+    .table-body > tr {
+        @apply cursor-pointer
     }
 }
 
@@ -28,117 +33,76 @@
     .page-container {
         margin-top: 80px;
     }
+    .empty-history h1 {
+        @apply text-3xl font-medium
+    }
     .page-container {
-        @apply grow flex py-10 justify-center px-6
+        @apply flex flex-col items-center py-10 overflow-y-auto h-full
     }
     .main {
-        @apply grow
+        @apply flex grow justify-center
     }
-    .histories {
-        @apply grid grow gap-y-10 justify-center
+    .empty-history {
+        @apply flex grow justify-center items-center
     }
-    .histories {
-        grid-template-columns: 300px;
-        grid-auto-rows: 180px;
+    .table-head {
+        @apply text-sm text-center
     }
-    .histories > div {
-        @apply flex items-center justify-center rounded-md text-2xl bg-black font-medium
+    .table-body {
+        @apply text-sm text-center 
+    }
+    .table-body > tr {
+        @apply cursor-pointer
     }
 }
 
 @media (834px < width <= 1440px) {
     .page-container {
-        margin-top: 100px;
+        margin-top: 80px;
+    }
+    .empty-history h1 {
+        @apply text-4xl font-medium
     }
     .page-container {
-        @apply flex grow flex-col h-full p-10 overflow-y-auto relative
+        @apply flex flex-col items-center grow py-10 overflow-y-auto h-full
     }
     .main {
-        @apply flex flex-col grow items-center justify-center
+        @apply flex grow justify-center
     }
-    .histories {
-        display: grid;
-        grid-template-columns: repeat(2, 300px);
-        grid-template-rows: repeat(2, 200px);
+    .empty-history {
+        @apply flex grow justify-center items-center
     }
-    .histories {
-        @apply gap-y-12 gap-x-24 box-content
+    .table-head {
+        @apply text-lg text-center
     }
-    .histories > div {
-        @apply flex justify-center items-center text-center p-5 rounded-md
+    .table-body {
+        @apply text-base text-center 
     }
-    .histories > div {
-        background-color: rgb(24, 24, 24);
-        font-size: 26px;
-    }
-    .histories > div:hover {
-        border: 3px solid rgb(122, 0, 194);
-    }
-    .histories > div:hover {
-        @apply font-medium
+    .table-body > tr {
+        @apply cursor-pointer
     }
 }
 
 @media (min-width: 1441px) {
     .page-container {
-        @apply h-full flex flex-col grow
+        @apply flex flex-col items-center grow py-12 overflow-y-auto h-full
     }
-    .page-container {
-        border-left-width: 4px;
-        border-left-color: black;
-    }
-    .header {
-        @apply flex items-end px-24
-    }
-    .header {
-        height: 80px;
-    }
-    .header h1 {
+    .empty-history h1 {
         @apply text-4xl font-medium
     }
     .main {
+        @apply flex grow justify-center 
+    }
+    .empty-history {
         @apply flex grow justify-center items-center
     }
-    .histories {
-        display: grid;
-        grid-template-columns: repeat(2, 300px);
-        grid-template-rows: repeat(2, 175px);
+    .table-head {
+        @apply text-lg text-center
     }
-    .histories {
-        @apply gap-x-24 gap-y-12 pb-10
+    .table-body {
+        @apply text-base text-center 
     }
-    .histories > div {
-        @apply bg-black flex items-center justify-center text-2xl rounded-md
+    .table-body > tr {
+        @apply cursor-pointer
     }
-    .histories > div:hover {
-        border-color: #7a00c2;
-        border-width: 3px;
-        font-weight: 600;
-    }
-    /* .page-container {
-        @apply grow flex py-10 px-10
-    }
-    .page-container {
-        border-left-width: 4px;
-        border-left-color: black;
-    }
-    .heading-container {
-        @apply grow flex items-center justify-center
-    }
-    .heading-container h1 {
-        @apply text-4xl font-inter-medium
-    }
-    .descriptions {
-        @apply flex flex-col grow items-center gap-y-10 overflow-auto
-    }
-    .descriptions > div {
-        @apply flex w-9/12 justify-between py-8 rounded-md px-8 cursor-pointer
-    }
-    .description:hover {
-        background-color: rgb(26, 26, 26);
-    }
-    .repository-name,
-    .generation-date {
-        @apply text-xl 
-    } */
 }

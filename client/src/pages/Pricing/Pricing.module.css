@@ -1,5 +1,9 @@
 .page-container {
-    background-color: rgb(18, 18, 18);
+    background-color: rgb(10, 10, 10);
+}
+
+.add-funds-button {
+    @apply shadow-md
 }
 
 @media (0 < width <= 480px) {
@@ -12,38 +16,82 @@
     .page-container > h1 {
         @apply text-3xl font-medium
     }
+    .main {
+        @apply grow flex items-center justify-center
+    }
+    .main div {
+        @apply flex flex-col gap-y-10
+    }
+    .user-balance {
+        @apply text-2xl
+    }
+    .add-funds-button {
+        @apply btn btn-lg text-2xl rounded-md
+    }
+    .add-funds-button {
+        background-color: #7a00c2;
+    }
 }
 
 @media (480px < width <= 834px) {
     .page-container {
-        @apply flex grow justify-center items-center 
+        @apply flex grow flex-col
     }
-    .page-container {
-        margin-top: 80px;
+    .main {
+        @apply grow flex flex-col items-center justify-center gap-y-12 px-12 text-center
     }
-    .page-container > h1 {
-        @apply text-3xl font-medium
+    .main > h1 {
+        @apply leading-snug
+    }
+    .user-balance {
+        @apply text-xl px-5 py-4 rounded-md cursor-pointer
+    }
+    .user-balance {
+        background-color: rgb(12.5, 12.5, 12.5);
+        border: 1px solid rgb(40, 40, 40);
+        font-weight: 600;
+    }
+    .user-balance:hover {
+        border-color: rgb(80, 80, 80);
     }
 }
 
 @media (834px < width <= 1440px) {
     .page-container {
-        @apply flex grow flex-col justify-center items-center
+        @apply flex grow flex-col
     }
-    .page-container > h1 {
-        @apply text-5xl
+    .main {
+        @apply grow flex flex-col items-center justify-center gap-y-12
+    }
+    .user-balance {
+        @apply text-xl px-5 py-4 rounded-md cursor-pointer
+    }
+    .user-balance {
+        background-color: rgb(12.5, 12.5, 12.5);
+        border: 1px solid rgb(40, 40, 40);
+        font-weight: 600;
+    }
+    .user-balance:hover {
+        border-color: rgb(80, 80, 80);
     }
 }
 
 @media (min-width: 1441px) {
     .page-container {
-        @apply flex grow flex-col justify-center items-center
+        @apply flex grow flex-col
     }
-    .page-container {
-        border-left-width: 4px;
-        border-left-color: black;
+    .main {
+        @apply grow flex flex-col items-center justify-center gap-y-8
     }
-    .page-container > h1 {
-        @apply text-5xl
+    .user-balance {
+        @apply text-xl px-5 py-4 rounded-md cursor-pointer
+    }
+    .user-balance {
+        background-color: rgb(12.5, 12.5, 12.5);
+        border: 1px solid rgb(40, 40, 40);
+        font-weight: 600;
+    }
+    .user-balance:hover {
+        border-color: rgb(80, 80, 80);
     }
 }

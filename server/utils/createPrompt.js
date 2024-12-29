@@ -5,14 +5,7 @@ const getFileContents = require("./getFileContents.js");
 
 async function createPrompt(props) {
 
-    const { 
-
-        userID,
-        owner,
-        repoName
-
-    } = props;
-
+    const { userID, owner, repoName } = props;
     const accessToken = await getUserAccessToken(userID);
 
     let githubRes = await fetch(
@@ -32,11 +25,9 @@ async function createPrompt(props) {
     let projectStructure = await generateProjectStructure(
         data.entries, {}, owner, repoName, accessToken
     );
-
     let filteredProjectStructure = await filterProjectStructure(
         JSON.stringify(projectStructure)
     );
-
     let fileContents = await getFileContents(
         JSON.parse(filteredProjectStructure), 
         "", 
@@ -49,7 +40,6 @@ async function createPrompt(props) {
                                "```json\n" + JSON.stringify(filteredProjectStructure) + "\n" +
                                "```\n\n";
     fileContents = "File contents of each file:\n\n" + fileContents;
-
     let prompt = filteredProjectStructure + fileContents;
     
     return prompt;

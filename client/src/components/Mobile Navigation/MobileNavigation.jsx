@@ -6,6 +6,7 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import styles from "./MobileNavigation.module.css";
+const serverIP = import.meta.env.VITE_SERVER_IP;
 
 function MobileNavigation() {
 
@@ -17,6 +18,7 @@ function MobileNavigation() {
 
     const headerRef = useRef(null);
     const checkBoxRef = useRef(null);
+    const modelWindowRef = useRef(null);
 
     const route = useLocation();
 
@@ -30,18 +32,36 @@ function MobileNavigation() {
         setIsMenuActive(!isMenuActive);
     }
 
+    async function deleteUserAccount(e) {
+        e.preventDefault();
+
+        modelWindowRef.current.close();
+
+        let res = await fetch(`${serverIP}/api/v1/delete-user`);
+
+        if (res.status == 500)
+        {
+            let data = await res.text();
+            console.log(data);
+        } 
+        else if (res.status == 200)
+        {
+            navigate('/registration', { replace: true });
+        }
+    }
+
     useEffect(() => {
         const currentRoute = route.pathname;
         if (currentRoute == "/contact") {
-            setPageName("Contact Us")
+            setPageName("Support");
         } else if (currentRoute == "/history") {
-            setPageName("History")
+            setPageName("History");
         } else if (currentRoute == "/pricing") {
-            setPageName("Balance")
+            setPageName("Balance");
         } else if (currentRoute == "/repositories") {
-            setPageName("Repositories")
+            setPageName("Repositories");
         } else if (currentRoute == "/logout") {
-            setPageName("Log Out")
+            setPageName("Log Out");
         }
     }, [route.pathname]);
 
@@ -54,6 +74,7 @@ function MobileNavigation() {
     }, [isMenuActive])
 
     return (
+        <>
         <div 
         className={styles['header']} 
         style={{ height: isMenuActive ? "100%": "80px" }}
@@ -67,13 +88,7 @@ function MobileNavigation() {
                         ) : (
                             (route.pathname === `/repositories/${repositoryName}`) 
                             ||
-                            (route.pathname === `/history/descriptions`)
-                            ||
-                            (route.pathname === `/history/logos`)
-                            || 
-                            (route.pathname === `/history/articles`) 
-                            ||
-                            (route.pathname === `/history/readmes`) ? (
+                            (route.pathname === `/history/${repositoryName}`) ? (
                                 <FontAwesomeIcon 
                                 icon={faChevronLeft} 
                                 onClick={() => navigate(-1)}
@@ -113,7 +128,7 @@ function MobileNavigation() {
                             }}
                             onClick={() => handleRedirection("Contact Us")}
                             >
-                                Contact Us
+                                Support
                             </NavLink>
                         </li>
                         <li>
@@ -156,22 +171,42 @@ function MobileNavigation() {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink
-                            to="/logout"
-                            style={({ isActive }) => {
-                                return  {
-                                    backgroundColor: isActive ? "#7a00c2" : ""
-                                }
-                            }}
-                            onClick={() => handleRedirection("Log Out")}
-                            >
+                            <div onClick={() => modelWindowRef.current.showModal()}>
                                 Log Out
-                            </NavLink>
+                            </div>
                         </li>
                     </ul>
                 </div>
             )}
         </div>
+        <dialog 
+        className={styles['modal-window']} 
+        ref={modelWindowRef}
+        >
+            <div className={styles['popup-message']}>
+                <p className={styles['warning']}>
+                    Are you sure you want to log out from your account? 
+                </p>
+                <div className={styles['buttons-container']}>
+                    <form method="dialog">
+                        <button 
+                        className={styles['cancel-button']}
+                        >
+                            Cancel
+                        </button>
+                    </form>
+                    <form>
+                        <button 
+                        className={styles['confirm-button']}
+                        onClick={deleteUserAccount}
+                        >
+                            Confirm
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </dialog>
+        </>
     )
 }
 

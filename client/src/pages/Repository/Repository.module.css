@@ -1,5 +1,5 @@
 .page-container {
-    background-color: rgb(18, 18, 18);
+    background-color: rgb(10, 10, 10);
 }
 
 @media (0 < width <= 480px) {
@@ -53,32 +53,34 @@
         @apply py-6
     }
     .header > div {
-        @apply flex items-center justify-center h-full gap-x-4
+        @apply flex items-end justify-center h-full gap-x-4
     }
     .github-icon {
-        @apply h-12 w-12
+        @apply h-8 w-8
     }
     .repository-name {
-        @apply text-3xl font-medium
+        @apply text-2xl font-medium
     }
     .main {
-        @apply flex flex-col grow items-center justify-center gap-y-8 py-8
+        @apply flex flex-col grow items-center justify-center py-4 px-12
     }
-    .services {
-        @apply grid gap-y-10 grow gap-x-12 justify-center
+    .summary {
+        @apply btn btn-lg m-3 flex gap-x-3 items-center rounded-md font-normal
     }
-    .services {
-        grid-template-columns: repeat(auto-fit, 300px);
-        grid-auto-rows: 180px;
+    .summary {
+        background-color: rgb(12.5, 12.5, 12.5);
+        border-width: 1px;
+        border-color: rgb(40, 40, 40);
+        border-style: solid;
     }
-    .services > div {
-        @apply flex justify-center items-center text-center p-5 rounded-md shadow-md text-2xl bg-black
+    .summary:hover {
+        border-color: rgb(80, 80, 80);
     }
 }
 
 @media (834px < width <= 1440px) {
     .page-container {
-        margin-top: 100px;
+        margin-top: 80px;
     }
     .page-container {
         @apply flex grow flex-col h-full p-10 overflow-y-auto relative
@@ -87,14 +89,23 @@
         height: 80px;
         position: absolute;
     }
+    .go-back-icon {
+        @apply h-5 w-5 mt-1
+    }
     .header > div:first-child {
-        @apply flex justify-start h-full px-14
+        @apply absolute left-0 rounded-md ml-16 border w-fit py-2 px-2 cursor-pointer 
+    }
+    .header > div:first-child {
+        border-color: rgb(40, 40, 40);
+    }
+    .header > div:first-child:hover {
+        background-color: rgb(40, 40, 40);
     }
     .go-back-icon {
-        @apply h-10 w-10 cursor-pointer
+        @apply h-5 w-5 mt-1
     }
     .github-icon {
-        @apply h-10 w-10
+        @apply h-6 w-6
     }
     .repository-name {
         @apply text-4xl
@@ -102,26 +113,17 @@
     .main {
         @apply flex flex-col grow items-center justify-center
     }
-    .services {
-        display: grid;
-        grid-template-columns: repeat(2, 300px);
-        grid-template-rows: repeat(2, 200px);
+    .summary {
+        @apply btn btn-lg m-3 flex gap-x-3 items-center rounded-md font-normal
     }
-    .services {
-        @apply gap-y-12 gap-x-24 box-content
+    .summary {
+        background-color: rgb(12.5, 12.5, 12.5);
+        border-width: 1px;
+        border-color: rgb(40, 40, 40);
+        border-style: solid;
     }
-    .services > div {
-        @apply flex justify-center items-center text-center p-5 rounded-md
-    }
-    .services > div {
-        background-color: rgb(24, 24, 24);
-        font-size: 26px;
-    }
-    .services > div:hover {
-        border: 3px solid rgb(122, 0, 194);
-    }
-    .services > div:hover {
-        @apply font-medium
+    .summary:hover {
+        border-color: rgb(80, 80, 80);
     }
 }
 
@@ -129,53 +131,103 @@
     .page-container {
         @apply flex grow flex-col h-full
     }
-    .page-container {
-        border-left-width: 4px;
-        border-left-color: black;
-    }
     .header {
         @apply flex items-center relative justify-center px-24
     }
     .header {
-        height: 150px;
+        height: 120px;
     }
     .go-back-icon {
-        @apply h-10 w-10 cursor-pointer 
+        @apply h-5 w-5 mt-1
     }
     .header > div:first-child {
-        @apply absolute left-0 rounded-md px-24
+        @apply absolute left-0 rounded-md ml-16 border w-fit py-2 px-2 cursor-pointer 
+    }
+    .header > div:first-child {
+        border-color: rgb(40, 40, 40);
+    }
+    .header > div:first-child:hover {
+        background-color: rgb(40, 40, 40);
     }
     .header > div:last-child {
-        @apply flex items-center justify-center gap-x-10
+        @apply flex items-center justify-center gap-x-5
     }
     .github-icon {
-        @apply h-12 w-12
+        @apply h-8 w-8
     }
     .repository-name {
-        @apply text-4xl 
+        @apply text-2xl font-medium
     }
     .main {
-        @apply flex grow justify-center items-center
+        @apply flex grow justify-center items-center pb-8
     }
-    .services {
-        display: grid;
-        grid-template-columns: repeat(2, 300px);
-        grid-template-rows: repeat(2, 175px);
+    .main > div:first-child {
+        @apply flex flex-col items-center
     }
-    .services {
-        @apply gap-y-12 gap-x-24
+    .view-logo-button-container {
+        @apply flex h-full items-center justify-center
     }
-    .services > div {
-        @apply flex flex-col justify-center items-center text-center p-5 rounded-md shadow-md relative text-2xl
+    .view-logo-button {
+        @apply btn btn-lg m-3 flex gap-x-3 items-center rounded-md font-normal
     }
-    .services > div > div {
-        @apply py-4 px-4 self-start bottom-0 absolute mb-5
+    .view-logo-button {
+        background-color: rgb(12.5, 12.5, 12.5);
+        border-width: 1px;
+        border-color: rgb(40, 40, 40);
+        border-style: solid;
     }
-    .services > div {
-        background-color: rgb(24, 24, 24);
+    .view-logo-button:hover {
+        border-color: rgb(80, 80, 80);
     }
-    .services > div:hover {
-        border: 3px solid rgb(122, 0, 194);
-        font-weight: 500;
+    .modal-window {
+        @apply modal flex justify-center items-center
+    }
+    .popup-message {
+        @apply modal-box flex flex-col rounded-md py-6 px-8 gap-y-6
+    }
+    .x-button {
+        @apply btn btn-lg btn-circle btn-ghost absolute right-4 top-4 w-fit
+    }
+    .popup-message {
+        background-color: rgb(12.5, 12.5, 12.5);
+    }
+    .warning {
+        @apply py-2 text-xl/normal text-center
+    }
+    .popup-message h3 {
+        @apply font-bold text-2xl text-center
+    }
+    .add-funds-button {
+        @apply btn rounded-md self-center text-lg
+    }
+    .add-funds-button {
+        background-color: #7a00c2;
+    }
+    .error-modal-window {
+        @apply modal flex justify-center items-center
+    }
+    .error-box {
+        @apply modal-box rounded-md
+    }
+    .error-box {
+        background-color: rgb(12.5, 12.5, 12.5);
+    }
+    .cancel-button {
+        @apply btn rounded-md
+    }
+    .cancel-button {
+        background-color: #7a00c2;
+    }
+    .summary {
+        @apply btn btn-lg m-3 flex gap-x-3 items-center rounded-md font-normal
+    }
+    .summary {
+        background-color: rgb(12.5, 12.5, 12.5);
+        border-width: 1px;
+        border-color: rgb(40, 40, 40);
+        border-style: solid;
+    }
+    .summary:hover {
+        border-color: rgb(80, 80, 80);
     }
 }

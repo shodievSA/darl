@@ -5,14 +5,14 @@ const vertexAI = new VertexAI({
     project: process.env.VERTEXAI_PTOJECT_ID
 });
 
-const content = "You will be given a description of the user's github project. " +
-                "Your job is to summarize this description into SIMPLE logo description " +
-                "which will be then given to AI image-generation model. Make sure your logo " +
-                "description is no more than 50 words and avoid asking the model to draw words on a logo. " +
-                "Reply directly with the logo description.";
+const content = "You are an advanced text generative AI model tasked with analyzing " +
+                "the contents of a user's GitHub repository to generate a detailed " +
+                "and concise prompt for generating a logo. Make sure your prompt is " +
+                "around 50 words and avoid asking the model to include words, letters " +
+                "and digits on a logo.";
 
 const generativeModel = vertexAI.getGenerativeModel({
-    model: "gemini-2.0-flash-exp",
+    model: "gemini-1.5-pro",
     systemInstruction: content,
 });
 
