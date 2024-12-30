@@ -3,7 +3,7 @@ const { VertexAI } = require("@google-cloud/vertexai");
 
 const content = "You are an advanced text generative AI model tasked with analyzing " +
                 "the contents of a user's GitHub repository to generate concise " +
-                "and professional description (around 50 words) suitable for inclusion in a CV/resume. " +
+                "and professional description (around 80 words) suitable for inclusion in a CV/resume. " +
                 "Make sure to describe the purpose of the project and stack of technologies used.";
 
 const vertexAI = new VertexAI({ 

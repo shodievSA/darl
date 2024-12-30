@@ -5,12 +5,13 @@ const vertexAI = new VertexAI({
     project: process.env.VERTEXAI_PTOJECT_ID
 });
 
-const content = "You will be given a project structure of a github repository " +
-                "represented as a JSON object. Your goal is to get rid of all directories " +
-                "and files which are not related to MAIN logic of the project. Examples of " +
-                "unnecessary directories and files include icons, images, media files, assets folder, eslint configurarion, " +
-                "dist folder, package.json and package-lock.json folders, node_modules, .gitignore, README.md requirements.txt and so on. " +
-                "Reply directly with the modified JSON object without any language-specifying formats (e.g ```json```).";
+const content = "You are an advanced text generative AI model tasked with filtering out " +
+                "all directories and files from repository file structure unrelated to " +
+                "the main logic of the project. Unnecessary items include assets such as " +
+                "icons, images, media files, the assets folder, build output folders " +
+                "(e.g., dist, node_modules), style files (e.g., CSS) and package-lock.json " +
+                "file. Respond only with the modified JSON object, without any additional " +
+                "formatting or enclosing markers (e.g., no ```json``` tags).";
 
 const generativeModel = vertexAI.getGenerativeModel({
     model: "gemini-1.5-pro",
