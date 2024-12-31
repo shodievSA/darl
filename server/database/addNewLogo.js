@@ -11,7 +11,7 @@ async function addNewLogo(userID, repoName) {
         repoName: repoName,
         date: formatDate(),
         type: 'logo',
-        price: userFreeTrials > 0 ? 'free trial' : 0.4
+        price: userFreeTrials > 0 ? 'free trial' : 0.2
     }
 
     await sequelize.query(
