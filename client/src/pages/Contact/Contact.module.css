@@ -1,0 +1,120 @@
+.page-container {
+    background-color: rgb(10, 10, 10);
+    overflow-y: hidden;
+}
+.email-input {
+    background-color: rgb(12.5, 12.5, 12.5) !important;
+    border-color: rgb(40, 40, 40) !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+}
+.problem-description-textarea {
+    background-color: rgb(12.5, 12.5, 12.5) !important;
+    border-color: rgb(40, 40, 40) !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+}
+
+@media (0 < width <= 480px) {
+    .page-container {
+        @apply pb-6 pt-6 px-5 h-full flex
+    }
+    .page-container {
+        margin-top: 80px;
+    }
+    .page-container form {
+        @apply flex grow flex-col gap-y-4
+    }
+    .email-input {
+        @apply input input-bordered w-full rounded
+    }
+    .problem-description-textarea {
+        @apply textarea textarea-bordered rounded textarea-lg px-4 text-base resize-none h-72 grow
+    }
+    .submit-problem-button {
+        @apply btn btn-secondary rounded text-lg font-medium
+    }
+}
+
+@media (480px < width < 834px) {
+    .page-container {
+        @apply pb-6 pt-6 px-8 h-full flex
+    }
+    .page-container {
+        margin-top: 80px;
+    }
+    .page-container form {
+        @apply flex grow flex-col gap-y-6 items-center
+    }
+    .email-input {
+        @apply input input-lg input-bordered min-w-96 w-3/4 rounded
+    }
+    .email-input {
+        background-color: rgb(12.5, 12.5, 12.5) !important;
+    }
+    .problem-description-textarea {
+        @apply textarea textarea-bordered rounded min-w-96 textarea-lg resize-none h-72 w-3/4 grow
+    }
+    .problem-description-textarea {
+        background-color: rgb(12.5, 12.5, 12.5) !important;
+    }
+    .submit-problem-button {
+        @apply btn btn-lg btn-secondary rounded text-xl font-medium w-3/4 min-w-96
+    }
+}
+
+@media (834px < width <= 1440px) {
+    .page-container {
+        @apply pb-8 pt-8 px-8 h-full flex
+    }
+    .page-container {
+        margin-top: 80px;
+    }
+    .page-container form {
+        @apply flex grow flex-col gap-y-4 items-center
+    }
+    .email-input {
+        @apply input input-bordered w-1/2 rounded
+    }
+    .email-input {
+        min-width: 650px;
+        background-color: rgb(12.5, 12.5, 12.5) !important;
+    }
+    .problem-description-textarea {
+        @apply textarea textarea-bordered rounded resize-none h-72 w-1/2 grow
+    }
+    .problem-description-textarea {
+        min-width: 650px;
+        background-color: rgb(12.5, 12.5, 12.5) !important;
+    }
+    .submit-problem-button {
+        @apply btn btn-secondary rounded text-lg font-medium btn-wide
+    }
+}
+
+@media (min-width: 1441px) {
+    .page-container {
+        @apply py-12 px-8 h-full flex grow
+    }
+    .page-container form {
+        @apply flex grow flex-col gap-y-4 items-center
+    }
+    .email-input {
+        @apply input input-bordered w-7/12 rounded
+    }
+    .email-input {
+        max-width: 700px;
+    }
+    .problem-description-textarea {
+        @apply textarea textarea-bordered rounded resize-none h-72 w-7/12 grow
+    }
+    .problem-description-textarea {
+        max-width: 700px;
+    }
+    .submit-problem-button {
+        @apply btn btn-wide btn-secondary rounded
+    }
+    .loading-button {
+        @apply btn btn-secondary rounded w-fit
+    }
+}

@@ -1,0 +1,95 @@
+.header {
+    @apply flex items-center py-6 px-8 fixed w-full justify-center
+}
+.header {
+    height: 80px;
+    background-color: rgb(12.5, 12.5, 12.5);
+    z-index: 10;
+}
+.header > div:first-child {
+    @apply absolute left-0 px-8
+}
+.header > div:last-child h1 {
+    @apply text-2xl font-medium
+}
+.header > div:last-child div {
+    @apply flex items-center gap-x-5
+}
+.bars-icon {
+    @apply h-6 w-6 p-2 rounded-md cursor-pointer
+}
+.bars-icon:hover {
+    background-color: rgb(20, 20, 20);
+}
+.menu-container {
+    @apply flex fixed top-0 z-10 h-full w-full
+}
+.menu-container > div:first-child {
+    @apply flex flex-col h-full space-y-12 pb-10 pt-6 px-8
+}
+.hide-menu-icon {
+    @apply h-6 w-6 cursor-pointer hover:bg-base-300 p-2 rounded-md
+}
+.menu-container > div:last-child {
+    @apply grow h-full backdrop-blur-2xl
+}
+.menu-container > div:last-child {
+    backdrop-filter: blur(40px);
+    background-color: rgba(0, 0, 0, 0.8);
+}
+.menu-header {
+    @apply flex justify-between items-center
+}
+.menu-header h1 {
+    @apply text-xl font-medium
+}
+.menu-links-container {
+    @apply h-full
+}
+.links > li {
+    border-radius: 6px;
+}
+.links > li > a, .links > li > div {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    column-gap: 0.5rem;
+    padding: 0.5rem;
+    padding-left: 1rem;
+}
+.links {
+    @apply flex flex-col gap-y-4 h-full 
+}
+.links li:last-child {
+    @apply mt-auto cursor-pointer
+}
+.links > li:hover {
+    background-color: rgb(26, 26, 26);
+}
+.github-icon {
+    @apply h-8 w-8
+}
+.delete-account-button {
+    @apply btn btn-secondary rounded-md
+}
+.modal-window {
+    @apply modal flex justify-center items-center
+}
+.popup-message {
+    @apply modal-box rounded-md py-10 px-8 gap-y-5 flex flex-col
+}
+.popup-message {
+    background-color: rgb(12.5, 12.5, 12.5);
+}
+.warning {
+    @apply text-2xl/normal text-center
+}
+.buttons-container {
+    @apply modal-action gap-x-8 flex justify-center
+}
+.cancel-button {
+    @apply btn rounded-md grow
+}
+.confirm-button {
+    @apply btn rounded-md grow
+}

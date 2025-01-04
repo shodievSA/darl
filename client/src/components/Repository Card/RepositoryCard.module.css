@@ -1,0 +1,93 @@
+.repository-card {
+    border-color: rgb(40, 40, 40);
+    border-width: 1px;
+    border-style: solid;
+    background-color: rgb(12.5, 12.5, 12.5);
+    cursor: pointer;
+    transition: border-color 0.5 ease;
+}
+
+.repository-card:hover {
+    border-color: rgb(80, 80, 80);
+}
+
+@media (0 < width <= 480px) {
+    .repository-card {
+        @apply flex flex-col p-6 rounded-md
+    }
+    .repository-card > div:first-child {
+        @apply flex items-start gap-x-4 
+    }
+    .github-icon {
+        @apply w-7 h-7
+    }
+    .repository-name {
+        @apply text-lg text-wrap text-ellipsis overflow-hidden font-medium
+    }
+    .last-commit {
+        @apply grow flex items-end justify-end 
+    }
+    .stack {
+        @apply flex grow items-end justify-start
+    }
+}
+@media (480px < width <= 834px) {
+    .repository-card {
+        @apply flex flex-col p-6 rounded-md
+    }
+    .repository-card > div:first-child {
+        @apply flex items-start gap-x-4 
+    }
+    .github-icon {
+        @apply w-7 h-7
+    }
+    .repository-name {
+        @apply text-base text-wrap text-ellipsis overflow-hidden font-medium
+    }
+    .last-commit {
+        @apply grow flex items-end justify-end 
+    }
+    .stack {
+        @apply flex grow items-end justify-start
+    }
+}
+@media (834px < width <= 1440px) {
+    .repository-card {
+        @apply flex flex-col p-6 rounded-md
+    }
+    .repository-card > div:first-child {
+        @apply flex items-start gap-x-4 
+    }
+    .github-icon {
+        @apply w-7 h-7
+    }
+    .repository-name {
+        @apply text-base text-wrap text-ellipsis overflow-hidden font-medium
+    }
+    .last-commit {
+        @apply grow flex items-end justify-end 
+    }
+    .stack {
+        @apply flex grow items-end justify-start
+    }
+}
+@media (min-width: 1441px) {
+    .repository-card {
+        @apply flex flex-col p-6 rounded-md
+    }
+    .repository-card > div:first-child {
+        @apply flex items-start gap-x-4 
+    }
+    .github-icon {
+        @apply w-7 h-7
+    }
+    .repository-name {
+        @apply text-base text-wrap text-ellipsis overflow-hidden font-medium
+    }
+    .last-commit {
+        @apply grow flex items-end justify-end 
+    }
+    .stack {
+        @apply flex grow items-end justify-start
+    }
+}

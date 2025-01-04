@@ -1,0 +1,60 @@
+.tariff-plan {
+    background-color: rgb(10, 10, 10) !important;
+}
+
+@media (0 < width <= 834px) {
+    .tariff-plan {
+        @apply card bg-base-200 w-72 rounded-md 
+    }
+    .tariff-plan-body {
+        @apply card-body flex flex-col gap-y-6 items-center px-6 py-8
+    }
+    .tariff-plan-title {
+        @apply card-title text-3xl
+    }
+    .tariff-plan-body p {
+        @apply text-lg text-center
+    }
+    .buy-tariff-plan-button {
+        @apply btn btn-secondary rounded text-lg 
+    }
+}
+
+@media (834px < width <= 1440px) {
+    .tariff-plan {
+        @apply card bg-base-200 w-80 rounded-md card-compact
+    }
+    .tariff-plan-body {
+        @apply card-body flex flex-col gap-y-4 items-center p-6
+    }
+    .tariff-plan-title {
+        @apply card-title text-2xl
+    }
+    .tariff-plan-body p {
+        @apply text-lg text-center
+    }
+    .buy-tariff-plan-button {
+        @apply btn btn-secondary btn-lg rounded-md text-xl text-white font-medium
+    }
+}
+
+@media (min-width: 1441px) {
+    .tariff-plan {
+        @apply card bg-base-200 rounded-md 
+    }
+    .tariff-plan{
+        width: 300px !important;
+    }
+    .tariff-plan-body {
+        @apply card-body flex flex-col gap-y-4 items-center py-6 px-4
+    }
+    .tariff-plan-title {
+        @apply card-title text-3xl font-medium
+    }
+    .tariff-plan-body p {
+        @apply text-lg text-center
+    }
+    .buy-tariff-plan-button {
+        @apply btn btn-secondary btn-lg rounded-md text-xl text-white font-medium
+    }
+}

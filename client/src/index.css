@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    @font-face {
+        font-family: "Inter-Medium";
+        src: url("./assets/fonts/Inter_18pt-Medium.ttf");
+    }
+
+    @font-face {
+        font-family: "Inter-Regular";
+        src: url("./assets/fonts/Inter_18pt-Regular.ttf");
+    }
+}
+

@@ -1,0 +1,108 @@
+.page-container {
+    background-color: rgb(10, 10, 10);
+}
+
+@media (0 < width <= 480px) {
+    .page-container {
+        margin-top: 80px;
+    }
+    .page-container {
+        @apply grow flex items-center py-6 justify-center px-6
+    }
+    .empty-history h1 {
+        @apply text-2xl font-medium
+    }
+    .main {
+        @apply grow
+    }
+    .empty-history {
+        @apply flex grow justify-center items-center
+    }
+    .table-head {
+        @apply text-sm text-center
+    }
+    .table-body {
+        @apply text-sm text-center 
+    }
+    .table-body > tr {
+        @apply cursor-pointer
+    }
+}
+
+@media (480px < width <= 834px) {
+    .page-container {
+        margin-top: 80px;
+    }
+    .empty-history h1 {
+        @apply text-3xl font-medium
+    }
+    .page-container {
+        @apply flex flex-col items-center py-10 overflow-y-auto h-full
+    }
+    .main {
+        @apply flex grow justify-center
+    }
+    .empty-history {
+        @apply flex grow justify-center items-center
+    }
+    .table-head {
+        @apply text-sm text-center
+    }
+    .table-body {
+        @apply text-sm text-center 
+    }
+    .table-body > tr {
+        @apply cursor-pointer
+    }
+}
+
+@media (834px < width <= 1440px) {
+    .page-container {
+        margin-top: 80px;
+    }
+    .empty-history h1 {
+        @apply text-4xl font-medium
+    }
+    .page-container {
+        @apply flex flex-col items-center grow py-10 overflow-y-auto h-full
+    }
+    .main {
+        @apply flex grow justify-center
+    }
+    .empty-history {
+        @apply flex grow justify-center items-center
+    }
+    .table-head {
+        @apply text-lg text-center
+    }
+    .table-body {
+        @apply text-base text-center 
+    }
+    .table-body > tr {
+        @apply cursor-pointer
+    }
+}
+
+@media (min-width: 1441px) {
+    .page-container {
+        @apply flex flex-col items-center grow py-12 overflow-y-auto h-full
+    }
+    .empty-history h1 {
+        @apply text-4xl font-medium
+    }
+    .main {
+        @apply flex grow justify-center 
+    }
+    .empty-history {
+        @apply flex grow justify-center items-center
+    }
+    .table-head {
+        @apply text-lg text-center
+    }
+    .table-body {
+        @apply text-base text-center 
+    }
+    .table-body > tr {
+        @apply cursor-pointer
+    }
+}
