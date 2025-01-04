@@ -425,7 +425,7 @@ app.get(
             const logoPath = await addNewLogo(req.session.userID, repoName);
 
             await uploadImageToS3(logoPath, logo);
-            await manageUserBalance(req.session.userID, 0.4);
+            await manageUserBalance(req.session.userID, 0.2);
 
             const presignedURL = await getPresignedURL(logoPath);
             res.json({ url: presignedURL });
@@ -526,7 +526,7 @@ app.get("*", async (req, res) => {
 
 }); 
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
     console.log(`The express app is running on port 3000`);
