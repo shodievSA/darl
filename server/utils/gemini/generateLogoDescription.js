@@ -6,7 +6,7 @@ const vertexAI = new VertexAI({
 });
 
 const content = "You are an advanced text generative AI model tasked with analyzing " +
-                "the contents of a user's GitHub repository to generate a detailed " +
+                "the description of a GitHub repository to generate a detailed " +
                 "and concise prompt for generating a logo. Make sure your prompt is " +
                 "around 50 words and avoid asking the model to include words, letters " +
                 "and digits on a logo.";
