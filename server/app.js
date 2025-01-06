@@ -7,6 +7,7 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const crypto = require("crypto");
 const axios = require("axios");
 const path = require("path");
+const favicon = require('serve-favicon');
 const exchangeCode = require('./utils/exchangeCode.js');
 const getUserInfo = require("./utils/getUserInfo.js");
 const registerNewUser = require("./database/registerNewUser.js");
@@ -36,7 +37,6 @@ const reduceUserBalance = require('./database/reduceUserBalance.js');
 const manageUserBalance = require('./utils/manageUserBalance.js');
 const generateStreamName = require('./utils/gemini/generateStreamName.js');
 const addNewName = require('./database/addNewName.js');
-const { error } = require('console');
 
 const app = express();
 
@@ -71,6 +71,7 @@ app.use(session({
     }
 }));
 app.use(express.json());
+app.use(favicon(path.join(__dirname, "public", "vite.svg")));
 app.use("/assets", express.static(
     path.join(__dirname, process.env.ASSETS_FOLDER_PATH)
 ));
