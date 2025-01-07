@@ -267,12 +267,13 @@ app.get("/api/v1/delete-user", (req, res) => {
 
 });
 
-app.get(
+app.post(
     "/api/v1/project-description/:repoName/:repoOwner", 
     async (req, res) => {
 
         const repoName = req.params['repoName'];
         const owner = req.params['repoOwner'];
+        const reference = req.body['reference'];
 
         try {
 
@@ -282,7 +283,7 @@ app.get(
                 userID: req.session.userID
             });
      
-            const description = await generateStreamDescription(prompt);
+            const description = await generateStreamDescription(prompt, reference);
     
             res.status(200).json({ description });
 
@@ -370,11 +371,12 @@ app.get(
     }
 );
 
-app.get(
+app.post(
     "/api/v1/article-generation/:repoName/:repoOwner", 
     async (req, res) => {
 
         const { repoName, repoOwner } = req.params;
+        const { reference } = req.body;
 
         try {
 
@@ -384,7 +386,7 @@ app.get(
                 userID: req.session.userID
             });
 
-            const article = await generateStreamArticle(prompt);
+            const article = await generateStreamArticle(prompt, reference);
 
             res.status(200).json({ article });
 
