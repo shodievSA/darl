@@ -71,7 +71,6 @@ app.use(session({
     }
 }));
 app.use(express.json());
-app.use(favicon(path.join(__dirname, "public", "vite.svg")));
 app.use("/assets", express.static(
     path.join(__dirname, process.env.ASSETS_FOLDER_PATH)
 ));
