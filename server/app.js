@@ -7,7 +7,6 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const crypto = require("crypto");
 const axios = require("axios");
 const path = require("path");
-const favicon = require('serve-favicon');
 const exchangeCode = require('./utils/exchangeCode.js');
 const getUserInfo = require("./utils/getUserInfo.js");
 const registerNewUser = require("./database/registerNewUser.js");
@@ -37,6 +36,8 @@ const reduceUserBalance = require('./database/reduceUserBalance.js');
 const manageUserBalance = require('./utils/manageUserBalance.js');
 const generateStreamName = require('./utils/gemini/generateStreamName.js');
 const addNewName = require('./database/addNewName.js');
+const generateFeatures = require('./utils/gemini/generateFeatures.js');
+const addNewFeatures = require('./database/addNewFeatures.js');
 
 const app = express();
 
@@ -175,8 +176,6 @@ app.get("/api/v1/user-repos", async (req, res) => {
         if (githubResponse.status == 200) {
 
             const repos = githubResponse.data;
-            console.log(repos);
-
             res.status(200).json(repos);
 
         } else {
@@ -188,6 +187,31 @@ app.get("/api/v1/user-repos", async (req, res) => {
         }
 
     }
+
+});
+
+app.get("/api/v1/repo-branches/:repoOwner/:repoName", async (req, res) => {
+
+    const { repoOwner, repoName } = req.params;
+    const accessToken = await getUserAccessToken(req.session.userID);
+
+    const githubRes = await fetch(
+        `https://api.github.com/repos/${repoOwner}/${repoName}/branches`,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/vnd.github+json",
+                "Authorization": "Bearer " + accessToken,
+                "X-GitHub-Api-Version": "2022-11-28"
+            }
+        }
+    );
+
+    let branches = await githubRes.json();
+    branches = branches.map((branch) => branch.name);
+    
+
+    res.json({ branches });
 
 });
 
@@ -272,13 +296,14 @@ app.post(
 
         const repoName = req.params['repoName'];
         const owner = req.params['repoOwner'];
-        const reference = req.body['reference'];
+        const { reference, branch } = req.body;
 
         try {
 
             const prompt = await createPrompt({
                 repoName: repoName,
                 owner: owner,
+                branch: branch,
                 userID: req.session.userID
             });
      
@@ -303,16 +328,17 @@ app.post(
 );
 
 app.get(
-    "/api/v1/readme-generation/:repoName/:repoOwner",
+    "/api/v1/readme-generation/:repoName/:repoOwner/:branch",
     async (req, res) => {
 
-        const { repoName, repoOwner } = req.params;
+        const { repoName, repoOwner, branch } = req.params;
 
         try {
 
             const prompt = await createPrompt({
                 repoName: repoName,
                 owner: repoOwner,
+                branch: branch,
                 userID: req.session.userID
             });
     
@@ -337,16 +363,17 @@ app.get(
 );
 
 app.get(
-    '/api/v1/name-generation/:repoName/:repoOwner', 
+    '/api/v1/name-generation/:repoName/:repoOwner/:branch', 
     async (req, res) => {
 
-        const { repoName, repoOwner } = req.params;
+        const { repoName, repoOwner, branch } = req.params;
 
         try {
 
             const prompt = await createPrompt({
                 repoName: repoName,
                 owner: repoOwner,
+                branch: branch,
                 userID: req.session.userID
             });
 
@@ -375,13 +402,14 @@ app.post(
     async (req, res) => {
 
         const { repoName, repoOwner } = req.params;
-        const { reference } = req.body;
+        const { reference, branch } = req.body;
 
         try {
 
             const prompt = await createPrompt({
                 repoName: repoName,
                 owner: repoOwner,
+                branch: branch,
                 userID: req.session.userID
             });
 
@@ -406,17 +434,52 @@ app.post(
 );
 
 app.get(
-    "/api/v1/generate-logo/:repoName/:repoOwner", 
+    "/api/v1/features-generation/:repoName/:repoOwner/:branch", 
     async (req, res) => {
 
-        const repoName = req.params['repoName'];
-        const repoOwner = req.params['repoOwner'];
+        const { repoName, repoOwner, branch } = req.params;
 
         try {
 
             const prompt = await createPrompt({
                 repoName: repoName,
                 owner: repoOwner,
+                branch: branch,
+                userID: req.session.userID
+            });
+
+            const features = await generateFeatures(prompt);
+
+            res.status(200).json({ features });
+
+            await addNewFeatures(req.session.userID, features, repoName);
+            await manageUserBalance(req.session.userID, 0.4);
+            
+        } catch (err) {
+
+            console.log(err);
+
+            res.status(500).json({
+                errorMessage: "An error occurred while generating the features. Please try again."
+            });
+
+        }
+
+    }
+);
+
+app.get(
+    "/api/v1/logo-generation/:repoName/:repoOwner/:branch", 
+    async (req, res) => {
+
+        const { repoName, repoOwner, branch } = req.params;
+
+        try {
+
+            const prompt = await createPrompt({
+                repoName: repoName,
+                owner: repoOwner,
+                branch: branch,
                 userID: req.session.userID
             });
 
