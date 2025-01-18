@@ -5,11 +5,11 @@ const getFileContents = require("./getFileContents.js");
 
 async function createPrompt(props) {
 
-    const { userID, owner, repoName } = props;
+    const { userID, owner, repoName, branch } = props;
     const accessToken = await getUserAccessToken(userID);
 
     let githubRes = await fetch(
-        `https://api.github.com/repos/${owner}/${repoName}/contents`,
+        `https://api.github.com/repos/${owner}/${repoName}/contents?ref=${branch}`,
         {
             method: "GET",
             headers: {
@@ -23,8 +23,9 @@ async function createPrompt(props) {
     let data = await githubRes.json();
 
     let projectStructure = await generateProjectStructure(
-        data.entries, {}, owner, repoName, accessToken
+        data.entries, {}, owner, repoName, accessToken, branch
     );
+
     let filteredProjectStructure = await filterProjectStructure(
         JSON.stringify(projectStructure)
     );

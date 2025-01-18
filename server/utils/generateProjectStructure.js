@@ -1,4 +1,4 @@
-async function generateProjectStructure(arr, root, owner, repoName, accessToken) {
+async function generateProjectStructure(arr, root, owner, repoName, accessToken, branch) {
 
     for (let i = 0; i < arr.length; i++)
     {
@@ -11,7 +11,7 @@ async function generateProjectStructure(arr, root, owner, repoName, accessToken)
             root[arr[i].name] = {};
 
             let githubRes = await fetch(
-                `https://api.github.com/repos/${owner}/${repoName}/contents/${arr[i].path}`,
+                `https://api.github.com/repos/${owner}/${repoName}/contents/${arr[i].path}?ref=${branch}`,
                 {
                     method: "GET",
                     headers: {
@@ -23,7 +23,9 @@ async function generateProjectStructure(arr, root, owner, repoName, accessToken)
             );
     
             let data = await githubRes.json();
-            await generateProjectStructure(data.entries, root[arr[i].name], owner, repoName, accessToken);
+            await generateProjectStructure(
+                data.entries, root[arr[i].name], owner, repoName, accessToken, branch
+            );
         }
     }
 
