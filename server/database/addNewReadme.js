@@ -24,6 +24,8 @@ async function addNewReadme(userID, readme, repoName) {
         }
     );
 
+    return newReadme;
+
 }
 
 module.exports = addNewReadme;

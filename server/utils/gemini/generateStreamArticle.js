@@ -21,7 +21,7 @@ async function generateStreamArticle(prompt, reference) {
         instruction = "You are an advanced text generative AI model tasked with painstakingly analyzing " +
                       "the codebase of a GitHub repository to generate high-quality " +
                       "articles tailored for IT professionals, developers and tech enthusiasts. " +
-                      "Assume the audience has a moderate understanding of technology.";
+                      "Make sure to not get technical in your article.";
 
     }
 

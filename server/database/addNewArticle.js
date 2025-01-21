@@ -24,6 +24,8 @@ async function addNewArticle(userID, article, repoName) {
         }
     );
 
+    return newArticle;
+
 }
 
 module.exports = addNewArticle;

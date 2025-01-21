@@ -24,6 +24,8 @@ async function addNewFeatures(userID, features, repoName) {
         }
     );
 
+    return newFeatures;
+
 }
 
 module.exports = addNewFeatures;

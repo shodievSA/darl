@@ -24,6 +24,8 @@ async function addNewName(userID, name, repoName) {
         }
     );
 
+    return newName;
+
 }
 
 module.exports = addNewName;

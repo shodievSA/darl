@@ -5,11 +5,11 @@ const getFileContents = require("./getFileContents.js");
 
 async function createPrompt(props) {
 
-    const { userID, owner, repoName, branch } = props;
+    const { userID, repoOwner, repoName, branchName } = props;
     const accessToken = await getUserAccessToken(userID);
 
-    let githubRes = await fetch(
-        `https://api.github.com/repos/${owner}/${repoName}/contents?ref=${branch}`,
+    const res = await fetch(
+        `https://api.github.com/repos/${repoOwner}/${repoName}/contents?ref=${branchName}`,
         {
             method: "GET",
             headers: {
@@ -20,28 +20,36 @@ async function createPrompt(props) {
         }
     );
 
-    let data = await githubRes.json();
+    const data = await res.json();
 
     let projectStructure = await generateProjectStructure(
-        data.entries, {}, owner, repoName, accessToken, branch
+        data.entries, {}, repoOwner, repoName, accessToken, branchName
     );
-
     let filteredProjectStructure = await filterProjectStructure(
         JSON.stringify(projectStructure)
     );
+    console.log(filteredProjectStructure);
     let fileContents = await getFileContents(
         JSON.parse(filteredProjectStructure), 
         "", 
-        owner, 
+        repoOwner, 
         repoName, 
         accessToken
     );
+    console.log(fileContents);
+    let extraInformation = `Extra information about the repository:\n\n` +
+                           `Repository name: ${repoName}\n` +
+                           `Repository owner: ${repoOwner}\n` +
+                           `Branch name: ${branchName}\n` +
+                           `Repository link: https://github.com/${repoOwner}/${repoName}`;
 
     filteredProjectStructure = "Repository structure represented in JSON format:\n\n" +
                                "```json\n" + JSON.stringify(filteredProjectStructure) + "\n" +
                                "```\n\n";
-    fileContents = "File contents of each file:\n\n" + fileContents;
-    let prompt = filteredProjectStructure + fileContents;
+
+    fileContents = "Contents of each file:\n\n" + fileContents + "\n\n";
+
+    const prompt = filteredProjectStructure + fileContents + extraInformation;
     
     return prompt;
 

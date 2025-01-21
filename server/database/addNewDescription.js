@@ -24,6 +24,8 @@ async function addNewDescription(userID, description, repoName) {
         }
     );
 
+    return newDescription;
+
 }
 
 module.exports = addNewDescription;
