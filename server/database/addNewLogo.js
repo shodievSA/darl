@@ -24,7 +24,7 @@ async function addNewLogo(userID, repoName) {
         }
     );
 
-    return newLogo.value;
+    return newLogo;
 
 }
 

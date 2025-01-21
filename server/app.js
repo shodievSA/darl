@@ -291,28 +291,28 @@ app.get("/api/v1/delete-user", (req, res) => {
 });
 
 app.post(
-    "/api/v1/project-description/:repoName/:repoOwner", 
+    "/api/v1/description-generation/:repoName/:repoOwner/:branchName", 
     async (req, res) => {
 
-        const repoName = req.params['repoName'];
-        const owner = req.params['repoOwner'];
-        const { reference, branch } = req.body;
+        const { repoName, repoOwner, branchName } = req.params;
+        const { sampleDescription } = req.body;
+        const userID = req.session.userID;
 
         try {
 
             const prompt = await createPrompt({
-                repoName: repoName,
-                owner: owner,
-                branch: branch,
-                userID: req.session.userID
+                repoName,
+                repoOwner,
+                branchName,
+                userID
             });
      
-            const description = await generateStreamDescription(prompt, reference);
-    
-            res.status(200).json({ description });
+            const description = await generateStreamDescription(prompt, sampleDescription);
+            const descriptionDetails = await addNewDescription(userID, description, repoName);
 
-            await addNewDescription(req.session.userID, description, repoName);
-            await manageUserBalance(req.session.userID, 0.2);
+            await manageUserBalance(userID, 0.2);
+
+            res.status(200).json(descriptionDetails);
 
         } catch (err) {
 
@@ -328,26 +328,28 @@ app.post(
 );
 
 app.get(
-    "/api/v1/readme-generation/:repoName/:repoOwner/:branch",
+    "/api/v1/readme-generation/:repoName/:repoOwner/:branchName",
     async (req, res) => {
 
-        const { repoName, repoOwner, branch } = req.params;
+        const { repoName, repoOwner, branchName } = req.params;
+        const userID = req.session.userID;
 
         try {
 
             const prompt = await createPrompt({
-                repoName: repoName,
-                owner: repoOwner,
-                branch: branch,
-                userID: req.session.userID
+                repoName,
+                repoOwner,
+                branchName,
+                userID
             });
     
             const readme = await generateStreamReadme(prompt);
+            const readmeDetails = await addNewReadme(userID, readme, repoName);
     
-            res.status(200).json({ readme });
+            await manageUserBalance(userID, 0.4);
 
-            await addNewReadme(req.session.userID, readme, repoName);
-            await manageUserBalance(req.session.userID, 0.4);
+            res.status(200).json(readmeDetails);
+
             
         } catch (err) {
 
@@ -363,26 +365,28 @@ app.get(
 );
 
 app.get(
-    '/api/v1/name-generation/:repoName/:repoOwner/:branch', 
+    '/api/v1/name-generation/:repoName/:repoOwner/:branchName', 
     async (req, res) => {
 
-        const { repoName, repoOwner, branch } = req.params;
+        const { repoName, repoOwner, branchName } = req.params;
+        const userID = req.session.userID;
 
         try {
 
             const prompt = await createPrompt({
-                repoName: repoName,
-                owner: repoOwner,
-                branch: branch,
-                userID: req.session.userID
+                repoName,
+                repoOwner,
+                branchName,
+                userID
             });
 
             const name = await generateStreamName(prompt);
+            const nameDetails = await addNewName(userID, name, repoName);
 
-            res.status(200).json({ name });
+            await manageUserBalance(userID, 0.2);
 
-            await addNewName(req.session.userID, name, repoName);
-            await manageUserBalance(req.session.userID, 0.2);
+            res.status(200).json(nameDetails);
+
             
         } catch (err) {
 
@@ -398,28 +402,29 @@ app.get(
 );
 
 app.post(
-    "/api/v1/article-generation/:repoName/:repoOwner", 
+    "/api/v1/article-generation/:repoName/:repoOwner/:branchName", 
     async (req, res) => {
 
-        const { repoName, repoOwner } = req.params;
-        const { reference, branch } = req.body;
+        const { repoName, repoOwner, branchName } = req.params;
+        const { sampleArticle } = req.body;
+        const userID = req.session.userID;
 
         try {
 
             const prompt = await createPrompt({
-                repoName: repoName,
-                owner: repoOwner,
-                branch: branch,
-                userID: req.session.userID
+                repoName,
+                repoOwner,
+                branchName,
+                userID
             });
 
-            const article = await generateStreamArticle(prompt, reference);
+            const article = await generateStreamArticle(prompt, sampleArticle);
+            const articleDetails = await addNewArticle(userID, article, repoName);
 
-            res.status(200).json({ article });
+            await manageUserBalance(userID, 0.4);
 
-            await addNewArticle(req.session.userID, article, repoName);
-            await manageUserBalance(req.session.userID, 0.4);
-            
+            res.status(200).json(articleDetails);
+
         } catch (err) {
 
             console.log(err);
@@ -434,26 +439,28 @@ app.post(
 );
 
 app.get(
-    "/api/v1/features-generation/:repoName/:repoOwner/:branch", 
+    "/api/v1/features-generation/:repoName/:repoOwner/:branchName", 
     async (req, res) => {
 
-        const { repoName, repoOwner, branch } = req.params;
+        const { repoName, repoOwner, branchName } = req.params;
+        const userID = req.session.userID;
 
         try {
 
             const prompt = await createPrompt({
-                repoName: repoName,
-                owner: repoOwner,
-                branch: branch,
-                userID: req.session.userID
+                repoName,
+                repoOwner,
+                branchName,
+                userID
             });
 
             const features = await generateFeatures(prompt);
+            const featuresDetails = await addNewFeatures(userID, features, repoName);
 
-            res.status(200).json({ features });
+            await manageUserBalance(userID, 0.4);
 
-            await addNewFeatures(req.session.userID, features, repoName);
-            await manageUserBalance(req.session.userID, 0.4);
+            res.status(200).json(featuresDetails);
+
             
         } catch (err) {
 
@@ -469,31 +476,32 @@ app.get(
 );
 
 app.get(
-    "/api/v1/logo-generation/:repoName/:repoOwner/:branch", 
+    "/api/v1/logo-generation/:repoName/:repoOwner/:branchName", 
     async (req, res) => {
 
-        const { repoName, repoOwner, branch } = req.params;
+        const { repoName, repoOwner, branchName } = req.params;
+        const userID = req.session.userID;
 
         try {
 
             const prompt = await createPrompt({
-                repoName: repoName,
-                owner: repoOwner,
-                branch: branch,
-                userID: req.session.userID
+                repoName,
+                repoOwner,
+                branchName,
+                userID
             });
 
-            const description = await generateDescription(prompt);
-            const logoDescription = await generateLogoDescription(description);
-
+            const logoDescription = await generateLogoDescription(prompt);
             const logo = await generateLogo(logoDescription); 
-            const logoPath = await addNewLogo(req.session.userID, repoName);
+            const logoDetails = await addNewLogo(userID, repoName);
 
-            await uploadImageToS3(logoPath, logo);
-            await manageUserBalance(req.session.userID, 0.2);
+            await uploadImageToS3(logoDetails["value"], logo);
 
-            const presignedURL = await getPresignedURL(logoPath);
-            res.json({ url: presignedURL });
+            const presignedURL = await getPresignedURL(logoDetails["value"]);
+
+            await manageUserBalance(userID, 0.2);
+
+            res.json({ ...logoDetails, url: presignedURL });
 
         } catch (err) {
 
