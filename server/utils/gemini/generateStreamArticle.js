@@ -5,9 +5,10 @@ const vertexAI = new VertexAI({
     project: process.env.VERTEXAI_PTOJECT_ID
 });
 
-async function generateStreamArticle(prompt, reference) {
+async function generateStreamArticle(prompt, reference, res) {
 
     let instruction = "";
+    let fullResponse = "";
 
     if (reference.length > 0) {
 
@@ -52,10 +53,18 @@ async function generateStreamArticle(prompt, reference) {
         contents: [{ role: "user", parts: [{ text: prompt }]}]
     }
 
-    const resp = await generativeModel.generateContent(request);
-    const contentResponse = resp.response;
+    const result = await generativeModel.generateContentStream(request);
+    
+    for await (const item of result.stream) {
 
-    return contentResponse['candidates'][0]['content']['parts'][0]['text'];
+        const chunkText = item.candidates[0].content.parts[0].text;
+        fullResponse += chunkText;
+
+        res.write(`data: ${JSON.stringify({ type: "chunk", content: chunkText })}\n\n`);
+
+    }
+
+    return fullResponse;
 
 }
 
