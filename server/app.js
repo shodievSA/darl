@@ -16,7 +16,6 @@ const refreshAccessToken = require("./utils/refreshAccessToken");
 const isUserNew = require("./database/isUserNew.js");
 const updateUserTokens = require("./database/updateUserTokens.js");
 const generateStreamDescription = require("./utils/gemini/generateStreamDescription.js");
-const generateDescription = require("./utils/gemini/generateDescription.js");
 const addNewDescription = require('./database/addNewDescription.js');
 const addNewArticle = require("./database/addNewArticle.js");
 const addNewReadme = require("./database/addNewReadme.js");
@@ -36,7 +35,7 @@ const reduceUserBalance = require('./database/reduceUserBalance.js');
 const manageUserBalance = require('./utils/manageUserBalance.js');
 const generateStreamName = require('./utils/gemini/generateStreamName.js');
 const addNewName = require('./database/addNewName.js');
-const generateFeatures = require('./utils/gemini/generateFeatures.js');
+const generateStreamFeatures = require('./utils/gemini/generateStreamFeatures.js');
 const addNewFeatures = require('./database/addNewFeatures.js');
 
 const app = express();
@@ -294,6 +293,10 @@ app.post(
     "/api/v1/description-generation/:repoName/:repoOwner/:branchName", 
     async (req, res) => {
 
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+
         const { repoName, repoOwner, branchName } = req.params;
         const { sampleDescription } = req.body;
         const userID = req.session.userID;
@@ -304,15 +307,25 @@ app.post(
                 repoName,
                 repoOwner,
                 branchName,
-                userID
+                userID,
+                res
             });
+
+            res.write(`data: ${JSON.stringify({ type: "status", content: "Analyzing repository files..." })}\n\n`);
      
-            const description = await generateStreamDescription(prompt, sampleDescription);
+            const description = await generateStreamDescription(prompt, sampleDescription, res);
             const descriptionDetails = await addNewDescription(userID, description, repoName);
 
             await manageUserBalance(userID, 0.2);
 
-            res.status(200).json(descriptionDetails);
+            const finalData = {
+                type: "json",
+                content: descriptionDetails
+            };
+
+            res.write(`data: ${JSON.stringify(finalData)}\n\n`);
+            res.write("data: [DONE]\n\n");
+            res.end();
 
         } catch (err) {
 
@@ -331,6 +344,10 @@ app.get(
     "/api/v1/readme-generation/:repoName/:repoOwner/:branchName",
     async (req, res) => {
 
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+
         const { repoName, repoOwner, branchName } = req.params;
         const userID = req.session.userID;
 
@@ -340,17 +357,26 @@ app.get(
                 repoName,
                 repoOwner,
                 branchName,
-                userID
+                userID,
+                res
             });
+
+            res.write(`data: ${JSON.stringify({ type: "status", content: "Analyzing repository files..." })}\n\n`);
     
-            const readme = await generateStreamReadme(prompt);
+            const readme = await generateStreamReadme(prompt, res);
             const readmeDetails = await addNewReadme(userID, readme, repoName);
     
             await manageUserBalance(userID, 0.4);
 
-            res.status(200).json(readmeDetails);
+            const finalData = {
+                type: "json",
+                content: readmeDetails
+            };
 
-            
+            res.write(`data: ${JSON.stringify(finalData)}\n\n`);
+            res.write("data: [DONE]\n\n");
+            res.end();
+
         } catch (err) {
 
             console.log(err);
@@ -368,6 +394,10 @@ app.get(
     '/api/v1/name-generation/:repoName/:repoOwner/:branchName', 
     async (req, res) => {
 
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+
         const { repoName, repoOwner, branchName } = req.params;
         const userID = req.session.userID;
 
@@ -377,17 +407,26 @@ app.get(
                 repoName,
                 repoOwner,
                 branchName,
-                userID
+                userID,
+                res
             });
 
-            const name = await generateStreamName(prompt);
+            res.write(`data: ${JSON.stringify({ type: "status", content: "Generating a list of names for your repository..." })}\n\n`);
+
+            const name = await generateStreamName(prompt, res);
             const nameDetails = await addNewName(userID, name, repoName);
 
             await manageUserBalance(userID, 0.2);
 
-            res.status(200).json(nameDetails);
+            const finalData = {
+                type: "json",
+                content: nameDetails
+            };
 
-            
+            res.write(`data: ${JSON.stringify(finalData)}\n\n`);
+            res.write("data: [DONE]\n\n");
+            res.end();
+
         } catch (err) {
 
             console.log(err);
@@ -405,6 +444,10 @@ app.post(
     "/api/v1/article-generation/:repoName/:repoOwner/:branchName", 
     async (req, res) => {
 
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+
         const { repoName, repoOwner, branchName } = req.params;
         const { sampleArticle } = req.body;
         const userID = req.session.userID;
@@ -415,15 +458,25 @@ app.post(
                 repoName,
                 repoOwner,
                 branchName,
-                userID
+                userID,
+                res
             });
 
-            const article = await generateStreamArticle(prompt, sampleArticle);
+            res.write(`data: ${JSON.stringify({ type: "status", content: "Analyzing repository files..." })}\n\n`);
+
+            const article = await generateStreamArticle(prompt, sampleArticle, res);
             const articleDetails = await addNewArticle(userID, article, repoName);
 
             await manageUserBalance(userID, 0.4);
 
-            res.status(200).json(articleDetails);
+            const finalData = {
+                type: "json",
+                content: articleDetails
+            };
+
+            res.write(`data: ${JSON.stringify(finalData)}\n\n`);
+            res.write("data: [DONE]\n\n");
+            res.end();
 
         } catch (err) {
 
@@ -442,6 +495,10 @@ app.get(
     "/api/v1/features-generation/:repoName/:repoOwner/:branchName", 
     async (req, res) => {
 
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+
         const { repoName, repoOwner, branchName } = req.params;
         const userID = req.session.userID;
 
@@ -451,15 +508,25 @@ app.get(
                 repoName,
                 repoOwner,
                 branchName,
-                userID
+                userID,
+                res
             });
 
-            const features = await generateFeatures(prompt);
+            res.write(`data: ${JSON.stringify({ type: "status", content: "Generating a list of extra features for your repository..." })}\n\n`);
+
+            const features = await generateStreamFeatures(prompt, res);
             const featuresDetails = await addNewFeatures(userID, features, repoName);
 
             await manageUserBalance(userID, 0.4);
 
-            res.status(200).json(featuresDetails);
+            const finalData = {
+                type: "json",
+                content: featuresDetails
+            };
+
+            res.write(`data: ${JSON.stringify(finalData)}\n\n`);
+            res.write("data: [DONE]\n\n");
+            res.end();
 
             
         } catch (err) {
@@ -479,6 +546,10 @@ app.get(
     "/api/v1/logo-generation/:repoName/:repoOwner/:branchName", 
     async (req, res) => {
 
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+
         const { repoName, repoOwner, branchName } = req.params;
         const userID = req.session.userID;
 
@@ -488,10 +559,16 @@ app.get(
                 repoName,
                 repoOwner,
                 branchName,
-                userID
+                userID,
+                res
             });
 
+            res.write(`data: ${JSON.stringify({ type: "status", content: "Generating prompt for your logo..." })}\n\n`);
+
             const logoDescription = await generateLogoDescription(prompt);
+
+            res.write(`data: ${JSON.stringify({ type: "status", content: "Generating logo..." })}\n\n`);
+
             const logo = await generateLogo(logoDescription); 
             const logoDetails = await addNewLogo(userID, repoName);
 
@@ -501,7 +578,14 @@ app.get(
 
             await manageUserBalance(userID, 0.2);
 
-            res.json({ ...logoDetails, url: presignedURL });
+            const finalData = {
+                type: "json",
+                content: {url: presignedURL, ...logoDetails}
+            };
+
+            res.write(`data: ${JSON.stringify(finalData)}\n\n`);
+            res.write("data: [DONE]\n\n");
+            res.end();
 
         } catch (err) {
 

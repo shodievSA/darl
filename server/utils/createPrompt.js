@@ -5,10 +5,10 @@ const getFileContents = require("./getFileContents.js");
 
 async function createPrompt(props) {
 
-    const { userID, repoOwner, repoName, branchName } = props;
+    const { userID, repoOwner, repoName, branchName, res } = props;
     const accessToken = await getUserAccessToken(userID);
 
-    const res = await fetch(
+    const response = await fetch(
         `https://api.github.com/repos/${repoOwner}/${repoName}/contents?ref=${branchName}`,
         {
             method: "GET",
@@ -20,23 +20,29 @@ async function createPrompt(props) {
         }
     );
 
-    const data = await res.json();
+    const data = await response.json();
+
+    res.write(`data: ${JSON.stringify({ type: "status", content: "Fetching repository structure..." })}\n\n`);
 
     let projectStructure = await generateProjectStructure(
         data.entries, {}, repoOwner, repoName, accessToken, branchName
     );
+
     let filteredProjectStructure = await filterProjectStructure(
         JSON.stringify(projectStructure)
     );
-    console.log(filteredProjectStructure);
+
+    res.write(`data: ${JSON.stringify({ type: "status", content: "Fetching repository files..." })}\n\n`);
+    
     let fileContents = await getFileContents(
         JSON.parse(filteredProjectStructure), 
         "", 
         repoOwner, 
         repoName, 
-        accessToken
+        accessToken,
+        branchName
     );
-    console.log(fileContents);
+    
     let extraInformation = `Extra information about the repository:\n\n` +
                            `Repository name: ${repoName}\n` +
                            `Repository owner: ${repoOwner}\n` +

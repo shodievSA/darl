@@ -33,16 +33,26 @@ const generativeModel = vertexAI.getGenerativeModel({
     ]
 });
 
-async function generateStreamReadme(prompt) {
+async function generateStreamReadme(prompt, res) {
+
+    let fullResponse = "";
 
     const request = {
         contents: [{ role: "user", parts: [{ text: prompt }]}]
     }
 
-    const resp = await generativeModel.generateContent(request);
-    const contentResponse = resp.response;
+    const result = await generativeModel.generateContentStream(request);
 
-    return contentResponse['candidates'][0]['content']['parts'][0]['text'];
+    for await (const item of result.stream) {
+
+        const chunkText = item.candidates[0].content.parts[0].text;
+        fullResponse += chunkText;
+
+        res.write(`data: ${JSON.stringify({ type: "chunk", content: chunkText })}\n\n`);
+
+    }
+
+    return fullResponse;
 
 }
 
