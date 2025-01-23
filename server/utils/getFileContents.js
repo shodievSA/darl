@@ -73,7 +73,6 @@ async function getFileContents(projectStructure, path, owner, repoName, accessTo
 
             const res = await fetch(url, { method: "GET", headers });
             const fileContent = await res.text();
-            console.log(fileContent);
             const fileExtension = fileName.match(fileExtensionRegex)?.[1] || '';
             return `${fileName}:\n\n\`\`\`${fileExtension}\n${fileContent}\`\`\`\n\n`;
 

@@ -311,7 +311,7 @@ app.post(
                 res
             });
 
-            res.write(`data: ${JSON.stringify({ type: "status", content: "Analyzing repository files..." })}\n\n`);
+            res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
      
             const description = await generateStreamDescription(prompt, sampleDescription, res);
             const descriptionDetails = await addNewDescription(userID, description, repoName);
@@ -361,7 +361,7 @@ app.get(
                 res
             });
 
-            res.write(`data: ${JSON.stringify({ type: "status", content: "Analyzing repository files..." })}\n\n`);
+            res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
     
             const readme = await generateStreamReadme(prompt, res);
             const readmeDetails = await addNewReadme(userID, readme, repoName);
@@ -411,7 +411,7 @@ app.get(
                 res
             });
 
-            res.write(`data: ${JSON.stringify({ type: "status", content: "Generating a list of names for your repository..." })}\n\n`);
+            res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
 
             const name = await generateStreamName(prompt, res);
             const nameDetails = await addNewName(userID, name, repoName);
@@ -462,7 +462,7 @@ app.post(
                 res
             });
 
-            res.write(`data: ${JSON.stringify({ type: "status", content: "Analyzing repository files..." })}\n\n`);
+            res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
 
             const article = await generateStreamArticle(prompt, sampleArticle, res);
             const articleDetails = await addNewArticle(userID, article, repoName);
@@ -512,7 +512,7 @@ app.get(
                 res
             });
 
-            res.write(`data: ${JSON.stringify({ type: "status", content: "Generating a list of extra features for your repository..." })}\n\n`);
+            res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
 
             const features = await generateStreamFeatures(prompt, res);
             const featuresDetails = await addNewFeatures(userID, features, repoName);
@@ -563,7 +563,7 @@ app.get(
                 res
             });
 
-            res.write(`data: ${JSON.stringify({ type: "status", content: "Generating prompt for your logo..." })}\n\n`);
+            res.write(`data: ${JSON.stringify({ type: "status", content: "Creating prompt for logo..." })}\n\n`);
 
             const logoDescription = await generateLogoDescription(prompt);
 
