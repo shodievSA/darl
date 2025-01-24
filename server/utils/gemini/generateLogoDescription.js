@@ -5,10 +5,9 @@ const vertexAI = new VertexAI({
     project: process.env.VERTEXAI_PTOJECT_ID
 });
 
-const instruction = "You are an advanced text-generation AI specialized in analyzing GitHub codebases. " +
-                    "Your task is to create concise logo-generation prompt (maximum 50 words) " +
-                    "for an image-generation AI model. Ensure that the prompts do not request the inclusion " +
-                    "of words, letters or digits in the logo. Focus on clarity, creativity and relevance to the repository's context.";
+const instruction = "You are an AI designed to generate a single, detailed, and professional logo description based on GitHub repositories. " +
+                    "Analyze the repository's content, purpose, and branding to craft one precise and vivid description " +
+                    "of a logo that reflects its core essence and identity.";
 
 async function generateLogoDescription(prompt) {
 
