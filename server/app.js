@@ -37,6 +37,8 @@ const generateStreamName = require('./utils/gemini/generateStreamName.js');
 const addNewName = require('./database/addNewName.js');
 const generateStreamFeatures = require('./utils/gemini/generateStreamFeatures.js');
 const addNewFeatures = require('./database/addNewFeatures.js');
+const generateStreamContributions = require('./utils/gemini/generateContributions.js');
+const getAuthorCommits = require('./utils/gemini/generateContributions.js');
 
 const app = express();
 
@@ -214,6 +216,33 @@ app.get("/api/v1/repo-branches/:repoOwner/:repoName", async (req, res) => {
 
 });
 
+app.get(
+    "/api/v1/repo-authors/:repoOwner/:repoName", 
+    async (req, res) => {
+
+        const { repoOwner, repoName } = req.params;
+        const userID = req.session.userID;
+
+        const accessToken = await getUserAccessToken(userID);
+
+        const githubRes = await fetch(
+            `https://api.github.com/repos/${repoOwner}/${repoName}/contributors`,
+            {
+                method: "GET",
+                headers: {
+                    "Accept": "application/vnd.github+json",
+                    "Authorization": "Bearer " + accessToken,
+                }
+            }
+        );
+
+        const data = await githubRes.json();
+        const authors = data.map((author) => author.login);
+
+        res.json({ authors });
+
+})
+
 app.get("/api/v1/user-history", async (req, res) => {
 
     if (req.session.userID) 
@@ -301,6 +330,8 @@ app.post(
         const { sampleDescription } = req.body;
         const userID = req.session.userID;
 
+        const author = "shodievSA";
+
         try {
 
             const prompt = await createPrompt({
@@ -314,6 +345,11 @@ app.post(
             res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
      
             const description = await generateStreamDescription(prompt, sampleDescription, res);
+
+            const contributions = await getAuthorCommits({
+                repoOwner, repoName, author, userID
+            });
+
             const descriptionDetails = await addNewDescription(userID, description, repoName);
 
             await manageUserBalance(userID, 0.2);
