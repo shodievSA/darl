@@ -346,9 +346,9 @@ app.post(
      
             const description = await generateStreamDescription(prompt, sampleDescription, res);
 
-            const contributions = await getAuthorCommits({
-                repoOwner, repoName, author, userID
-            });
+            // const contributions = await getAuthorCommits({
+            //     repoOwner, repoName, author, userID
+            // });
 
             const descriptionDetails = await addNewDescription(userID, description, repoName);
 
