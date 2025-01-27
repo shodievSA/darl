@@ -5,11 +5,29 @@ const vertexAI = new VertexAI({
     project: process.env.VERTEXAI_PTOJECT_ID
 });
 
-const instruction = "You are an AI designed to generate a single, detailed, and professional logo description based on GitHub repositories. " +
-                    "Analyze the repository's content, purpose, and branding to craft one precise and vivid description " +
-                    "of a logo that reflects its core essence and identity.";
+async function generateLogoDescription(prompt, companyName, logoStyle, backgroundColor) {
 
-async function generateLogoDescription(prompt) {
+    let instruction = "";
+
+    if (backgroundColor) {
+
+        instruction = 
+        "Analyze the GitHub repository's codebase to understand the company's core essence and purpose. " +
+        "Using this analysis, create a concise prompt for generating a brand logo that visually represents the company. " +
+        "Format your response as follows: " +
+        `${logoStyle} logo [visual_element] on a solid, ${backgroundColor} background. Include the text ${companyName}.\n\n` +
+        "Example: \"Simple flat vector logo of an eagle on a white background. Include the text Eagle Inc.\"";
+
+    } else {
+
+        instruction = 
+        "Analyze the GitHub repository's codebase to understand the company's core essence and purpose. " +
+        "Using this analysis, create a concise prompt for generating a brand logo that visually represents the company. " +
+        "Format your response as follows: " +
+        `${logoStyle} logo [visual_element] on a solid background. Include the text ${companyName}.\n\n` +
+        "Example: \"Simple flat vector logo of an eagle on a white background. Include the text Eagle Inc.\"";
+
+    }
 
     const generativeModel = vertexAI.getGenerativeModel({
         model: "gemini-1.5-pro",
@@ -39,9 +57,11 @@ async function generateLogoDescription(prompt) {
     }
 
     const res = await generativeModel.generateContent(request);
-    const logoDescription = res.response.candidates[0].content.parts[0].text;
 
-    return logoDescription;
+    const logoPrompt = res.response.candidates[0].content.parts[0].text;
+    const formattedLogoPrompt = logoPrompt.replace(/\*/g, '');
+
+    return formattedLogoPrompt;
 
 }
 
