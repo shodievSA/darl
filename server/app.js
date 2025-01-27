@@ -578,7 +578,7 @@ app.get(
     }
 );
 
-app.get(
+app.post(
     "/api/v1/logo-generation/:repoName/:repoOwner/:branchName", 
     async (req, res) => {
 
@@ -587,6 +587,7 @@ app.get(
         res.setHeader('Connection', 'keep-alive');
 
         const { repoName, repoOwner, branchName } = req.params;
+        const { companyName, logoStyle, backgroundColor } = req.body;
         const userID = req.session.userID;
 
         try {
@@ -601,7 +602,9 @@ app.get(
 
             res.write(`data: ${JSON.stringify({ type: "status", content: "Creating prompt for logo..." })}\n\n`);
 
-            const logoDescription = await generateLogoDescription(prompt);
+            const logoDescription = await generateLogoDescription(prompt, companyName, logoStyle, backgroundColor);
+
+            console.log(logoDescription);
 
             res.write(`data: ${JSON.stringify({ type: "status", content: "Generating logo..." })}\n\n`);
 
@@ -616,7 +619,7 @@ app.get(
 
             const finalData = {
                 type: "json",
-                content: {url: presignedURL, ...logoDetails}
+                content: { url: presignedURL, ...logoDetails }
             };
 
             res.write(`data: ${JSON.stringify(finalData)}\n\n`);
