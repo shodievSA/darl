@@ -37,8 +37,8 @@ const generateStreamName = require('./utils/gemini/generateStreamName.js');
 const addNewName = require('./database/addNewName.js');
 const generateStreamFeatures = require('./utils/gemini/generateStreamFeatures.js');
 const addNewFeatures = require('./database/addNewFeatures.js');
-const generateStreamContributions = require('./utils/gemini/generateContributions.js');
-const getAuthorCommits = require('./utils/gemini/generateContributions.js');
+const generateStreamCustomPromptResponse = require('./utils/gemini/generateStreamCustomPromptResponse.js');
+const addNewCustomPromptResponse = require('./database/addNewCustomPromptResponse.js');
 
 const app = express();
 
@@ -216,33 +216,6 @@ app.get("/api/v1/repo-branches/:repoOwner/:repoName", async (req, res) => {
 
 });
 
-app.get(
-    "/api/v1/repo-authors/:repoOwner/:repoName", 
-    async (req, res) => {
-
-        const { repoOwner, repoName } = req.params;
-        const userID = req.session.userID;
-
-        const accessToken = await getUserAccessToken(userID);
-
-        const githubRes = await fetch(
-            `https://api.github.com/repos/${repoOwner}/${repoName}/contributors`,
-            {
-                method: "GET",
-                headers: {
-                    "Accept": "application/vnd.github+json",
-                    "Authorization": "Bearer " + accessToken,
-                }
-            }
-        );
-
-        const data = await githubRes.json();
-        const authors = data.map((author) => author.login);
-
-        res.json({ authors });
-
-})
-
 app.get("/api/v1/user-history", async (req, res) => {
 
     if (req.session.userID) 
@@ -345,11 +318,6 @@ app.post(
             res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
      
             const description = await generateStreamDescription(prompt, sampleDescription, res);
-
-            // const contributions = await getAuthorCommits({
-            //     repoOwner, repoName, author, userID
-            // });
-
             const descriptionDetails = await addNewDescription(userID, description, repoName);
 
             await manageUserBalance(userID, 0.2);
@@ -604,8 +572,6 @@ app.post(
 
             const logoDescription = await generateLogoDescription(prompt, companyName, logoStyle, backgroundColor);
 
-            console.log(logoDescription);
-
             res.write(`data: ${JSON.stringify({ type: "status", content: "Generating logo..." })}\n\n`);
 
             const logo = await generateLogo(logoDescription); 
@@ -656,6 +622,62 @@ app.get("/api/v1/user-balance", async (req, res) => {
     res.json({ balance: userBalance });
 
 });
+
+app.post(
+    "/api/v1/custom-prompt/:repoName/:repoOwner/:branchName", 
+    async (req, res) => {
+
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+
+        const { repoName, repoOwner, branchName } = req.params;
+        const { customPrompt } = req.body;
+        const userID = req.session.userID;
+
+        try {
+
+            const repoDetails = await createPrompt({
+                repoName,
+                repoOwner,
+                branchName,
+                userID,
+                res
+            });
+
+            res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
+
+            const customPromptResponse = await generateStreamCustomPromptResponse(
+                repoDetails, customPrompt, res
+            );
+            const customPromptResponseDetails = await addNewCustomPromptResponse(
+                userID, customPromptResponse, repoName
+            );
+
+            await manageUserBalance(userID, 0.5);
+
+            const repoCodebase = {
+                type: "json",
+                content: customPromptResponseDetails
+            };
+
+            res.write(`data: ${JSON.stringify(repoCodebase)}\n\n`);
+            res.write("data: [DONE]\n\n");
+            res.end();
+
+            
+        } catch (err) {
+
+            console.log(err);
+
+            res.status(500).json({
+                errorMessage: "An error occurred while generating the features. Please try again."
+            });
+
+        }
+
+    }
+);
 
 app.patch("/api/v1/reduce-user-free-trials", async (req, res) => {
 
