@@ -1,10 +1,9 @@
 require("dotenv").config();
 const { VertexAI } = require("@google-cloud/vertexai");
 
-const content = "You are an advanced text generative AI model tasked with analyzing " +
-                "the contents of a user's GitHub repository to generate a list of " +
-                "creative, relevant, and concise repository names that reflect the " +
-                "essence of the project.";
+const instruction = "You are an advanced text generative AI model tasked with painstakingly analyzing " +
+                    "the codebase of a GitHub repository to create social media announcements for it " +
+                    "for various social platforms such as Twitter, LinkedIn and so on."
 
 const vertexAI = new VertexAI({ 
     project: process.env.VERTEXAI_PTOJECT_ID
@@ -12,7 +11,7 @@ const vertexAI = new VertexAI({
 
 const generativeModel = vertexAI.getGenerativeModel({
     model: "gemini-1.5-pro",
-    systemInstruction: content,
+    systemInstruction: instruction,
     safetySettings: [
         {
             category: 'HARM_CATEGORY_HARASSMENT',
@@ -33,7 +32,7 @@ const generativeModel = vertexAI.getGenerativeModel({
     ]
 });
 
-async function generateStreamName(prompt, res) {
+async function generateStreamSocialMediaAnnouncements(prompt, res) {
 
     let fullResponse = "";
 
@@ -56,4 +55,4 @@ async function generateStreamName(prompt, res) {
 
 }
 
-module.exports = generateStreamName;
+module.exports = generateStreamSocialMediaAnnouncements;
