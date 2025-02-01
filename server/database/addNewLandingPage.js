@@ -2,30 +2,30 @@ const { sequelize } = require("./models/user.js");
 const getUserFreeTrials = require("./getUserFreeTrials.js");
 const formatDate = require("../utils/formatDate.js");
 
-async function addNewFeatures(userID, features, repoName) {
+async function addNewLandingPage(userID, landingPage, repoName) {
 
     const userFreeTrials = await getUserFreeTrials(userID);
 
-    const newFeatures = {
-        value: features,
+    const newLandingPage = {
+        value: landingPage,
         repoName: repoName,
         date: formatDate(),
-        type: 'features',
+        type: 'landing page',
         price: userFreeTrials > 0 ? 'free trial' : 0.4
     }
 
     await sequelize.query(
-        `UPDATE users SET user_history = :newFeatures || user_history WHERE user_id = :userID`,
+        `UPDATE users SET user_history = :newLandingPage || user_history WHERE user_id = :userID`,
         {
             replacements: {
-                newFeatures: JSON.stringify([newFeatures]),
+                newLandingPage: JSON.stringify([newLandingPage]),
                 userID: userID,
             },
         }
     );
 
-    return newFeatures;
+    return newLandingPage;
 
 }
 
-module.exports = addNewFeatures;
+module.exports = addNewLandingPage;

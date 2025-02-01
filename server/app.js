@@ -33,12 +33,16 @@ const getUserBalance = require('./database/getUserBalance.js');
 const reduceUserFreeTrials = require('./database/reduceUserFreeTrials.js');
 const reduceUserBalance = require('./database/reduceUserBalance.js');
 const manageUserBalance = require('./utils/manageUserBalance.js');
-const generateStreamName = require('./utils/gemini/generateStreamName.js');
-const addNewName = require('./database/addNewName.js');
-const generateStreamFeatures = require('./utils/gemini/generateStreamFeatures.js');
-const addNewFeatures = require('./database/addNewFeatures.js');
+const generateStreamName = require('./utils/gemini/generateStreamLandingPage.js');
+const addNewName = require('./database/addNewLandingPage.js');
+const generateStreamFeatures = require('./utils/gemini/generateStreamSocialMediaAnnouncements.js');
+const addNewFeatures = require('./database/addNewSocialMediaAnnouncements.js');
 const generateStreamCustomPromptResponse = require('./utils/gemini/generateStreamCustomPromptResponse.js');
 const addNewCustomPromptResponse = require('./database/addNewCustomPromptResponse.js');
+const generateStreamLandingPage = require('./utils/gemini/generateStreamLandingPage.js');
+const addNewLandingPage = require('./database/addNewLandingPage.js');
+const generateStreamSocialMediaAnnouncements = require('./utils/gemini/generateStreamSocialMediaAnnouncements.js');
+const addNewSocialMediaAnnouncements = require('./database/addNewSocialMediaAnnouncements.js');
 
 const app = express();
 
@@ -303,8 +307,6 @@ app.post(
         const { sampleDescription } = req.body;
         const userID = req.session.userID;
 
-        const author = "shodievSA";
-
         try {
 
             const prompt = await createPrompt({
@@ -320,7 +322,7 @@ app.post(
             const description = await generateStreamDescription(prompt, sampleDescription, res);
             const descriptionDetails = await addNewDescription(userID, description, repoName);
 
-            await manageUserBalance(userID, 0.2);
+            await manageUserBalance(userID, 0.4);
 
             const finalData = {
                 type: "json",
@@ -395,7 +397,7 @@ app.get(
 );
 
 app.get(
-    '/api/v1/name-generation/:repoName/:repoOwner/:branchName', 
+    '/api/v1/landing-page-generation/:repoName/:repoOwner/:branchName', 
     async (req, res) => {
 
         res.setHeader('Content-Type', 'text/event-stream');
@@ -417,14 +419,14 @@ app.get(
 
             res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
 
-            const name = await generateStreamName(prompt, res);
-            const nameDetails = await addNewName(userID, name, repoName);
+            const landingPage = await generateStreamLandingPage(prompt, res);
+            const landingPageDetails = await addNewLandingPage(userID, landingPage, repoName);
 
-            await manageUserBalance(userID, 0.2);
+            await manageUserBalance(userID, 0.4);
 
             const finalData = {
                 type: "json",
-                content: nameDetails
+                content: landingPageDetails
             };
 
             res.write(`data: ${JSON.stringify(finalData)}\n\n`);
@@ -434,7 +436,6 @@ app.get(
         } catch (err) {
 
             console.log(err);
-
             res.status(500).json({
                 errorMessage: "An error occurred while generating the project name. Please try again."
             });
@@ -496,7 +497,7 @@ app.post(
 );
 
 app.get(
-    "/api/v1/features-generation/:repoName/:repoOwner/:branchName", 
+    "/api/v1/social-media-announcements-generation/:repoName/:repoOwner/:branchName", 
     async (req, res) => {
 
         res.setHeader('Content-Type', 'text/event-stream');
@@ -518,14 +519,14 @@ app.get(
 
             res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
 
-            const features = await generateStreamFeatures(prompt, res);
-            const featuresDetails = await addNewFeatures(userID, features, repoName);
+            const announcements = await generateStreamSocialMediaAnnouncements(prompt, res);
+            const announcementsDetails = await addNewSocialMediaAnnouncements(userID, announcements, repoName);
 
             await manageUserBalance(userID, 0.4);
 
             const finalData = {
                 type: "json",
-                content: featuresDetails
+                content: announcementsDetails
             };
 
             res.write(`data: ${JSON.stringify(finalData)}\n\n`);
@@ -581,7 +582,7 @@ app.post(
 
             const presignedURL = await getPresignedURL(logoDetails["value"]);
 
-            await manageUserBalance(userID, 0.2);
+            await manageUserBalance(userID, 0.8);
 
             const finalData = {
                 type: "json",
