@@ -14,7 +14,7 @@ const clientOptions = {
 
 const predictionServiceClient = new PredictionServiceClient(clientOptions);
 
-async function generateLogo(logoDescription) {
+async function generateLogo(logoDescription, logoQuantity) {
 
     const endpoint = `projects/${projectID}/locations/${location}/publishers/google/models/${model}`;
 
@@ -25,7 +25,7 @@ async function generateLogo(logoDescription) {
     const instances = [instanceValue];
 
     const parameter = {
-        sampleCount: 1,
+        sampleCount: logoQuantity,
         aspectRatio: '1:1',
         safetyFilterLevel: 'block_none',
         personGeneration: 'dont_allow',
@@ -40,9 +40,13 @@ async function generateLogo(logoDescription) {
     };
 
     const [response] = await predictionServiceClient.predict(request);
-    const prediction = response.predictions[0];
+    const predictions = response.predictions;
 
-    return prediction.structValue.fields.bytesBase64Encoded.stringValue;
+    const logos = predictions.map((prediction) => {
+        return prediction.structValue.fields.bytesBase64Encoded.stringValue;
+    })
+
+    return logos;
 
 }
 

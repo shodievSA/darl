@@ -1,7 +1,8 @@
 require("dotenv").config();
-const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
-async function uploadImageToS3(logoPath, logo) {
+async function uploadImageToS3(logoDetails, logos) {
 
     try {
 
@@ -13,17 +14,41 @@ async function uploadImageToS3(logoPath, logo) {
             }
         });
 
-        const uploadParams = {
-            Bucket: "darl-generator-logos",
-            Key: logoPath,
-            Body: Buffer.from(logo, 'base64'),
-            ContentType: "image/png"
-        }
+        const uploadPromises = logoDetails.map(async (logoDetail, index) => {
 
-        const command = new PutObjectCommand(uploadParams);
-        const response = await s3Client.send(command);
+            const key = logoDetail["value"];
+            const base_64URL = logos[index];
 
-        console.log('Image uploaded successfully', response);
+            const uploadParams = {
+                Bucket: "darl-generator-logos",
+                Key: key,
+                Body: Buffer.from(base_64URL, 'base64'),
+                ContentType: "image/png"
+            }
+            
+            await s3Client.send(new PutObjectCommand(uploadParams));
+
+            const command = new GetObjectCommand({
+                Bucket: "darl-generator-logos",
+                Key: key,
+                ResponseContentDisposition: `attachment; filename="${key}"`
+            });
+            
+            const presignedURL = await getSignedUrl(
+                s3Client, 
+                command, 
+                {
+                    expiresIn: 60 * 30
+                }
+            );
+
+            return presignedURL;
+
+        });
+
+        const presignedURLs = await Promise.all(uploadPromises);
+
+        return presignedURLs;
 
     } catch (error) {
 

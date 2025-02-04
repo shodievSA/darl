@@ -557,6 +557,7 @@ app.post(
 
         const { repoName, repoOwner, branchName } = req.params;
         const { companyName, logoStyle, backgroundColor } = req.body;
+        const logoQuantity  = Number(req.body["logoQuantity"]);
         const userID = req.session.userID;
 
         try {
@@ -575,18 +576,17 @@ app.post(
 
             res.write(`data: ${JSON.stringify({ type: "status", content: "Generating logo..." })}\n\n`);
 
-            const logo = await generateLogo(logoDescription); 
-            const logoDetails = await addNewLogo(userID, repoName);
+            const logos = await generateLogo(logoDescription, logoQuantity); 
+            const logoDetails = await addNewLogo(userID, repoName, logoQuantity);
+            const presignedURLs = await uploadImageToS3(logoDetails, logos);
 
-            await uploadImageToS3(logoDetails["value"], logo);
+            // const presignedURL = await getPresignedURL(logoDetails);
 
-            const presignedURL = await getPresignedURL(logoDetails["value"]);
-
-            await manageUserBalance(userID, 0.8);
+            await manageUserBalance(userID, 0.8 * logoQuantity);
 
             const finalData = {
                 type: "json",
-                content: { url: presignedURL, ...logoDetails }
+                content: { urls: presignedURLs, logoDetails, type: "logos" }
             };
 
             res.write(`data: ${JSON.stringify(finalData)}\n\n`);
