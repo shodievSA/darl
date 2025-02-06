@@ -30,7 +30,7 @@ async function generateLogoDescription(prompt, companyName, logoStyle, backgroun
     }
 
     const generativeModel = vertexAI.getGenerativeModel({
-        model: "gemini-1.5-pro",
+        model: "gemini-2.0-flash-001",
         systemInstruction: instruction, 
         safetySettings: [
             {
@@ -60,6 +60,8 @@ async function generateLogoDescription(prompt, companyName, logoStyle, backgroun
 
     const logoPrompt = res.response.candidates[0].content.parts[0].text;
     const formattedLogoPrompt = logoPrompt.replace(/\*/g, '');
+
+    console.log(formattedLogoPrompt)
 
     return formattedLogoPrompt;
 

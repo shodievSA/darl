@@ -14,7 +14,7 @@ const content = "You are an advanced text generative AI model tasked with filter
                 "formatting or enclosing markers (e.g., no ```json``` tags).";
 
 const generativeModel = vertexAI.getGenerativeModel({
-    model: "gemini-1.5-pro",
+    model: "gemini-2.0-flash-001",
     systemInstruction: content,
 });
 
