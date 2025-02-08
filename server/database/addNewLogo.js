@@ -1,10 +1,7 @@
 const { sequelize } = require("./models/user.js");
-const getUserFreeTrials = require("./getUserFreeTrials.js");
 const formatDate = require("../utils/formatDate.js");
 
 async function addNewLogo(userID, repoName, logoQuantity) {
-
-    const userFreeTrials = await getUserFreeTrials(userID);
 
     let newLogos = [];
 
@@ -16,8 +13,7 @@ async function addNewLogo(userID, repoName, logoQuantity) {
             value: `${userID}/${repoName}-${uniqueID}.png`,
             repoName: repoName,
             date: formatDate(),
-            type: 'logo',
-            price: userFreeTrials > 0 ? 'free trial' : 0.8
+            type: 'logo'
         }
 
         newLogos.push(newLogo);

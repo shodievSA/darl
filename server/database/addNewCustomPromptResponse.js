@@ -1,17 +1,13 @@
 const { sequelize } = require("./models/user.js");
-const getUserFreeTrials = require("./getUserFreeTrials.js");
 const formatDate = require("../utils/formatDate.js");
 
 async function addNewCustomPromptResponse(userID, customPromptResponse, repoName) {
-
-    const userFreeTrials = await getUserFreeTrials(userID);
 
     const newCustomPromptResponse = {
         value: customPromptResponse,
         repoName: repoName,
         date: formatDate(),
-        type: 'custom prompt',
-        price: userFreeTrials > 0 ? 'free trial' : 0.2
+        type: 'custom prompt'
     }
 
     await sequelize.query(

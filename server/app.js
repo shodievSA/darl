@@ -15,7 +15,6 @@ const getUserHistory = require('./database/getUserHistory.js');
 const refreshAccessToken = require("./utils/refreshAccessToken");
 const isUserNew = require("./database/isUserNew.js");
 const updateUserTokens = require("./database/updateUserTokens.js");
-const generateStreamDescription = require("./utils/gemini/generateStreamDescription.js");
 const addNewDescription = require('./database/addNewDescription.js');
 const addNewArticle = require("./database/addNewArticle.js");
 const addNewReadme = require("./database/addNewReadme.js");
@@ -24,25 +23,25 @@ const createPrompt = require('./utils/createPrompt.js');
 const contactAdmin = require('./utils/contactAdmin.js');
 const generateLogoDescription = require("./utils/gemini/generateLogoDescription.js");
 const generateLogo = require('./utils/gemini/generateLogo.js');
-const generateStreamReadme = require('./utils/gemini/generateStreamReadme.js');
-const generateStreamArticle = require('./utils/gemini/generateStreamArticle.js');
 const uploadImageToS3 = require('./utils/uploadImageToS3.js');
 const getPresignedURL = require('./utils/getPresignedURL.js');
 const getUserFreeTrials = require('./database/getUserFreeTrials.js');
 const getUserBalance = require('./database/getUserBalance.js');
 const reduceUserFreeTrials = require('./database/reduceUserFreeTrials.js');
-const reduceUserBalance = require('./database/reduceUserBalance.js');
-const manageUserBalance = require('./utils/manageUserBalance.js');
-const generateStreamName = require('./utils/gemini/generateStreamLandingPage.js');
-const addNewName = require('./database/addNewLandingPage.js');
-const generateStreamFeatures = require('./utils/gemini/generateStreamSocialMediaAnnouncements.js');
-const addNewFeatures = require('./database/addNewSocialMediaAnnouncements.js');
-const generateStreamCustomPromptResponse = require('./utils/gemini/generateStreamCustomPromptResponse.js');
+const reduceUserBalance = require('./database/updateUserBalance.js');
 const addNewCustomPromptResponse = require('./database/addNewCustomPromptResponse.js');
-const generateStreamLandingPage = require('./utils/gemini/generateStreamLandingPage.js');
 const addNewLandingPage = require('./database/addNewLandingPage.js');
-const generateStreamSocialMediaAnnouncements = require('./utils/gemini/generateStreamSocialMediaAnnouncements.js');
 const addNewSocialMediaAnnouncements = require('./database/addNewSocialMediaAnnouncements.js');
+const getUserTransactions = require('./database/getUserTransactions.js');
+const deductUserCredits = require('./utils/deductUserCredits.js');
+const streamDescription = require('./utils/gemini/streamDescription.js');
+const streamReadme = require('./utils/gemini/streamReadme.js');
+const streamLandingPage = require('./utils/gemini/streamLandingPage.js');
+const streamArticle = require('./utils/gemini/streamArticle.js');
+const streamSocialMediaAnnouncements = require('./utils/gemini/streamSocialMediaAnnouncements.js');
+const streamCustomPromptResponse = require('./utils/gemini/streamCustomPromptResponse.js');
+const getUserMonthlyUsage = require('./database/getUserMonthlyUsage.js');
+const getRecentUserTransactions = require('./utils/getRecentUserTransactions.js');
 
 const app = express();
 
@@ -317,12 +316,22 @@ app.post(
                 res
             });
 
-            res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
+            res.write(
+                `data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`
+            );
      
-            const description = await generateStreamDescription(prompt, sampleDescription, res);
-            const descriptionDetails = await addNewDescription(userID, description, repoName);
+            const completeDescription = await streamDescription(
+                prompt, sampleDescription, res
+            );
+            const descriptionDetails = await addNewDescription(
+                userID, completeDescription, repoName
+            );
 
-            await manageUserBalance(userID, 0.4);
+            await deductUserCredits({
+                userID: userID,
+                deductionAmount: 0.4,
+                description: "description"
+            });
 
             const finalData = {
                 type: "json",
@@ -369,10 +378,14 @@ app.get(
 
             res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
     
-            const readme = await generateStreamReadme(prompt, res);
-            const readmeDetails = await addNewReadme(userID, readme, repoName);
+            const completeReadme = await streamReadme(prompt, res);
+            const readmeDetails = await addNewReadme(userID, completeReadme, repoName);
     
-            await manageUserBalance(userID, 0.4);
+            await deductUserCredits({
+                userID: userID,
+                deductionAmount: 0.4,
+                description: "readme"
+            });
 
             const finalData = {
                 type: "json",
@@ -419,10 +432,14 @@ app.get(
 
             res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
 
-            const landingPage = await generateStreamLandingPage(prompt, res);
-            const landingPageDetails = await addNewLandingPage(userID, landingPage, repoName);
+            const completeLandingPage = await streamLandingPage(prompt, res);
+            const landingPageDetails = await addNewLandingPage(userID, completeLandingPage, repoName);
 
-            await manageUserBalance(userID, 0.4);
+            await deductUserCredits({
+                userID: userID,
+                deductionAmount: 0.4,
+                description: "landing"
+            });
 
             const finalData = {
                 type: "json",
@@ -436,6 +453,7 @@ app.get(
         } catch (err) {
 
             console.log(err);
+
             res.status(500).json({
                 errorMessage: "An error occurred while generating the project name. Please try again."
             });
@@ -469,10 +487,18 @@ app.post(
 
             res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
 
-            const article = await generateStreamArticle(prompt, sampleArticle, res);
-            const articleDetails = await addNewArticle(userID, article, repoName);
+            const completeArticle = await streamArticle(
+                prompt, sampleArticle, res
+            );
+            const articleDetails = await addNewArticle(
+                userID, completeArticle, repoName
+            );
 
-            await manageUserBalance(userID, 0.4);
+            await deductUserCredits({
+                userID: userID,
+                deductionAmount: 0.4,
+                description: "article"
+            });
 
             const finalData = {
                 type: "json",
@@ -519,10 +545,16 @@ app.get(
 
             res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
 
-            const announcements = await generateStreamSocialMediaAnnouncements(prompt, res);
-            const announcementsDetails = await addNewSocialMediaAnnouncements(userID, announcements, repoName);
+            const announcements = await streamSocialMediaAnnouncements(prompt, res);
+            const announcementsDetails = await addNewSocialMediaAnnouncements(
+                userID, announcements, repoName
+            );
 
-            await manageUserBalance(userID, 0.4);
+            await deductUserCredits({
+                userID: userID,
+                deductionAmount: 0.4,
+                description: "announcements"
+            });
 
             const finalData = {
                 type: "json",
@@ -532,7 +564,6 @@ app.get(
             res.write(`data: ${JSON.stringify(finalData)}\n\n`);
             res.write("data: [DONE]\n\n");
             res.end();
-
             
         } catch (err) {
 
@@ -580,9 +611,11 @@ app.post(
             const logoDetails = await addNewLogo(userID, repoName, logoQuantity);
             const presignedURLs = await uploadImageToS3(logoDetails, logos);
 
-            // const presignedURL = await getPresignedURL(logoDetails);
-
-            await manageUserBalance(userID, 0.8 * logoQuantity);
+            await deductUserCredits({
+                userID: userID,
+                deductionAmount: (0.8 * logoQuantity).toFixed(1),
+                description: logoQuantity > 1 ? "logos" : "logo"
+            });
 
             const finalData = {
                 type: "json",
@@ -624,6 +657,33 @@ app.get("/api/v1/user-balance", async (req, res) => {
 
 });
 
+app.get("/api/v1/recent-user-transactions", async (req, res) => {
+
+    const { userID } = req.session;
+    const recentUserTransactions = await getRecentUserTransactions(userID);
+
+    res.json({ recentTransactions: recentUserTransactions });
+
+});
+
+app.get("/api/v1/user-transactions", async(req, res) => {
+
+    const { userID } = req.session;
+    const userTransactions = await getUserTransactions(userID);
+
+    res.json({ transactions: userTransactions });
+
+});
+
+app.get("/api/v1/user-monthly-usage", async (req, res) => {
+
+    const { userID } = req.session;
+    const monthlyUsage = await getUserMonthlyUsage(userID);
+
+    res.json({ monthlyUsage: monthlyUsage });
+
+});
+
 app.post(
     "/api/v1/custom-prompt/:repoName/:repoOwner/:branchName", 
     async (req, res) => {
@@ -648,14 +708,18 @@ app.post(
 
             res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
 
-            const customPromptResponse = await generateStreamCustomPromptResponse(
+            const customPromptResponse = await streamCustomPromptResponse(
                 repoDetails, customPrompt, res
             );
             const customPromptResponseDetails = await addNewCustomPromptResponse(
                 userID, customPromptResponse, repoName
             );
 
-            await manageUserBalance(userID, 0.5);
+            await deductUserCredits({
+                userID: userID,
+                deductionAmount: 0.5,
+                description: "custom prompt"
+            });
 
             const repoCodebase = {
                 type: "json",
@@ -666,7 +730,6 @@ app.post(
             res.write("data: [DONE]\n\n");
             res.end();
 
-            
         } catch (err) {
 
             console.log(err);

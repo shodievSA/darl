@@ -5,7 +5,7 @@ const vertexAI = new VertexAI({
     project: process.env.VERTEXAI_PTOJECT_ID
 });
 
-async function generateStreamDescription(prompt, reference, res) {
+async function streamDescription(prompt, reference, res) {
 
     let instruction = '';
     let fullResponse = '';
@@ -68,4 +68,4 @@ async function generateStreamDescription(prompt, reference, res) {
 
 }
 
-module.exports = generateStreamDescription;
+module.exports = streamDescription;
