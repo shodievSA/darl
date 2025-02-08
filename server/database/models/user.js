@@ -31,6 +31,10 @@ const User = sequelize.define(
             type: DataTypes.FLOAT,
             defaultValue: 0
         },
+        user_transactions: {
+            type: DataTypes.JSONB,
+            defaultValue: []
+        },
         access_token: {
             type: DataTypes.TEXT
         },

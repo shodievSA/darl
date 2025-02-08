@@ -1,10 +1,10 @@
 require("dotenv").config();
 const { VertexAI } = require("@google-cloud/vertexai");
 
-const content = "You are an advanced text generative AI model tasked with thoroughly analyzing " +
-                "the contents of a user's GitHub repository in order to develop a well-designed " +
-                "landing page for it. You can choose any stack for developing the landing page. " +
-                "Reply directly with the code.";
+const content = "You are an advanced text generative AI model tasked with analyzing " +
+                "the contents of a user's GitHub repository to generate a well-structured " +
+                "and informative text for README file. Make sure the text provides clear " +
+                "instructions on how to set up and use the repository.";
 
 const vertexAI = new VertexAI({ 
     project: process.env.VERTEXAI_PTOJECT_ID
@@ -33,7 +33,7 @@ const generativeModel = vertexAI.getGenerativeModel({
     ]
 });
 
-async function generateStreamLandingPage(prompt, res) {
+async function streamReadme(prompt, res) {
 
     let fullResponse = "";
 
@@ -42,7 +42,7 @@ async function generateStreamLandingPage(prompt, res) {
     }
 
     const result = await generativeModel.generateContentStream(request);
-    
+
     for await (const item of result.stream) {
 
         const chunkText = item.candidates[0].content.parts[0].text;
@@ -56,4 +56,4 @@ async function generateStreamLandingPage(prompt, res) {
 
 }
 
-module.exports = generateStreamLandingPage;
+module.exports = streamReadme;

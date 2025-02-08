@@ -1,17 +1,13 @@
 const { sequelize } = require("./models/user.js");
-const getUserFreeTrials = require("./getUserFreeTrials.js");
 const formatDate = require("../utils/formatDate.js");
 
 async function addNewReadme(userID, readme, repoName) {
-
-    const userFreeTrials = await getUserFreeTrials(userID);
 
     const newReadme = {
         value: readme,
         repoName: repoName,
         date: formatDate(),
-        type: 'readme',
-        price: userFreeTrials > 0 ? 'free trial' : 0.4
+        type: 'readme'
     }
 
     await sequelize.query(
