@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require("express");
 const rateLimiter = require("express-rate-limit");
 const session = require("express-session");
-const Sequelize = require("sequelize");
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const crypto = require("crypto");
 const axios = require("axios");
@@ -21,7 +20,6 @@ const addNewReadme = require("./database/addNewReadme.js");
 const addNewLogo = require("./database/addNewLogo.js");
 const createPrompt = require('./utils/createPrompt.js');
 const contactAdmin = require('./utils/contactAdmin.js');
-const generateLogoDescription = require("./utils/gemini/generateLogoDescription.js");
 const generateLogo = require('./utils/gemini/generateLogo.js');
 const uploadImageToS3 = require('./utils/uploadImageToS3.js');
 const getPresignedURL = require('./utils/getPresignedURL.js');
@@ -34,26 +32,12 @@ const addNewLandingPage = require('./database/addNewLandingPage.js');
 const addNewSocialMediaAnnouncements = require('./database/addNewSocialMediaAnnouncements.js');
 const getUserTransactions = require('./database/getUserTransactions.js');
 const deductUserCredits = require('./utils/deductUserCredits.js');
-const streamDescription = require('./utils/gemini/streamDescription.js');
-const streamReadme = require('./utils/gemini/streamReadme.js');
-const streamLandingPage = require('./utils/gemini/streamLandingPage.js');
-const streamArticle = require('./utils/gemini/streamArticle.js');
-const streamSocialMediaAnnouncements = require('./utils/gemini/streamSocialMediaAnnouncements.js');
-const streamCustomPromptResponse = require('./utils/gemini/streamCustomPromptResponse.js');
 const getUserMonthlyUsage = require('./database/getUserMonthlyUsage.js');
 const getRecentUserTransactions = require('./utils/getRecentUserTransactions.js');
+const sequelize = require("./database/sequelize.js");
+const gemini = require('./utils/gemini/gemini-services.js');
 
 const app = express();
-
-const sequelize = new Sequelize(
-    process.env.DB_NAME,
-    process.env.DB_USERNAME,
-    process.env.DB_PASSWORD,
-    {
-        host: process.env.DB_HOST,
-        dialect: "postgres"
-    }
-);
 
 const sessionStore = new SequelizeStore({
     db: sequelize,
@@ -295,7 +279,7 @@ app.get("/api/v1/delete-user", (req, res) => {
 });
 
 app.post(
-    "/api/v1/description-generation/:repoName/:repoOwner/:branchName", 
+    "/api/v1/description-generation/:repoName/:repoOwner/:branchName",
     async (req, res) => {
 
         res.setHeader('Content-Type', 'text/event-stream');
@@ -320,7 +304,7 @@ app.post(
                 `data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`
             );
      
-            const completeDescription = await streamDescription(
+            const completeDescription = await gemini.streamDescription(
                 prompt, sampleDescription, res
             );
             const descriptionDetails = await addNewDescription(
@@ -378,7 +362,7 @@ app.get(
 
             res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
     
-            const completeReadme = await streamReadme(prompt, res);
+            const completeReadme = await gemini.streamReadme(prompt, res);
             const readmeDetails = await addNewReadme(userID, completeReadme, repoName);
     
             await deductUserCredits({
@@ -432,7 +416,7 @@ app.get(
 
             res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
 
-            const completeLandingPage = await streamLandingPage(prompt, res);
+            const completeLandingPage = await gemini.streamLandingPage(prompt, res);
             const landingPageDetails = await addNewLandingPage(userID, completeLandingPage, repoName);
 
             await deductUserCredits({
@@ -472,7 +456,7 @@ app.post(
         res.setHeader('Connection', 'keep-alive');
 
         const { repoName, repoOwner, branchName } = req.params;
-        const { sampleArticle } = req.body;
+        const { sampleArticle = null } = req.body;
         const userID = req.session.userID;
 
         try {
@@ -487,7 +471,7 @@ app.post(
 
             res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
 
-            const completeArticle = await streamArticle(
+            const completeArticle = await gemini.streamArticle(
                 prompt, sampleArticle, res
             );
             const articleDetails = await addNewArticle(
@@ -545,7 +529,7 @@ app.get(
 
             res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
 
-            const announcements = await streamSocialMediaAnnouncements(prompt, res);
+            const announcements = await gemini.streamSocialMediaAnnouncements(prompt, res);
             const announcementsDetails = await addNewSocialMediaAnnouncements(
                 userID, announcements, repoName
             );
@@ -603,7 +587,9 @@ app.post(
 
             res.write(`data: ${JSON.stringify({ type: "status", content: "Creating prompt for logo..." })}\n\n`);
 
-            const logoDescription = await generateLogoDescription(prompt, companyName, logoStyle, backgroundColor);
+            const logoDescription = await gemini.generateLogoDescription(
+                prompt, companyName, logoStyle, backgroundColor
+            );
 
             res.write(`data: ${JSON.stringify({ type: "status", content: "Generating logo..." })}\n\n`);
 
@@ -632,6 +618,65 @@ app.post(
             
             res.status(500).json({
                 errorMessage: "An error occurred while generating the project logo. Please try again."
+            });
+
+        }
+
+    }
+);
+
+app.post(
+    "/api/v1/custom-prompt/:repoName/:repoOwner/:branchName", 
+    async (req, res) => {
+
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+
+        const { repoName, repoOwner, branchName } = req.params;
+        const { customPrompt } = req.body;
+        const userID = req.session.userID;
+
+        try {
+
+            const repoDetails = await createPrompt({
+                repoName,
+                repoOwner,
+                branchName,
+                userID,
+                res
+            });
+
+            res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
+
+            const customPromptResponse = await gemini.streamResponseForCustomPrompt(
+                repoDetails, customPrompt, res
+            );
+            const customPromptResponseDetails = await addNewCustomPromptResponse(
+                userID, customPromptResponse, repoName
+            );
+
+            await deductUserCredits({
+                userID: userID,
+                deductionAmount: 0.5,
+                description: "custom prompt"
+            });
+
+            const repoCodebase = {
+                type: "json",
+                content: customPromptResponseDetails
+            };
+
+            res.write(`data: ${JSON.stringify(repoCodebase)}\n\n`);
+            res.write("data: [DONE]\n\n");
+            res.end();
+
+        } catch (err) {
+
+            console.log(err);
+
+            res.status(500).json({
+                errorMessage: "An error occurred while generating the features. Please try again."
             });
 
         }
@@ -683,65 +728,6 @@ app.get("/api/v1/user-monthly-usage", async (req, res) => {
     res.json({ monthlyUsage: monthlyUsage });
 
 });
-
-app.post(
-    "/api/v1/custom-prompt/:repoName/:repoOwner/:branchName", 
-    async (req, res) => {
-
-        res.setHeader('Content-Type', 'text/event-stream');
-        res.setHeader('Cache-Control', 'no-cache');
-        res.setHeader('Connection', 'keep-alive');
-
-        const { repoName, repoOwner, branchName } = req.params;
-        const { customPrompt } = req.body;
-        const userID = req.session.userID;
-
-        try {
-
-            const repoDetails = await createPrompt({
-                repoName,
-                repoOwner,
-                branchName,
-                userID,
-                res
-            });
-
-            res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
-
-            const customPromptResponse = await streamCustomPromptResponse(
-                repoDetails, customPrompt, res
-            );
-            const customPromptResponseDetails = await addNewCustomPromptResponse(
-                userID, customPromptResponse, repoName
-            );
-
-            await deductUserCredits({
-                userID: userID,
-                deductionAmount: 0.5,
-                description: "custom prompt"
-            });
-
-            const repoCodebase = {
-                type: "json",
-                content: customPromptResponseDetails
-            };
-
-            res.write(`data: ${JSON.stringify(repoCodebase)}\n\n`);
-            res.write("data: [DONE]\n\n");
-            res.end();
-
-        } catch (err) {
-
-            console.log(err);
-
-            res.status(500).json({
-                errorMessage: "An error occurred while generating the features. Please try again."
-            });
-
-        }
-
-    }
-);
 
 app.patch("/api/v1/reduce-user-free-trials", async (req, res) => {
 

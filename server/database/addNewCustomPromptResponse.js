@@ -1,4 +1,4 @@
-const { sequelize } = require("./models/user.js");
+const sequelize = require("./sequelize.js");
 const formatDate = require("../utils/formatDate.js");
 
 async function addNewCustomPromptResponse(userID, customPromptResponse, repoName) {
