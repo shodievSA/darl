@@ -61,8 +61,6 @@ async function generateLogoDescription(prompt, companyName, logoStyle, backgroun
     const logoPrompt = res.response.candidates[0].content.parts[0].text;
     const formattedLogoPrompt = logoPrompt.replace(/\*/g, '');
 
-    console.log(formattedLogoPrompt)
-
     return formattedLogoPrompt;
 
 }

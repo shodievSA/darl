@@ -1,15 +1,5 @@
-const { Sequelize, DataTypes } = require("sequelize");
-const config = require("../config.js");
-
-const sequelize = new Sequelize(
-    config.database,
-    config.username,
-    config.password,
-    {
-        host: config.host,
-        dialect: "postgres"
-    }
-);
+const sequelize = require("../sequelize.js");
+const { DataTypes } = require("sequelize");
 
 const User = sequelize.define(
     'users',
@@ -50,4 +40,4 @@ const User = sequelize.define(
 
 User.sync({ alter: true });
 
-module.exports = { sequelize, User }
+module.exports = { User };

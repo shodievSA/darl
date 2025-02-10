@@ -18,9 +18,7 @@ async function generateLogo(logoDescription, logoQuantity) {
 
     const endpoint = `projects/${projectID}/locations/${location}/publishers/google/models/${model}`;
 
-    const promptText = {
-        prompt: logoDescription
-    };
+    const promptText = { prompt: logoDescription };
     const instanceValue = helpers.toValue(promptText);
     const instances = [instanceValue];
 

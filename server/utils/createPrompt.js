@@ -40,21 +40,13 @@ async function createPrompt(props) {
         accessToken,
         branchName
     );
-    
-    let extraInformation = `Extra information about the repository:\n\n` +
-                           `Repository name: ${repoName}\n` +
-                           `Repository owner: ${repoOwner}\n` +
-                           `Branch name: ${branchName}\n` +
-                           `Repository link: https://github.com/${repoOwner}/${repoName}`;
 
-    filteredProjectStructure = "Repository structure represented in JSON format:\n\n" +
-                               "```json\n" + JSON.stringify(filteredProjectStructure) + "\n" +
-                               "```\n\n";
+    fileContents = "[GitHub Repository Codebase]:\n" + fileContents;
+    let extraInformation = `[Extra Repository Information]:\n` +
+                           `GitHub repository name: ${repoName}\n` +
+                           `GitHub repository link: https://github.com/${repoOwner}/${repoName}`;
 
-    fileContents = "Contents of each file:\n\n" + fileContents + "\n\n";
-
-    const prompt = filteredProjectStructure + fileContents + extraInformation;
-    
+    const prompt = fileContents + extraInformation + "\n\n";
     return prompt;
 
 }

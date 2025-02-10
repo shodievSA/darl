@@ -1,4 +1,4 @@
-const { sequelize } = require("../database/models/user");
+const sequelize = require("../database/sequelize.js");
 const { QueryTypes } = require('sequelize');
  
 async function getRecentUserTransactions(userID) {
