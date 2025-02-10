@@ -14,10 +14,6 @@ const getUserHistory = require('./database/getUserHistory.js');
 const refreshAccessToken = require("./utils/refreshAccessToken");
 const isUserNew = require("./database/isUserNew.js");
 const updateUserTokens = require("./database/updateUserTokens.js");
-const addNewDescription = require('./database/addNewDescription.js');
-const addNewArticle = require("./database/addNewArticle.js");
-const addNewReadme = require("./database/addNewReadme.js");
-const addNewLogo = require("./database/addNewLogo.js");
 const createPrompt = require('./utils/createPrompt.js');
 const contactAdmin = require('./utils/contactAdmin.js');
 const generateLogo = require('./utils/gemini/generateLogo.js');
@@ -27,15 +23,13 @@ const getUserFreeTrials = require('./database/getUserFreeTrials.js');
 const getUserBalance = require('./database/getUserBalance.js');
 const reduceUserFreeTrials = require('./database/reduceUserFreeTrials.js');
 const reduceUserBalance = require('./database/updateUserBalance.js');
-const addNewCustomPromptResponse = require('./database/addNewCustomPromptResponse.js');
-const addNewLandingPage = require('./database/addNewLandingPage.js');
-const addNewSocialMediaAnnouncements = require('./database/addNewSocialMediaAnnouncements.js');
 const getUserTransactions = require('./database/getUserTransactions.js');
 const deductUserCredits = require('./utils/deductUserCredits.js');
 const getUserMonthlyUsage = require('./database/getUserMonthlyUsage.js');
 const getRecentUserTransactions = require('./utils/getRecentUserTransactions.js');
 const sequelize = require("./database/sequelize.js");
 const gemini = require('./utils/gemini/gemini-services.js');
+const userHistory = require('./database/user-history.js');
 
 const app = express();
 
@@ -307,7 +301,7 @@ app.post(
             const completeDescription = await gemini.streamDescription(
                 prompt, sampleDescription, res
             );
-            const descriptionDetails = await addNewDescription(
+            const descriptionDetails = await userHistory.addNewDescription(
                 userID, completeDescription, repoName
             );
 
@@ -363,7 +357,7 @@ app.get(
             res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
     
             const completeReadme = await gemini.streamReadme(prompt, res);
-            const readmeDetails = await addNewReadme(userID, completeReadme, repoName);
+            const readmeDetails = await userHistory.addNewReadme(userID, completeReadme, repoName);
     
             await deductUserCredits({
                 userID: userID,
@@ -417,7 +411,9 @@ app.get(
             res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
 
             const completeLandingPage = await gemini.streamLandingPage(prompt, res);
-            const landingPageDetails = await addNewLandingPage(userID, completeLandingPage, repoName);
+            const landingPageDetails = await userHistory.addNewLandingPage(
+                userID, completeLandingPage, repoName
+            );
 
             await deductUserCredits({
                 userID: userID,
@@ -474,7 +470,7 @@ app.post(
             const completeArticle = await gemini.streamArticle(
                 prompt, sampleArticle, res
             );
-            const articleDetails = await addNewArticle(
+            const articleDetails = await userHistory.addNewArticle(
                 userID, completeArticle, repoName
             );
 
@@ -530,7 +526,7 @@ app.get(
             res.write(`data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`);
 
             const announcements = await gemini.streamSocialMediaAnnouncements(prompt, res);
-            const announcementsDetails = await addNewSocialMediaAnnouncements(
+            const announcementsDetails = await userHistory.addNewSocialMediaAnnouncements(
                 userID, announcements, repoName
             );
 
@@ -594,7 +590,7 @@ app.post(
             res.write(`data: ${JSON.stringify({ type: "status", content: "Generating logo..." })}\n\n`);
 
             const logos = await generateLogo(logoDescription, logoQuantity); 
-            const logoDetails = await addNewLogo(userID, repoName, logoQuantity);
+            const logoDetails = await userHistory.addNewLogo(userID, repoName, logoQuantity);
             const presignedURLs = await uploadImageToS3(logoDetails, logos);
 
             await deductUserCredits({
@@ -652,7 +648,7 @@ app.post(
             const customPromptResponse = await gemini.streamResponseForCustomPrompt(
                 repoDetails, customPrompt, res
             );
-            const customPromptResponseDetails = await addNewCustomPromptResponse(
+            const customPromptResponseDetails = await userHistory.addNewCustomPromptResponse(
                 userID, customPromptResponse, repoName
             );
 
