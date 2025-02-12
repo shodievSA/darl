@@ -35,6 +35,7 @@ const app = express();
 
 const sessionStore = new SequelizeStore({
     db: sequelize,
+    checkExpirationInterval: 24 * 60 * 60 * 1000,
     tableName: "sessions"
 });
 
