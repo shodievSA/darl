@@ -17,8 +17,6 @@ const updateUserTokens = require("./database/updateUserTokens.js");
 const createPrompt = require('./utils/createPrompt.js');
 const contactAdmin = require('./utils/contactAdmin.js');
 const generateLogo = require('./utils/gemini/generateLogo.js');
-const uploadImageToS3 = require('./utils/uploadImageToS3.js');
-const getPresignedURL = require('./utils/getPresignedURL.js');
 const getUserFreeTrials = require('./database/getUserFreeTrials.js');
 const getUserBalance = require('./database/getUserBalance.js');
 const reduceUserFreeTrials = require('./database/reduceUserFreeTrials.js');
@@ -30,6 +28,8 @@ const getRecentUserTransactions = require('./utils/getRecentUserTransactions.js'
 const sequelize = require("./database/sequelize.js");
 const gemini = require('./utils/gemini/gemini-services.js');
 const userHistory = require('./database/user-history.js');
+const { checkUserBalance} = require('./middleware/checkUserBalance.js');
+const { uploadObject, getPresignedURL } = require('./utils/aws/s3-bucket/services.js');
 
 const app = express();
 
@@ -221,8 +221,8 @@ app.get("/api/v1/user-history", async (req, res) => {
 
 app.post("/api/v1/generated-logo", async (req, res) => {
 
-    const { path } = req.body;
-    const signenURL = await getPresignedURL(path);
+    const { key } = req.body;
+    const signenURL = await getPresignedURL(key);
 
     res.json({ url: signenURL });
 
@@ -274,6 +274,7 @@ app.get("/api/v1/delete-user", (req, res) => {
 
 app.post(
     "/api/v1/description-generation/:repoName/:repoOwner/:branchName",
+    checkUserBalance("description"),
     async (req, res) => {
 
         res.setHeader('Content-Type', 'text/event-stream');
@@ -335,6 +336,7 @@ app.post(
 
 app.get(
     "/api/v1/readme-generation/:repoName/:repoOwner/:branchName",
+    checkUserBalance("readme"),
     async (req, res) => {
 
         res.setHeader('Content-Type', 'text/event-stream');
@@ -389,6 +391,7 @@ app.get(
 
 app.get(
     '/api/v1/landing-page-generation/:repoName/:repoOwner/:branchName', 
+    checkUserBalance("landing"),
     async (req, res) => {
 
         res.setHeader('Content-Type', 'text/event-stream');
@@ -445,6 +448,7 @@ app.get(
 
 app.post(
     "/api/v1/article-generation/:repoName/:repoOwner/:branchName", 
+    checkUserBalance("article"),
     async (req, res) => {
 
         res.setHeader('Content-Type', 'text/event-stream');
@@ -504,6 +508,7 @@ app.post(
 
 app.get(
     "/api/v1/social-media-announcements-generation/:repoName/:repoOwner/:branchName", 
+    checkUserBalance("social-media-announcements"),
     async (req, res) => {
 
         res.setHeader('Content-Type', 'text/event-stream');
@@ -559,7 +564,8 @@ app.get(
 );
 
 app.post(
-    "/api/v1/logo-generation/:repoName/:repoOwner/:branchName", 
+    "/api/v1/logo-generation/:repoName/:repoOwner/:branchName",
+    checkUserBalance("logo"),
     async (req, res) => {
 
         res.setHeader('Content-Type', 'text/event-stream');
@@ -568,7 +574,6 @@ app.post(
 
         const { repoName, repoOwner, branchName } = req.params;
         const { companyName, logoStyle, backgroundColor } = req.body;
-        const logoQuantity  = Number(req.body["logoQuantity"]);
         const userID = req.session.userID;
 
         try {
@@ -589,19 +594,19 @@ app.post(
 
             res.write(`data: ${JSON.stringify({ type: "status", content: "Generating logo..." })}\n\n`);
 
-            const logos = await generateLogo(logoDescription, logoQuantity); 
-            const logoDetails = await userHistory.addNewLogo(userID, repoName, logoQuantity);
-            const presignedURLs = await uploadImageToS3(logoDetails, logos);
-
+            const logo = await generateLogo(logoDescription); 
+            const logoDetails = await userHistory.addNewLogo(userID, repoName);
+            
+            await uploadObject(logoDetails, logo);
             await deductUserCredits({
                 userID: userID,
-                deductionAmount: (0.8 * logoQuantity).toFixed(1),
-                description: logoQuantity > 1 ? "logos" : "logo"
+                deductionAmount: 0.8,
+                description: "logo"
             });
 
             const finalData = {
                 type: "json",
-                content: { urls: presignedURLs, logoDetails, type: "logos" }
+                content: logoDetails
             };
 
             res.write(`data: ${JSON.stringify(finalData)}\n\n`);
@@ -623,6 +628,7 @@ app.post(
 
 app.post(
     "/api/v1/custom-prompt/:repoName/:repoOwner/:branchName", 
+    checkUserBalance("custom-prompt"),
     async (req, res) => {
 
         res.setHeader('Content-Type', 'text/event-stream');

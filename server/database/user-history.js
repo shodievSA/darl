@@ -93,36 +93,26 @@ async function addNewLandingPage(userID, landingPage, repoName) {
 
 }
 
-async function addNewLogo(userID, repoName, logoQuantity) {
+async function addNewLogo(userID, repoName) {
 
-    let newLogos = [];
-
-    for (let i = 0; i < logoQuantity; i++) {
-
-        const uniqueID = `${Date.now()}-${i}`;
-
-        const newLogo = {
-            value: `${userID}/${repoName}-${uniqueID}.png`,
-            repoName: repoName,
-            date: formatDate(),
-            type: 'logo'
-        }
-
-        newLogos.push(newLogo);
-
+    const newLogo = {
+        value: `${userID}/${repoName}-${Date.now()}.png`,
+        repoName: repoName,
+        date: formatDate(),
+        type: 'logo'
     }
 
     await sequelize.query(
-        `UPDATE users SET user_history = :newLogos || user_history WHERE user_id = :userID`,
+        `UPDATE users SET user_history = :newLogo || user_history WHERE user_id = :userID`,
         {
             replacements: {
-                newLogos: JSON.stringify(newLogos),
+                newLogo: JSON.stringify([newLogo]),
                 userID: userID,
             },
         }
     );
 
-    return newLogos;
+    return newLogo;
 
 }
 
