@@ -22,7 +22,6 @@ const getUserBalance = require('./database/getUserBalance.js');
 const reduceUserFreeTrials = require('./database/reduceUserFreeTrials.js');
 const reduceUserBalance = require('./database/updateUserBalance.js');
 const getUserTransactions = require('./database/getUserTransactions.js');
-const deductUserCredits = require('./utils/deductUserCredits.js');
 const getUserMonthlyUsage = require('./database/getUserMonthlyUsage.js');
 const getRecentUserTransactions = require('./utils/getRecentUserTransactions.js');
 const sequelize = require("./database/sequelize.js");
@@ -30,6 +29,8 @@ const gemini = require('./utils/gemini/gemini-services.js');
 const userHistory = require('./database/user-history.js');
 const { checkUserBalance} = require('./middleware/checkUserBalance.js');
 const { uploadObject, getPresignedURL } = require('./utils/aws/s3-bucket/services.js');
+const { createPayment, getPayment } = require('./utils/payze/services.js');
+const updateUserCredits = require('./database/updateUserCredits.js');
 
 const app = express();
 
@@ -283,7 +284,7 @@ app.post(
         res.setHeader('Connection', 'keep-alive');
 
         const { repoName, repoOwner, branchName } = req.params;
-        const { sampleDescription } = req.body;
+        const { sampleDescription, homepageURL } = req.body;
         const userID = req.session.userID;
 
         try {
@@ -292,6 +293,7 @@ app.post(
                 repoName,
                 repoOwner,
                 branchName,
+                homepageURL,
                 userID,
                 res
             });
@@ -307,9 +309,9 @@ app.post(
                 userID, completeDescription, repoName
             );
 
-            await deductUserCredits({
+            await updateUserCredits({
                 userID: userID,
-                deductionAmount: 0.4,
+                amount: -0.4,
                 description: "description"
             });
 
@@ -362,9 +364,9 @@ app.get(
             const completeReadme = await gemini.streamReadme(prompt, res);
             const readmeDetails = await userHistory.addNewReadme(userID, completeReadme, repoName);
     
-            await deductUserCredits({
+            await updateUserCredits({
                 userID: userID,
-                deductionAmount: 0.4,
+                amount: -0.4,
                 description: "readme"
             });
 
@@ -390,7 +392,7 @@ app.get(
     }
 );
 
-app.get(
+app.post(
     '/api/v1/landing-page-generation/:repoName/:repoOwner/:branchName', 
     checkUserBalance("landing"),
     async (req, res) => {
@@ -400,6 +402,7 @@ app.get(
         res.setHeader('Connection', 'keep-alive');
 
         const { repoName, repoOwner, branchName } = req.params;
+        const { homepageURL } = req.body;
         const userID = req.session.userID;
 
         try {
@@ -408,6 +411,7 @@ app.get(
                 repoName,
                 repoOwner,
                 branchName,
+                homepageURL,
                 userID,
                 res
             });
@@ -419,9 +423,9 @@ app.get(
                 userID, completeLandingPage, repoName
             );
 
-            await deductUserCredits({
+            await updateUserCredits({
                 userID: userID,
-                deductionAmount: 0.4,
+                amount: -0.4,
                 description: "landing"
             });
 
@@ -457,7 +461,7 @@ app.post(
         res.setHeader('Connection', 'keep-alive');
 
         const { repoName, repoOwner, branchName } = req.params;
-        const { sampleArticle = null } = req.body;
+        const { sampleArticle, homepageURL } = req.body;
         const userID = req.session.userID;
 
         try {
@@ -466,6 +470,7 @@ app.post(
                 repoName,
                 repoOwner,
                 branchName,
+                homepageURL,
                 userID,
                 res
             });
@@ -479,9 +484,9 @@ app.post(
                 userID, completeArticle, repoName
             );
 
-            await deductUserCredits({
+            await updateUserCredits({
                 userID: userID,
-                deductionAmount: 0.4,
+                amount: -0.4,
                 description: "article"
             });
 
@@ -507,7 +512,7 @@ app.post(
     }
 );
 
-app.get(
+app.post(
     "/api/v1/social-media-announcements-generation/:repoName/:repoOwner/:branchName", 
     checkUserBalance("social-media-announcements"),
     async (req, res) => {
@@ -517,6 +522,7 @@ app.get(
         res.setHeader('Connection', 'keep-alive');
 
         const { repoName, repoOwner, branchName } = req.params;
+        const { homepageURL } = req.body;
         const userID = req.session.userID;
 
         try {
@@ -525,6 +531,7 @@ app.get(
                 repoName,
                 repoOwner,
                 branchName,
+                homepageURL,
                 userID,
                 res
             });
@@ -536,9 +543,9 @@ app.get(
                 userID, announcements, repoName
             );
 
-            await deductUserCredits({
+            await updateUserCredits({
                 userID: userID,
-                deductionAmount: 0.4,
+                amount: -0.4,
                 description: "announcements"
             });
 
@@ -599,9 +606,9 @@ app.post(
             const logoDetails = await userHistory.addNewLogo(userID, repoName);
             
             await uploadObject(logoDetails, logo);
-            await deductUserCredits({
+            await updateUserCredits({
                 userID: userID,
-                deductionAmount: 0.8,
+                amount: -0.8,
                 description: "logo"
             });
 
@@ -659,9 +666,9 @@ app.post(
                 userID, customPromptResponse, repoName
             );
 
-            await deductUserCredits({
+            await updateUserCredits({
                 userID: userID,
-                deductionAmount: 0.5,
+                amount: -0.5,
                 description: "custom prompt"
             });
 
@@ -686,6 +693,45 @@ app.post(
 
     }
 );
+
+app.put("/api/v1/user-create-payment", async (req, res) => {
+
+    const amount = Number(req.body.amount);
+    const source = req.body.source;
+
+    const paymentDetails = await createPayment({
+        amount: amount,
+        source: source
+    });
+
+    res.json({ paymentURL: paymentDetails.payment.paymentUrl });
+
+});
+
+app.post("/api/v1/payze-webhook-gateway", async (req, res) => {
+
+    console.log("Payze sent an update");
+
+});
+
+app.get("/payze-payment-success", async (req, res) => {
+
+    const { payment_transaction_id } = req.query;
+    const { userID } = req.session;
+
+    const paymentDetails = await getPayment({
+        transactionID: payment_transaction_id
+    });
+
+    await updateUserCredits({
+        userID: userID,
+        amount: paymentDetails.amount,
+        description: "Balance"
+    });
+
+    res.redirect("/pricing");
+ 
+});
 
 app.get("/api/v1/user-free-trials", async (req, res) => {
 
