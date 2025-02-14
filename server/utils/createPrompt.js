@@ -5,7 +5,15 @@ const getFileContents = require("./getFileContents.js");
 
 async function createPrompt(props) {
 
-    const { userID, repoOwner, repoName, branchName, res } = props;
+    const { 
+        userID, 
+        repoOwner, 
+        repoName, 
+        branchName, 
+        homepageURL, 
+        res 
+    } = props;
+
     const accessToken = await getUserAccessToken(userID);
 
     const response = await fetch(
@@ -43,6 +51,7 @@ async function createPrompt(props) {
 
     fileContents = "[GitHub Repository Codebase]:\n" + fileContents;
     let extraInformation = `[Extra Repository Information]:\n` +
+                           `Homepage link: ${ homepageURL ? homepageURL + "\n" : "N/A\n" }` +
                            `GitHub repository name: ${repoName}\n` +
                            `GitHub repository link: https://github.com/${repoOwner}/${repoName}`;
 

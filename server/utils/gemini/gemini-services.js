@@ -78,9 +78,10 @@ async function streamDescription(repoDetails, reference, res) {
     } else {
 
         requestedContent = "[Requested Content]:\n" +
-                           "Generate concise and professional description (no more than 90 words) of the project " +
+                           "Generate concise and formal description (no more than 90 words) of the project " +
                            "suitable for inclusion in a CV or resume. Make sure to describe the main " +
-                           "functionality of the project and stack of technologies used.\n\n";
+                           "functionality of the project and stack of technologies used. If the project has " +
+                           "homepage or GitHub links, include them in your description too.\n\n"
 
     }
 
@@ -154,13 +155,41 @@ async function streamArticle(repoDetails, reference, res) {
 async function streamLandingPage(repoDetails, res) {
 
     const requestedContent = "[Requested Content]:\n" +
-                             "Create a well-crafted, user-friendly landing page for the GitHub repository. " +
-                             "Ensure the design effectively highlights the project's key features " +
-                             "and goals. If the repository includes a color palette, incorporate " +
-                             "it into the design. Use CSS libraries with ready-to-use components, " +
+                             "Create a responsive and user-friendly landing page with smooth animations for the GitHub repository. " +
+                             "If the repository includes a color palette, incorporate " +
+                             "it into the design. Use modern CSS libraries with ready-to-use components, " +
                              "such as Bootstrap or Tailwind CSS, to ensure a polished and responsive " +
-                             "layout. If the landing page requires a special setup, include clear and " +
-                             "concise setup instructions in your response.\n\n";
+                             "layout. If the repository is built with a frontend framework (e.g Next.js or React), " +
+                             "develop the landing page using the same framework.\n\n" +
+                             "Requirements:\n\n" +
+                             "1. Hero Section:\n" +
+                             "- Prominent headline that clearly communicates the value proposition\n" +
+                             "- Engaging subheadline that elaborates on the main benefit\n" +
+                             "- Primary CTA button above the fold\n" +
+                             "- Optional: Background image or illustration that reinforces the message\n\n" +
+                             "2. Features Section:\n" +
+                             "- 3-4 key features presented in a grid or cards layout\n" +
+                             "- Each feature should include an icon, heading, and brief description\n\n" +
+                             "3. Social Proof Section:\n" +
+                             "- Customer testimonials (2-3 featured quotes)\n" +
+                             "- Logos of notable clients or partners\n" +
+                             "- Key metrics or statistics demonstrating success\n\n" +
+                             "4. How It Works Section:\n" +
+                             "- Step-by-step explanation of the product/service\n" +
+                             "- Use numbered steps or timeline design\n" +
+                             "- Include relevant icons or illustrations\n\n" +
+                             "5. Pricing Section (if applicable):\n" +
+                             "- Clear pricing tiers in a comparative table or cards\n" +
+                             "- List key features included in each tier\n\n" +
+                             "6. Call-to-Action Section:\n" +
+                             "- Compelling final CTA with urgency or incentive\n" +
+                             "- Secondary supporting text addressing potential objections\n" +
+                             "- Make the action button prominent and clear\n\n" +
+                             "7. Footer:\n" +
+                             "- Navigation links\n" +
+                             "- Contact information\n" +
+                             "- Social media links\n" +
+                             "- Legal links (Privacy Policy, Terms of Service)\n\n";
 
     const prompt = requestedContent + repoDetails;
 
