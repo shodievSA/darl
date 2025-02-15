@@ -31,6 +31,7 @@ const { checkUserBalance} = require('./middleware/checkUserBalance.js');
 const { uploadObject, getPresignedURL } = require('./utils/aws/s3-bucket/services.js');
 const { createPayment, getPayment } = require('./utils/payze/services.js');
 const updateUserCredits = require('./database/updateUserCredits.js');
+const authMiddleware = require("./middleware/authMiddleware");
 
 const app = express();
 
@@ -802,46 +803,7 @@ app.patch("/api/v1/reduce-user-balance", async (req, res) => {
 
 });
 
-app.get("*", async (req, res) => {
-
-    if (req.session.userID) 
-    {
-        const refreshTokenExpirationDate = new Date(
-            req.session.refreshTokenExpirationDate
-        );
-        const accessTokenExpirationDate = new Date(
-            req.session.accessTokenExpirationDate
-        );
-
-        if (refreshTokenExpirationDate <= Date.now())
-        {
-            res.redirect('/registration');
-        } 
-        else if (accessTokenExpirationDate <= Date.now())
-        {
-            await refreshAccessToken(req.session.userID, req);
-
-            const filePath = path.join(
-                __dirname, 
-                process.env.SPA_INDEX_PATH
-            );
-            res.sendFile(filePath);
-        }
-        else
-        {
-            const filePath = path.join(
-                __dirname, 
-                process.env.SPA_INDEX_PATH
-            );
-            res.sendFile(filePath);
-        }
-    } 
-    else 
-    {
-        res.redirect("/registration");
-    }
-
-}); 
+app.get("*", authMiddleware);
 
 const PORT = process.env.PORT || 3000;
 
