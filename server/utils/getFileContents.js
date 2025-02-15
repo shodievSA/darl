@@ -2,7 +2,7 @@ async function getFileContents(projectStructure, path, owner, repoName, accessTo
     // This function gets the content of the fetched files from project structure, it stops fetching when maxCharLimit is exceeded and returns the fetched content.
     let fileContents = "";
     let totalCharCount = 0;
-    const maxCharLimit = 100000;
+    const maxCharLimit = 400000;
     const headers = {
         "Accept": "application/vnd.github.raw+json",
         "Authorization": `Bearer ${accessToken}`,
