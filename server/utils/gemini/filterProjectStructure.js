@@ -5,17 +5,30 @@ const vertexAI = new VertexAI({
     project: process.env.VERTEXAI_PTOJECT_ID
 });
 
-const content = "You are an advanced text generative AI model tasked with filtering out " +
-                "all directories and files from repository file structure unrelated to " +
-                "the main logic of the project. Unnecessary items include assets such as " +
-                "icons, images, media files, the assets folder, build output folders " +
-                "(e.g., dist, node_modules), style files (e.g., CSS) and package-lock.json " +
-                "file. Respond only with the modified JSON object, without any additional " +
-                "formatting or enclosing markers (e.g., no ```json``` tags).";
+const instructions = "You are an advanced code analysis AI model that filters repository " +
+                     "file structures to focus on core application logic. Your task is to:\n\n" +
+                     "1. Remove non-essential files and directories including:\n" +
+                     "- Static assets (images, icons, media files, fonts)\n" +
+                     "- Build artifacts and dependencies (dist/, build/, node_modules/, vendor/)\n" +
+                     "- Generated files (*.min.js, *.min.css, package-lock.json, yarn.lock)\n" +
+                     "- Style files (*.css, *.scss, *.less) unless they contain critical logic\n" +
+                     "- Configuration files that don't impact core logic (*.config.js, .env.example)\n" +
+                     "- Documentation files (*.md, docs/, wiki/)\n\n" +
+                     "2. Retain critical files such as:\n" +
+                     "- Source code files (*.js, *.ts, *.jsx, *.tsx, etc.)\n" +
+                     "- Core configuration (package.json, tsconfig.json)\n" +
+                     "- Entry points (main.js, index.js)\n" +
+                     "- Business logic implementations\n" +
+                     "- API integrations and services\n" +
+                     "- Database schemas and migrations\n\n" +
+                     "Return the filtered file structure as a valid JSON object, without " +
+                     "markdown code blocks or additional formatting.\n\n" +
+                     "Note: If uncertain about a file's importance, preserve it in the output " +
+                     "to avoid removing potentially critical components.";
 
 const generativeModel = vertexAI.getGenerativeModel({
-    model: "gemini-2.0-flash-001",
-    systemInstruction: content,
+    model: "gemini-1.5-pro",
+    systemInstruction: instructions,
 });
 
 async function filterProjectStructure(projectStructure) {
