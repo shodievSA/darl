@@ -52,8 +52,12 @@ async function filterProjectStructure(projectStructure, userInfo) {
 
 function cleanJsonResponse(aiResponse) {
 
-    const cleaned = aiResponse.replace(/```json\n?|```/g, "").trim();
-    return JSON.parse(cleaned);
+    try {
+        const cleaned = aiResponse.replace(/```json\n?|```/g, "").trim();
+        return JSON.parse(cleaned);
+    } catch (error) {
+        throw new Error("Failed to parse JSON response: " + error.message)
+    }
 
 }
 
