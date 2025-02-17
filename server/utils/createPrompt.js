@@ -30,9 +30,13 @@ async function createPrompt(props) {
 
     const data = await response.json();
 
+    res.write(`data: ${JSON.stringify({ type: "status", content: "Fetching repository file structure..." })}\n\n`);
+
     let projectStructure = await generateProjectStructure(
         data.entries, {}, repoOwner, repoName, accessToken, branchName
     );
+
+    res.write(`data: ${JSON.stringify({ type: "status", content: "Filtering repository file structure..." })}\n\n`);
 
     let filteredProjectStructure = await filterProjectStructure(
         JSON.stringify(projectStructure)
