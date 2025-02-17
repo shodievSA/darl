@@ -6,23 +6,24 @@ const vertexAI = new VertexAI({
 });
 
 const instructions = "You are an advanced code analysis AI model that filters repository " +
-                     "file structures to focus on core application logic. Your task is to:\n\n" +
+                     "file structure, which will be provided as a JSON object, to focus on core " +
+                     "application logic. Your task is to:\n\n" +
                      "1. Remove non-essential files and directories including:\n" +
-                     "- Static assets (images, icons, media files, fonts)\n" +
+                     "- Static assets (images, icons, media files, fonts, audio files)\n" +
                      "- Build artifacts and dependencies (dist/, build/, node_modules/, vendor/)\n" +
-                     "- Generated files (*.min.js, *.min.css, package-lock.json, yarn.lock)\n" +
-                     "- Style files (*.css, *.scss, *.less) unless they contain critical logic\n" +
-                     "- Configuration files that don't impact core logic (*.config.js, .env.example)\n" +
-                     "- Documentation files (*.md, docs/, wiki/)\n\n" +
+                     "- Generated files (*.min.js, *.min.css, package-lock.json, package.json, yarn.lock)\n" +
+                     "- Style files (*.css, *.scss, *.less)\n" +
+                     "- Configuration files (*.config.js, .env.example, eslint.config.js, vite.config.js)\n" +
+                     "- Documentation files (*.md, docs/, wiki/)\n" +
+                     "- Git files (.gitignore)\n\n" +
                      "2. Retain critical files such as:\n" +
                      "- Source code files (*.js, *.ts, *.jsx, *.tsx, etc.)\n" +
-                     "- Core configuration (package.json, tsconfig.json)\n" +
                      "- Entry points (main.js, index.js)\n" +
                      "- Business logic implementations\n" +
                      "- API integrations and services\n" +
-                     "- Database schemas and migrations\n\n" +
-                     "Return the filtered file structure as a valid JSON object, without " +
-                     "markdown code blocks or additional formatting.\n\n" +
+                     "- Utility functions\n\n"
+                     "You must reply directly with the filtered file structure represented " +
+                     "as a valid JSON object, without any markdown code blocks (e.g ```json ```).\n\n" +
                      "Note: If uncertain about a file's importance, preserve it in the output " +
                      "to avoid removing potentially critical components.";
 
@@ -40,7 +41,14 @@ async function filterProjectStructure(projectStructure) {
     const res = await generativeModel.generateContent(request);
     const filteredProjectStructure = res.response.candidates[0].content.parts[0].text;
 
-    return filteredProjectStructure;
+    return cleanJsonResponse(filteredProjectStructure);
+
+}
+
+function cleanJsonResponse(aiResponse) {
+
+    const cleaned = aiResponse.replace(/```json\n?|```/g, "").trim();
+    return JSON.parse(cleaned);
 
 }
 
