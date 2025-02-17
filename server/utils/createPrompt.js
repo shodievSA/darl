@@ -41,7 +41,7 @@ async function createPrompt(props) {
     res.write(`data: ${JSON.stringify({ type: "status", content: "Fetching repository files..." })}\n\n`);
     
     let fileContents = await getFileContents(
-        JSON.parse(filteredProjectStructure), 
+        filteredProjectStructure, 
         "", 
         repoOwner, 
         repoName, 
