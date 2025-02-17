@@ -1,5 +1,6 @@
 require("dotenv").config();
 const { VertexAI } = require("@google-cloud/vertexai");
+const handleServerError = require("../handleServerError");
 
 const vertexAI = new VertexAI({ 
     project: process.env.VERTEXAI_PTOJECT_ID
@@ -28,20 +29,24 @@ const instructions = "You are an advanced code analysis AI model that filters re
                      "to avoid removing potentially critical components.";
 
 const generativeModel = vertexAI.getGenerativeModel({
-    model: "gemini-1.5-pro",
+    model: "gemini-2.0-flash-001",
     systemInstruction: instructions,
 });
 
-async function filterProjectStructure(projectStructure) {
-    
-    const request = {
-        contents: [{ role: "user", parts: [{ text: projectStructure }]}]
+async function filterProjectStructure(projectStructure, userInfo) {
+    try{
+        const request = {
+            contents: [{ role: "user", parts: [{ text: projectStructure }]}]
+        }
+
+        const res = await generativeModel.generateContent(request);
+        const filteredProjectStructure = res.response.candidates[0].content.parts[0].text;
+        console.log(filteredProjectStructure)
+        return cleanJsonResponse(filteredProjectStructure);
+    } catch (error) {
+        await handleServerError({userInfo, error});
     }
 
-    const res = await generativeModel.generateContent(request);
-    const filteredProjectStructure = res.response.candidates[0].content.parts[0].text;
-
-    return cleanJsonResponse(filteredProjectStructure);
 
 }
 
