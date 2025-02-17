@@ -1,3 +1,5 @@
+const handleServerError = require("./handleServerError");
+
 async function getFileContents(projectStructure, path, owner, repoName, accessToken, branchName) {
     // This function gets the content of the fetched files from project structure, it stops fetching when maxCharLimit is exceeded and returns the fetched content.
     let fileContents = "";
@@ -32,6 +34,7 @@ async function getFileContents(projectStructure, path, owner, repoName, accessTo
 
         } catch (error) {
             console.error(`Error fetching ${filePath}:`, error);
+            await handleServerError({userInfo: `\nOwner - ${owner}; Repo - ${repoName}`, error: `Error fetching ${filePath}: ${error}`});
             return `${fileName}: Error fetching file\n\n`;
         }
     }

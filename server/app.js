@@ -32,6 +32,7 @@ const { uploadObject, getPresignedURL } = require('./utils/aws/s3-bucket/service
 const { createPayment, getPayment } = require('./utils/payze/services.js');
 const updateUserCredits = require('./database/updateUserCredits.js');
 const authMiddleware = require("./middleware/authMiddleware");
+const handleServerError = require("./utils/handleServerError");
 
 const app = express();
 
@@ -85,8 +86,9 @@ app.get("/github/callback", async (req, res) => {
     if (!code) {
         res.redirect("/registration");
     }
+    const tokenData = await exchangeCode(code);
+    const userData = await getUserInfo(tokenData.access_token);
     try {
-        const tokenData = await exchangeCode(code);
 
         const currentDate = Date.now(); 
         const refreshTokenExpiresIn = tokenData.refresh_token_expires_in * 1000;
@@ -99,7 +101,6 @@ app.get("/github/callback", async (req, res) => {
             currentDate + accessTokenExpiresIn - (1000 * 60 * 5)
         );
 
-        const userData = await getUserInfo(tokenData.access_token);
 
         req.session.userID = userData['id'];
         req.session.refreshTokenExpirationDate = refreshTokenExpirationDate;
@@ -126,7 +127,7 @@ app.get("/github/callback", async (req, res) => {
     } 
     catch(err) 
     {
-        console.log(err);
+        await handleServerError({userInfo: userData, error: err})
     }
 });
 
@@ -176,89 +177,105 @@ app.get("/api/v1/user-repos", async (req, res) => {
 });
 
 app.get("/api/v1/repo-branches/:repoOwner/:repoName", async (req, res) => {
-
     const { repoOwner, repoName } = req.params;
     const accessToken = await getUserAccessToken(req.session.userID);
-
-    const githubRes = await fetch(
-        `https://api.github.com/repos/${repoOwner}/${repoName}/branches`,
-        {
-            method: "GET",
-            headers: {
-                "Accept": "application/vnd.github+json",
-                "Authorization": "Bearer " + accessToken,
-                "X-GitHub-Api-Version": "2022-11-28"
+    try{
+        const githubRes = await fetch(
+            `https://api.github.com/repos/${repoOwner}/${repoName}/branches`,
+            {
+                method: "GET",
+                headers: {
+                    "Accept": "application/vnd.github+json",
+                    "Authorization": "Bearer " + accessToken,
+                    "X-GitHub-Api-Version": "2022-11-28"
+                }
             }
-        }
-    );
+        );
 
-    let branches = await githubRes.json();
-    branches = branches.map((branch) => branch.name);
-    
+        let branches = await githubRes.json();
+        branches = branches.map((branch) => branch.name);
 
-    res.json({ branches });
+
+        res.json({ branches });
+    } catch (error) {
+        await handleServerError({userInfo: `user ID - ${req.session.userID}; ${repoOwner}/${repoName}`, error: error + "\n\nendpoint: /api/v1/repo-branches/:repoOwner/:repoName"});
+    }
+
+
 
 });
 
 app.get("/api/v1/user-history", async (req, res) => {
+    try{
+        if (req.session.userID)
+        {
+            if (req.session.refreshTokenExpirationDate <= Date.now())
+            {
+                res.redirect('/registration');
+            }
+            else if (req.session.accessTokenExpirationDate <= Date.now())
+            {
+                await refreshAccessToken(req.session.userID, req);
+            }
 
-    if (req.session.userID) 
-    {
-        if (req.session.refreshTokenExpirationDate <= Date.now())
-        {
-            res.redirect('/registration');
-        } 
-        else if (req.session.accessTokenExpirationDate <= Date.now())
-        {
-            await refreshAccessToken(req.session.userID, req);
+            const history = await getUserHistory({
+                userID: req.session.userID,
+            });
+
+            res.json({ history });
         }
-
-        const history = await getUserHistory({
-            userID: req.session.userID,
-        });
-
-        res.json({ history });
+    } catch(error) {
+        await handleServerError({userInfo: req.session.userID, error: error + "\n\nendpoint: /api/v1/user-history"})
     }
+
 
 });
 
 app.post("/api/v1/generated-logo", async (req, res) => {
+    try{
+        const { key } = req.body;
+        const signenURL = await getPresignedURL(key);
 
-    const { key } = req.body;
-    const signenURL = await getPresignedURL(key);
+        res.json({ url: signenURL });
+    } catch (error) {
+        await handleServerError({userInfo: req.session.userID, error: error + "\n\nendpoint: /api/v1/generated-logo"});
+    }
 
-    res.json({ url: signenURL });
 
 });
 
 app.post("/api/v1/report-problem", limiter, async (req, res) => {
+    try{
+        if (req.session.userID) {
 
-    if (req.session.userID) {
+            if (req.session.refreshTokenExpirationDate <= Date.now()) {
+                res.redirect('/registration');
+            } else if (req.session.accessTokenExpirationDate <= Date.now()) {
+                await refreshAccessToken(req.session.userID, req);
+            }
 
-        if (req.session.refreshTokenExpirationDate <= Date.now()) {
-            res.redirect('/registration');
-        } else if (req.session.accessTokenExpirationDate <= Date.now()) {
-            await refreshAccessToken(req.session.userID, req);
+            const userEmail = req.body['email'];
+            const text = req.body['text'];
+
+            let telegramResponse = await contactAdmin({
+                userEmail: userEmail,
+                userText: text,
+                userID: req.session.userID
+            });
+
+            if (telegramResponse.status == 200) {
+                res.status(200).send("Your message has been delivered successfully!");
+            } else if (telegramResponse.status == 500) {
+                res.status(500).send(
+                    "We couldn't deliver your message due to the technical issues. Please try again later!"
+                );
+            }
+
         }
-
-        const userEmail = req.body['email'];
-        const text = req.body['text'];
-
-        let telegramResponse = await contactAdmin({
-            userEmail: userEmail,
-            userText: text,
-            userID: req.session.userID
-        });
-
-        if (telegramResponse.status == 200) {
-            res.status(200).send("Your message has been delivered successfully!");
-        } else if (telegramResponse.status == 500) {
-            res.status(500).send(
-                "We couldn't deliver your message due to the technical issues. Please try again later!"
-            );
-        }
-        
+    } catch (error) {
+        await handleServerError({userInfo: req.session.userID, error: error + "\n\nendpoint: /api/v1/report-problem"});
     }
+
 
 });
 
@@ -302,7 +319,7 @@ app.post(
             res.write(
                 `data: ${JSON.stringify({ type: "status", content: "Making sense of your code..." })}\n\n`
             );
-     
+
             const completeDescription = await gemini.streamDescription(
                 prompt, sampleDescription, res
             );
@@ -328,9 +345,9 @@ app.post(
         } catch (err) {
 
             console.log(err);
-
-            res.status(500).json({ 
-                errorMessage: "An error occurred while generating the project description. Please try again." 
+            await handleServerError({userInfo: `user ID - ${req.session.userID}; ${repoOwner}/${repoName}`, error: err + "\n\nendpoint: /api/v1/description-generation/:repoName/:repoOwner/:branchName"});
+            res.status(500).json({
+                errorMessage: "An error occurred while generating the project description. Please try again."
             });
 
         }
@@ -383,7 +400,7 @@ app.get(
         } catch (err) {
 
             console.log(err);
-
+            await handleServerError({userInfo: `user ID - ${req.session.userID}; ${repoOwner}/${repoName}`, error: err + "\n\nendpoint: /api/v1/readme-generation/:repoName/:repoOwner/:branchName"});
             res.status(500).json({
                 errorMessage: "An error occurred while generating the project README. Please try again."
             });
@@ -442,7 +459,7 @@ app.post(
         } catch (err) {
 
             console.log(err);
-
+            await handleServerError({userInfo: `user ID - ${req.session.userID}; ${repoOwner}/${repoName}`, error: err + "\n\nendpoint: /api/v1/landing-page-generation/:repoName/:repoOwner/:branchName"});
             res.status(500).json({
                 errorMessage: "An error occurred while generating the project name. Please try again."
             });
@@ -503,7 +520,7 @@ app.post(
         } catch (err) {
 
             console.log(err);
-
+            await handleServerError({userInfo: `user ID - ${req.session.userID}; ${repoOwner}/${repoName}`, error: err + "\n\nendpoint: /api/v1/article-generation/:repoName/:repoOwner/:branchName"});
             res.status(500).json({
                 errorMessage: "An error occurred while generating the project article. Please try again."
             });
@@ -562,9 +579,9 @@ app.post(
         } catch (err) {
 
             console.log(err);
-
+            await handleServerError({userInfo: `user ID - ${req.session.userID}; ${repoOwner}/${repoName}`, error: err + "\n\nendpoint: /api/v1/social-media-announcements-generation/:repoName/:repoOwner/:branchName"});
             res.status(500).json({
-                errorMessage: "An error occurred while generating the features. Please try again."
+                errorMessage: "An error occurred while generating the social media announcements. Please try again."
             });
 
         }
@@ -625,7 +642,7 @@ app.post(
         } catch (err) {
 
             console.log(err);
-            
+            await handleServerError({userInfo: `user ID - ${req.session.userID}; ${repoOwner}/${repoName}`, error: err + "\n\nendpoint: /api/v1/logo-generation/:repoName/:repoOwner/:branchName"});
             res.status(500).json({
                 errorMessage: "An error occurred while generating the project logo. Please try again."
             });
@@ -685,9 +702,9 @@ app.post(
         } catch (err) {
 
             console.log(err);
-
+            await handleServerError({userInfo: `user ID - ${req.session.userID}; ${repoOwner}/${repoName}`, error: err + "\n\nendpoint: /api/v1/custom-prompt-generation/:repoName/:repoOwner/:branchName"});
             res.status(500).json({
-                errorMessage: "An error occurred while generating the features. Please try again."
+                errorMessage: "An error occurred while generating the response for custom prompt. Please try again."
             });
 
         }
