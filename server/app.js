@@ -581,7 +581,7 @@ app.post(
             console.log(err);
             await handleServerError({userInfo: `user ID - ${req.session.userID}; ${repoOwner}/${repoName}`, error: err + "\n\nendpoint: /api/v1/social-media-announcements-generation/:repoName/:repoOwner/:branchName"});
             res.status(500).json({
-                errorMessage: "An error occurred while generating the features. Please try again."
+                errorMessage: "An error occurred while generating the social media announcements. Please try again."
             });
 
         }
@@ -704,7 +704,7 @@ app.post(
             console.log(err);
             await handleServerError({userInfo: `user ID - ${req.session.userID}; ${repoOwner}/${repoName}`, error: err + "\n\nendpoint: /api/v1/custom-prompt-generation/:repoName/:repoOwner/:branchName"});
             res.status(500).json({
-                errorMessage: "An error occurred while generating the features. Please try again."
+                errorMessage: "An error occurred while generating the response for custom prompt. Please try again."
             });
 
         }
