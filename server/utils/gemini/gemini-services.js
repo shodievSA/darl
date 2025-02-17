@@ -78,10 +78,12 @@ async function streamDescription(repoDetails, reference, res) {
     } else {
 
         requestedContent = "[Requested Content]:\n" +
-                           "Generate concise and formal description (no more than 90 words) of the project " +
+                           "Generate concise and formal description (max 90 words) of the project " +
                            "suitable for inclusion in a CV or resume. Make sure to describe the main " +
-                           "functionality of the project and stack of technologies used. If the project has " +
-                           "homepage or GitHub links, include them in your description too.\n\n"
+                           "functionality of the project and stack of technologies used. If available, " + 
+                           "include links to the project's homepage and GitHub and explicitly specify " +
+                           "where each link redirects the user (e.g Github - github_link, Telegram - " +
+                           "telegram_link, Website - website_link and etc.).\n\n";
 
     }
 
