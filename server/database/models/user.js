@@ -15,11 +15,11 @@ const User = sequelize.define(
         },
         free_trials_left: {
             type: DataTypes.SMALLINT,
-            defaultValue: 100
+            defaultValue: 0
         },
         user_balance: {
             type: DataTypes.FLOAT,
-            defaultValue: 0
+            defaultValue: 5
         },
         user_transactions: {
             type: DataTypes.JSONB,
