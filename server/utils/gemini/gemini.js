@@ -16,7 +16,7 @@ const instruction = "You are an advanced AI model designed to generate high-qual
                     "Includes metadata such as the repository name, GitHub link, and homepage (if available).";
 
 const generativeModel = vertexAI.getGenerativeModel({
-    model: "gemini-2.0-flash-001",
+    model: "gemini-2.5-pro-preview-03-25",
     systemInstruction: instruction,
     safetySettings: [
         {
